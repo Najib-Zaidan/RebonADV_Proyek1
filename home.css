@@ -60,6 +60,7 @@ nav .active1 {
 .hero h1 {
   font-size: 42px;
   line-height: 1.4;
+  margin-bottom: 20px;
 }
 
 .hero span {
@@ -75,7 +76,7 @@ nav .active1 {
   margin-bottom: 20px;
 }
 
-.btn {
+.hero-content a {
   margin-top: 20px;
   padding: 12px 25px;
   border: none;
@@ -83,6 +84,7 @@ nav .active1 {
   background: white;
   color: #333;
   cursor: pointer;
+  text-decoration: none;
 }
 
 /* TRIP TERSEDIA */
@@ -177,7 +179,7 @@ nav .active1 {
 }
 
 .private-text .p_bawah {
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
 .private-text a {
