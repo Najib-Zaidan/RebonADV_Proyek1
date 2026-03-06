@@ -1,0 +1,36 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #f4f0e5;
+}
+
+.logo img {
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+nav .active1 {
+  color: #6b3df5;
+}
+
+.login {
+  background: #6b3df5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
