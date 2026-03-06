@@ -176,14 +176,19 @@ nav .active1 {
   margin-bottom: 10px;
 }
 
-.private-text button {
+.private-text .p_bawah {
+  margin-bottom: 40px;
+}
+
+.private-text a {
   margin-top: 20px;
-  padding: 12px 20px;
+  padding: 10px 20px;
   border: none;
   background: #4f46e5;
   color: white;
   border-radius: 8px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .private-img img {
