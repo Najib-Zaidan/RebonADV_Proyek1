@@ -1,3 +1,14 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #e7e2c8;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -35,23 +46,11 @@ nav .active1 {
   cursor: pointer;
 }
 
-<<<<<<< HEAD
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  background: #e7e2c8;
-}
-
 /* HERO */
 
 .hero {
   height: 600px;
-  background: url("hero.jpg") center/cover no-repeat;
+  background: url("gunung.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
   padding-left: 80px;
@@ -215,7 +214,8 @@ body {
   height: 220px;
   object-fit: cover;
   border-radius: 10px;
-=======
+}
+
 /* FOOTER */
 
 footer {
@@ -282,11 +282,11 @@ footer {
   height: auto;
   display: block;
 }
+
 .copyright {
   text-align: center;
   font-size: 12px;
   margin-top: 20px;
   font-weight: bold;
   color: #333;
->>>>>>> 8065a10a6242fb55120fdde6de5bb45b890b1e9d
 }
