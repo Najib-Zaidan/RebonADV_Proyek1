@@ -35,6 +35,7 @@ nav .active1 {
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 * {
   margin: 0;
   padding: 0;
@@ -214,4 +215,78 @@ body {
   height: 220px;
   object-fit: cover;
   border-radius: 10px;
+=======
+/* FOOTER */
+
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+>>>>>>> 8065a10a6242fb55120fdde6de5bb45b890b1e9d
 }
