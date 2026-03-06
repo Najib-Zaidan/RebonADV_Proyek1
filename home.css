@@ -1,0 +1,297 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #e7e2c8;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #f4f0e5;
+}
+
+.logo img {
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+nav .active1 {
+  color: #6b3df5;
+}
+
+.login {
+  background: #6b3df5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* HERO */
+
+.hero {
+  height: 600px;
+  background: url("gunung.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  padding-left: 80px;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 42px;
+  line-height: 1.4;
+}
+
+.hero span {
+  color: #c8b6ff;
+}
+
+.hero b {
+  color: #ffc107;
+}
+
+.hero-logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+}
+
+/* TRIP TERSEDIA */
+
+.trip {
+  padding: 60px 80px;
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.trip-header h2 {
+  color: #5a3ec8;
+}
+
+.trip-header a {
+  text-decoration: none;
+  color: #5a3ec8;
+}
+
+.trip-container {
+  background: linear-gradient(135deg, #7f5af0, #3b1fa5);
+  padding: 30px;
+  border-radius: 15px;
+
+  display: flex;
+  gap: 25px;
+}
+
+.trip-card {
+  background: white;
+  width: 250px;
+  border-radius: 10px;
+  overflow: hidden;
+  padding-bottom: 15px;
+}
+
+.trip-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.trip-card h3 {
+  margin: 10px;
+}
+
+.trip-card p {
+  margin: 0 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.trip-card .date {
+  margin-top: 5px;
+}
+
+.price {
+  display: block;
+  margin: 10px;
+  font-weight: bold;
+}
+
+/* PRIVATE TRIP */
+
+.private-trip {
+  margin: 60px 80px;
+  background: #f1edf8;
+  padding: 40px;
+  border-radius: 15px;
+
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.private-text {
+  flex: 1;
+}
+
+.private-text h2 {
+  color: #5a3ec8;
+  margin-bottom: 15px;
+}
+
+.private-text p {
+  margin-bottom: 10px;
+}
+
+.private-text .p_bawah {
+  margin-bottom: 40px;
+}
+
+.private-text a {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background: #4f46e5;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.private-img img {
+  width: 450px;
+  border-radius: 12px;
+}
+
+/* GALERI */
+
+.galeri {
+  padding: 60px 80px;
+  text-align: center;
+}
+
+.galeri h2 {
+  color: #5a3ec8;
+  margin-bottom: 40px;
+}
+
+.galeri-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.galeri-container img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* FOOTER */
+
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
