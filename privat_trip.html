@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rebon Adventure — Private Trip</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- File CSS -->
+  <link rel="stylesheet" href="privat_trip.css">
+
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <img src="REBON LOGO GRADIENT presisi.png" alt="Rebon Adventure logo" class="logo">
+      </div>
+      <nav class="main-nav">
+        <a href="home.html">Home</a>
+        <a href="Open_Trip.html">Open</a>
+        <a href="privat_trip.html" class="active">Private</a>
+        <a href="tentangkami.html">Tentang Kami</a>
+      </nav>
+      <div class="auth">
+        <button class="btn-login">Masuk</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="hero-area">
+    <div class="hero-inner">
+      <!-- left: image card -->
+      <div class="card-image">
+        <div class="image-wrap">
+          <img src="123.jpg" alt="Rinjani / destinasi" />
+          <h1 class="hero-title">
+            Rencanakan<br>Trip Anda
+          </h1>
+        </div>
+      </div>
+
+      <!-- right: form -->
+      <aside class="card-form">
+        <form class="trip-form" action="#" method="post" onsubmit="return false;">
+          <input type="text" placeholder="Nama Lengkap" required>
+          <input type="tel" placeholder="Nomor Telepon" required>
+          <input type="text" placeholder="Lokasi Destinasi" required>
+
+          <div class="row">
+            <input type="date" class="half" placeholder="Pilih Tanggal">
+            <input type="text" class="half" placeholder="Durasi Trip">
+          </div>
+
+          <textarea placeholder="Catatan Tambahan" rows="5"></textarea>
+          <input type="number" placeholder="Jumlah Peserta" min="1">
+
+          <div class="cta-row">
+            <button class="btn-whatsapp" title="Pesan via WhatsApp">
+              <span class="wa-icon"><i class="fab fa-whatsapp"></i></span>
+              <span>Pesan Sekarang</span>
+            </button>
+          </div>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="REBON LOGO GRADIENT presisi.png" alt="Rebon Adventure" />
+      </div>
+
+      <div class="footer-col">
+        <h4>KONTAK KAMI</h4>
+        <ul class="contact-list">
+          <li>📧 rebonadventure@gmail.com</li>
+          <li>📞 +62 812-3456-7890</li>
+          <li>📍 Jl. sukawera No. 15, Cirebon, Indonesia</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>LAYANAN KAMI</h4>
+        <ul>
+          <li>OPEN TRIP</li>
+          <li>PRIVATE TRIP</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>INFORMASI</h4>
+        <ul>
+          <li>TENTANG KAMI</li>
+          <li>TRIP TERSEDIA</li>
+          <li>FAQ</li>
+        </ul>
+
+        <div class="follow">
+          <small>FOLLOW US ON</small>
+          <div class="socials">
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-tiktok"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.
+    </div>
+  </footer>
+
+</body>
+</html>
