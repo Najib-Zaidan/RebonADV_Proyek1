@@ -192,6 +192,7 @@ html,body { height:100%; margin:0; font-family: 'Poppins', system-ui, -apple-sys
 }
 @media (max-width: 560px){
   .main-nav { display:none; }
+  
   .header-inner{ padding:12px 18px; }
   .hero-title{ font-size:36px; left:14px; bottom:18px; }
   .footer-inner{ grid-template-columns: 1fr; gap:18px; padding:22px; }
