@@ -6,23 +6,65 @@
 }
 
 /* Header */
+/* HEADER BARU */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #f4f0e5;
+}
+
+.logo img {
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+nav .active4 {
+  color: #6b3df5;
+}
+
+.login {
+  background: #6b3df5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* HEADER LAMA */
 /* Container Header */
+
+/*
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 8%;
-    background-color: #fdfae6; /* Warna krem sesuai foto */
+    background-color: #fdfae6; /* Warna krem sesuai foto 
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
 .main-logo {
-    height: 50px; /* Sesuaikan ukuran logo */
+    height: 50px; /* Sesuaikan ukuran logo 
 }
 
-/* Navigasi Desktop */
+Navigasi Desktop 
 nav ul {
     display: flex;
     list-style: none;
@@ -37,14 +79,14 @@ nav ul li a {
     transition: 0.3s;
 }
 
-/* Link Aktif (Tentang Kami) */
+/* Link Aktif (Tentang Kami) 
 nav ul li a.active {
-    color: #7d5fff; /* Warna ungu sesuai foto */
+    color: #7d5fff; /* Warna ungu sesuai foto 
 }
 
-/* Tombol Masuk */
+/* Tombol Masuk 
 .btn-masuk {
-    background-color: #3f408c; /* Biru gelap sesuai foto */
+    background-color: #3f408c;
     color: white;
     padding: 10px 30px;
     border: none;
@@ -53,10 +95,11 @@ nav ul li a.active {
     cursor: pointer;
 }
 
-/* Hidden Elements */
+/* Hidden Elements 
 #menu-auth, .hamburger, .mobile-only {
     display: none;
-}
+} 
+*/
 
 /* ========================================== */
 /* RESPONSIVE (VERSI HP)                      */
