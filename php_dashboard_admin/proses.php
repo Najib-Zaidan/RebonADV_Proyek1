@@ -1,0 +1,22 @@
+<?php 
+session_start();
+require 'konek.php';
+
+if (isset($_POST['login'])) {
+    $username = mysqli_real_escape_string($konek, $_POST['username']);
+    $password = mysqli_real_escape_string($konek, $_POST['password']);
+
+    $query = mysqli_query($konek, "SELECT * FROM admin WHERE Username='$username' AND Password='$password'");
+    $cek = mysqli_num_rows($query);
+
+    if ($cek) {
+        $_SESSION['verif'] = true;
+        $_SESSION['user'] = $username;
+        header("Location: index.php");
+    } else {
+        header("Location: login.php");
+    }
+} else {
+    header("Location: login.php");
+}
+?>
