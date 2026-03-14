@@ -8,10 +8,16 @@ if (isset($_POST['login'])) {
 
     $query = mysqli_query($konek, "SELECT * FROM admin WHERE Username='$username' AND Password='$password'");
     $cek = mysqli_num_rows($query);
+    $nama = mysqli_fetch_assoc($query);
+    //echo "proses php";
+    //var_dump($cek);
+    //die();
 
     if ($cek) {
+      //echo "cek proses php";
+      //die();
         $_SESSION['verif'] = true;
-        $_SESSION['user'] = $username;
+        $_SESSION['nama'] = $nama['nama'];
         header("Location: index.php");
     } else {
         header("Location: login.php");

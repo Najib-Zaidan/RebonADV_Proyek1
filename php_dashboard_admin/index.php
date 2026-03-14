@@ -1,6 +1,8 @@
 <?php 
 session_start();
-if (!isset($_SESSION["verif"]) || $_SESSION["verif"] !== true) {
+//echo "index php";
+if (!isset($_SESSION["verif"]) || $_SESSION["verif"] != true) {
+  echo "isset index php";
     header("Location: login.php");
     exit;
 }
@@ -13,7 +15,7 @@ require 'konek.php';
     <title>Dashboard Admin</title>
 </head>
 <body>
-    <h1>Selamat Datang, <?php echo $_SESSION['user']; ?></h1>
+    <h1>Selamat Datang, <?php echo $_SESSION['nama']; ?></h1>
     <p>Ini adalah halaman admin Rebon Adventure.</p>
     <a href="home.html">Logout</a>
 </body>

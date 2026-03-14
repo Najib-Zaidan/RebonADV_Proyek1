@@ -21,16 +21,17 @@ mysqli_query($konek, $katalog);
 $admin = "CREATE TABLE IF NOT EXISTS admin (
     Id_Admin VARCHAR(8) PRIMARY KEY,
     Username VARCHAR(25) NOT NULL,
-    Password VARCHAR(25) NOT NULL
+    Password VARCHAR(25) NOT NULL,
+    nama VARCHAR(25) NOT NULL
 )";
 mysqli_query($konek, $admin);
 
-$insert_admin = "INSERT IGNORE INTO admin (Id_Admin, Username, Password) VALUES 
-('AD001', 'password', 'admin'),
-('AD002', 'rebon2019', 'rebongasjos'),
-('AD003', 'wongganteng', 'masmaskampus123'),
-('AD004', 'admin_utama', 'rahasia123'),
-('AD005', 'operator_rebon', 'op_rebon')";
+$insert_admin = "INSERT IGNORE INTO admin (Id_Admin, Username, Password, nama) VALUES 
+('AD001', 'password', 'admin', 'Rebon Admin 1'),
+('AD002', 'rebon2019', 'rebongasjos', 'Rebon Admin 2'),
+('AD003', 'wongganteng', 'masmaskampus123', 'Najib Zeruk Purut'),
+('AD004', 'admin_utama', 'rahasia123', 'Ibnu Rebon'),
+('AD005', 'operator_rebon', 'op_rebon', 'Operator')";
 mysqli_query($konek, $insert_admin);
 
 mysqli_close($konek);
