@@ -18,6 +18,44 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
 )";
 mysqli_query($konek, $katalog);
 
+$pengguna = "CREATE TABLE IF NOT EXISTS pengguna (
+    Id_User VARCHAR(8) PRIMARY KEY,
+    Username VARCHAR(25) NOT NULL,
+    Password VARCHAR(25) NOT NULL
+)";
+mysqli_query($konek, $pengguna);
+
+$pelanggan = "CREATE TABLE IF NOT EXISTS  data_pelanggan (
+    Id_Pelanggan VARCHAR(8) PRIMARY KEY,
+    Nama_Lengkap VARCHAR(100) NOT NULL,
+    Alamat TEXT,
+    Tanggal_Lahir DATE,
+    Nomor_HP_No_Darurat VARCHAR(15),
+    Riwayat_Penyakit TEXT
+)";
+mysqli_query($konek, $pelanggan);
+
+$booking = "CREATE TABLE IF NOT EXISTS  booking (
+    Id_Booking VARCHAR(8) PRIMARY KEY,
+    Id_Katalog VARCHAR(8),
+    Id_User VARCHAR(8),
+    Id_Pelanggan VARCHAR(8),
+    Tanggal_Booking DATETIME,
+    FOREIGN KEY (Id_Katalog) REFERENCES katalog(Id_Trip) ON DELETE CASCADE,
+    FOREIGN KEY (Id_User) REFERENCES pengguna(Id_User) ON DELETE CASCADE,
+    FOREIGN KEY (Id_Pelanggan) REFERENCES data_pelanggan(Id_Pelanggan) ON DELETE CASCADE
+)";
+mysqli_query($konek, $booking);
+
+$payment = "CREATE TABLE IF NOT EXISTS  payment (
+    Id_Bayar VARCHAR(8) PRIMARY KEY,
+    Id_Booking VARCHAR(8),
+    Tanggal_Bayar DATETIME,
+    Status_Bayar VARCHAR(20),
+    FOREIGN KEY (Id_Booking) REFERENCES booking(Id_Booking) ON DELETE CASCADE
+)";
+mysqli_query($konek, $payment);
+
 $admin = "CREATE TABLE IF NOT EXISTS admin (
     Id_Admin VARCHAR(8) PRIMARY KEY,
     Username VARCHAR(25) NOT NULL,
