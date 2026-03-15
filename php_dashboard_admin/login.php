@@ -3,7 +3,7 @@ session_start();
 if(!isset($_SESSION["verif"]) || $_SESSION != true){
   session_unset();
   session_destroy();
-  header("Location: home.html");
+  header("Location: ../home.html");
   exit;
 }
 echo "berhasil masuk";

@@ -17,6 +17,6 @@ require 'konek.php';
 <body>
     <h1>Selamat Datang, <?php echo $_SESSION['nama']; ?></h1>
     <p>Ini adalah halaman admin Rebon Adventure.</p>
-    <a href="home.html">Logout</a>
+    <a href="../home.html">Logout</a>
 </body>
 </html>

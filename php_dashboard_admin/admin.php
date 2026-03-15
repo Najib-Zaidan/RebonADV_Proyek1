@@ -9,7 +9,7 @@ if($konek){
 else{
   session_unset();
   session_destroy();
-  header("Location: home.html");
+  header("Location: ../home.html");
   exit;
 }
 ?>
