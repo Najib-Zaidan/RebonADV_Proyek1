@@ -16,11 +16,14 @@ if (isset($_POST['login'])) {
     if ($cek) {
       //echo "cek proses php";
       //die();
-        $_SESSION['verif'] = true;
+        $_SESSION['login'] = true;
         $_SESSION['nama'] = $nama['nama'];
         header("Location: index.php");
+        exit;
     } else {
-        header("Location: login.php");
+      $_SESSION["gagal"] = "Gagal Login...";
+      header("Location: login.php");
+      exit;
     }
 } else {
     header("Location: login.php");

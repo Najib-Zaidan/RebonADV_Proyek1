@@ -1,13 +1,27 @@
 <?php
+require 'konek.php';
 session_start();
-if(!isset($_SESSION["verif"]) || $_SESSION != true){
+if($konek){
+  if(isset($_SESSION["gagal"])){
+    $gagal = $_SESSION["gagal"];
+    echo "<srcipt> alert('$gagal'); </srcipt>";
+    unset($_SESSION["gagal"]);
+  }
+  if(isset($_SESSION["login"])){
+    header("Location: index.php");
+    exit;
+  }
+}
+else{
+  header("Location: ../home.html");
+}
+/* if(!isset($_SESSION["verif"]) || $_SESSION != true){
   session_unset();
   session_destroy();
   header("Location: ../home.html");
   exit;
 }
-echo "berhasil masuk";
-session_unset();
+session_unset(); */
 ?>
 <!DOCTYPE html>
 <html lang="id">
