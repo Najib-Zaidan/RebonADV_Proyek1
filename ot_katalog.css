@@ -1,0 +1,202 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: #f3ecd2;
+}
+
+/* NAVBAR */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #f4f0e5;
+}
+
+.logo img {
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+nav .active2 {
+  color: #6b3df5;
+}
+
+.login {
+  background: #6b3df5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* LAYOUT */
+.container {
+  padding: 40px;
+}
+
+.hero {
+  display: flex;
+  gap: 40px;
+}
+
+.left {
+  width: 50%;
+}
+
+.right {
+  width: 50%;
+}
+
+/* IMAGE */
+.main-img {
+  width: 100%;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.thumbs img {
+  width: 100px;
+  border-radius: 8px;
+}
+
+/* CARD */
+.card {
+  background: #fff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.card h2 {
+  color: purple;
+  margin: 10px 0;
+}
+
+.card button {
+  background: purple;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* RIGHT CONTENT */
+.right h2 {
+  margin-top: 10px;
+}
+
+.right ul {
+  margin-top: 10px;
+}
+
+.right li {
+  margin-bottom: 5px;
+}
+
+/* ITINERARY */
+.itinerary {
+  margin-top: 40px;
+}
+
+.itinerary ul {
+  margin-top: 10px;
+}
+
+/* FOOTER */
+
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
