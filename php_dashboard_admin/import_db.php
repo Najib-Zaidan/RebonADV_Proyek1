@@ -5,20 +5,23 @@ mysqli_query($konek, $buat_db);
 mysqli_select_db($konek, "rebon_adventure");
 $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     id_katalog INT AUTO_INCREMENT PRIMARY KEY,
-    id_trip INT,
-    judul VARCHAR(100) NOT NULL,
-    gambar VARCHAR(100) NOT NULL,
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
 $trip = "CREATE TABLE IF NOT EXIST trip(
     id_trip INT AUTO_INCREMENT PRIMARY KEY,
     tujuan VARCHAR(50) NOT NULL,
-    tgl_pulang DATE NOT NULL,
     tgl_berangkat DATE NOT NULL,
+    tgl_pulang DATE NOT NULL,
     harga INT NOT NULL,
     kuota INT NOT NULL,
     catatan TEXT
+)";
+$gambar = "CREATE TABLE IF NOT EXIST gambar(
+    id_gambar INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    nama_file VARCHAR(100) NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
 $itenerary = "CREATE TABLE IF NOT EXIST itenerary(
     id_itenerary INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,6 +82,40 @@ $akun = "CREATE TABLE IF NOT EXIST akun(
     password VARCHAR(100) NOT NULL,
     role VARCHAR(10) NOT NULL,
 )";
+$private = "CREATE TABLE IF NOT EXIST private(
+    id_private INT AUTO_INCREMENT PRIMARY KEY,
+    id_akun INT,
+    nama VARCHAR(100) NOT NULL,
+    no_hp VARCHAR(20) NOT NULL,
+    tgl_berangkat DATE NOT NULL,
+    tgl_pulang DATE NOT NULL,
+    catatan TEXT,
+    jumlah_peserta INT NOT NULL,
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
+)";
+mysqli_query($konek, $trip);
+mysqli_query($konek, $katalog);
+mysqli_query($konek, $akun);
+mysqli_query($konek, $peserta);
+mysqli_query($konek, $private);
+mysqli_query($konek, $gambar);
+mysqli_query($konek, $itenerary);
+mysqli_query($konek, $meetpoint);
+mysqli_query($konek, $fasilitas);
+mysqli_query($konek, $booking);
+mysqli_query($konek, $payment);
+
+
+$insert_trip = "INSERT INTO trip (id_trip, tujuan, tgl_berangkat, tgl_pulang, harga, kuota, catatan) VALUES 
+('', 'Gunung Ciremai', '2026-04-03', '2026-04-04', 500000, 30, 'Harap Membawa Perlengkapan Tidur'),
+('', 'Gunung Slamet', '2026-04-05', '2026-04-05', 350000, 10, 'Harap Membawa Perlengkapan Memasak'),
+('', 'Gunung Prau', '2026-04-01', '2026-04-02', 200000, 25, ''),
+('', 'Gunung Lawu', '2026-04-10', '2026-04-12', 720000, 15, ''),
+('', 'Gunung Merapi', '2026-04-07', '2026-04-07', 400000, 45, 'Dilarang Membuang Sampah di kawah'),";
+
+$insert_katalog = "INSERT INTO katalog (id_katalog, id_trip, deskripsi) VALUES 
+('', 1, 'Gunung Ciremai merupakan salah satu gunung dengan tinggi lebih dari 3000 Mdpl yang menawarkan pemandangan yang luar biasa ...'),
+";
 
 mysqli_query($konek, $katalog);
 $insert_katalog = "INSERT INTO katalog (Id_Trip, Nama_Trip, Jadwal_Trip, Tujuan_Destinasi, Itinerary, Meeting_Point, Harga_Trip, Fasilitas_Trip, Kapasitas_Peserta, Sisa_Kuota, Catatan_Trip) VALUES 
