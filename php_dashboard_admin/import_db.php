@@ -4,18 +4,82 @@ $buat_db = "CREATE DATABASE IF NOT EXISTS rebon_adventure";
 mysqli_query($konek, $buat_db);
 mysqli_select_db($konek, "rebon_adventure");
 $katalog = "CREATE TABLE IF NOT EXISTS katalog (
-    Id_Trip VARCHAR(8) PRIMARY KEY,
-    Nama_Trip VARCHAR(50) NOT NULL,
-    Jadwal_Trip DATE,
-    Itinerary TEXT,
-    Meeting_Point TEXT,
-    Harga_Trip INT,
-    Kapasitas_Peserta INT DEFAULT 0,
-    Sisa_Kuota INT DEFAULT 0,
-    Tujuan_Destinasi VARCHAR(50),
-    Fasilitas_Trip TEXT,
-    Catatan_Trip TEXT
+    id_katalog INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    judul VARCHAR(100) NOT NULL,
+    gambar VARCHAR(100) NOT NULL,
+    deskripsi TEXT NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
+$trip = "CREATE TABLE IF NOT EXIST trip(
+    id_trip INT AUTO_INCREMENT PRIMARY KEY,
+    tujuan VARCHAR(50) NOT NULL,
+    tgl_pulang DATE NOT NULL,
+    tgl_berangkat DATE NOT NULL,
+    harga INT NOT NULL,
+    kuota INT NOT NULL,
+    catatan TEXT
+)";
+$itenerary = "CREATE TABLE IF NOT EXIST itenerary(
+    id_itenerary INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    mulai TIME NOT NULL,
+    selesai TIME NOT NULL,
+    kegiatan VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
+)";
+$meetpoint = "CREATE TABLE IF NOT EXIST meetpoint(
+    id_meetoint INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    waktu TIME NOT NULL,
+    kota VARCHAR(50) NOT NULL,
+    daerah VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
+)";
+$fasilitas = "CREATE TABLE IF NOT EXIST fasilitas(
+    id_fasilitas INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    fasilitas VARCHAR(100) NOT NULL,
+    jenis VARCHAR(20) NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
+)";
+$booking = "CREATE TABLE IF NOT EXIST booking(
+    id_booking INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    id_peserta INT,
+    tgl_booking TIME NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE,
+    FOREIGN KEY (id_peserta) REFERENCES peserta(id_peserta) ON DELETE CASCADE
+)";
+$payment = "CREATE TABLE IF NOT EXIST payment(
+    id_payment INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
+    id_booking INT,
+    tgl_bayar TIME NOT NULL,
+    nominal INT NOT NULL,
+    bukti_bayar VARCHAR(100) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE,
+    FOREIGN KEY (id_booking) REFERENCES booking(id_booking) ON DELETE CASCADE
+)";
+$peserta = "CREATE TABLE IF NOT EXIST peserta(
+    id_peserta INT AUTO_INCREMENT PRIMARY KEY,
+    id_akun INT,
+    nama VARCHAR(100) NOT NULL,
+    no_hp VARCHAR(20) NOT NULL,
+    tgl_lahir DATE NOT NULL,
+    alamat VARCHAR(100) NOT NULL,
+    riwayat VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
+)";
+$akun = "CREATE TABLE IF NOT EXIST akun(
+    id_akun INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(10) NOT NULL,
+)";
+
 mysqli_query($konek, $katalog);
 $insert_katalog = "INSERT INTO katalog (Id_Trip, Nama_Trip, Jadwal_Trip, Tujuan_Destinasi, Itinerary, Meeting_Point, Harga_Trip, Fasilitas_Trip, Kapasitas_Peserta, Sisa_Kuota, Catatan_Trip) VALUES 
 ('TR000001', 'GN. Ciremai', '2025-09-25', 'Gunung Ciremai', 'pukul 10.00 start, 13.00 istirahat', 'Lohbener, Indramayu', 200000, 'Transportasi PP Full Tol', 10, 7, 'Harap membawa peralatan tidur'),
