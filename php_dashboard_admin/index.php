@@ -6,7 +6,8 @@ if (!isset($_SESSION["login"])) {
     exit;
 }
 require 'konek.php';
-$katalog = mysqli_query($konek, "SELECT * FROM katalog");
+require 'fungsi.php';
+/* $katalog = mysqli_query($konek, "SELECT * FROM katalog"); */
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +51,7 @@ $katalog = mysqli_query($konek, "SELECT * FROM katalog");
     $menu = $_GET['menu'];
     /*var_dump($menu);
     die();*/
-    $hasil = mysqli_query($konek, "SELECT * FROM $menu");
+    $hasil = kueri("SELECT * FROM $menu");
     if($menu == "katalog"): ?>
       <table cellspacing = 0>
       <tr>
@@ -66,7 +67,7 @@ $katalog = mysqli_query($konek, "SELECT * FROM katalog");
       <?php
         if(mysqli_num_rows($hasil)){
           $nomer = 1;
-          while($row=mysqli_fetch_assoc($hasil)){
+          while($row=ambil($hasil)){
             echo "<tr>";
             echo "<td>" . $nomer . "</td>";
             echo "<td>" . $row['Id_Trip'] . "</td>";
@@ -98,22 +99,30 @@ $katalog = mysqli_query($konek, "SELECT * FROM katalog");
     <?php
     if(mysqli_num_rows($hasil)){
       $nomer = 1;
-      while($row = mysqli_fetch_assoc($hasil)){
-        $id_katalog = $row["Id_Katalog"];
-        $id_pelanggan = $row["Id_Pelanggan"];
-        $data = mysqli_query($konek, "SELECT Tujuan_Destinasi,Harga_Trip FROM katalog WHERE Id_Trip ='$id_katalog'");
-        $ambil = mysqli_fetch_assoc($data);
+      while($row = ambil($hasil)){
+        $id = $row['Id_Booking'];
+        $data = kueri("SELECT 
+        k.Tujuan_Destinasi,
+        k.Harga_Trip,
+        d.Nama_Lengkap,
+        d.Nomor_HP_No_Darurat
+        FROM booking b 
+        JOIN katalog k
+        ON b.Id_Katalog = k.Id_Trip
+        JOIN data_pelanggan d
+        ON b.Id_Pelanggan = d.Id_Pelanggan
+        WHERE Id_Booking = '$id'");
+        
+        $ambil = ambil($data);
         $tujuan = $ambil['Tujuan_Destinasi'];
         $harga = $ambil['Harga_Trip'];
-                $id_katalog = $row["Id_Katalog"];
-        $data = mysqli_query($konek, "SELECT Nama_Lengkap,Nomor_HP_No_Darurat FROM data_pelanggan WHERE Id_Pelanggan ='$id_pelanggan'");
-        $ambil = mysqli_fetch_assoc($data);
+        
         $nama = $ambil['Nama_Lengkap'];
         $nope = $ambil['Nomor_HP_No_Darurat'];
         
         echo "<tr>";
         echo "<td>" . $nomer . "</td>";
-        echo "<td>" . $row['Id_Booking'] . "</td>";
+        echo "<td>" . $id . "</td>";
         echo "<td>" . $tujuan . "</td>";
         echo "<td>" . $harga . "</td>";
         echo "<td>" . $nama . "</td>";
