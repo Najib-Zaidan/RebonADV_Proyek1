@@ -1,0 +1,216 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #e7e2c8;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #f4f0e5;
+}
+
+.logo img {
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+nav .active2 {
+  color: #6b3df5;
+}
+
+.login {
+  background: #6b3df5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* SECTION BACKGROUND */
+.form-section {
+  background: linear-gradient(135deg, #4e2bbf, #8b6cf6);
+  padding: 80px 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* CARD FORM */
+.form-container {
+  background: #e9e4c7;
+  padding: 40px;
+  border-radius: 15px;
+  width: 420px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* JUDUL */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* FORM */
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* INPUT & SELECT */
+.form-container input,
+.form-container select {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #cfc7ea;
+  font-size: 14px;
+  outline: none;
+}
+
+/* FOCUS EFFECT */
+.form-container input:focus,
+.form-container select:focus {
+  border: 2px solid #6b3df5;
+  background: #e6e0ff;
+}
+
+/* TANGGAL LAHIR */
+
+.date-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.date-wrapper label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.date-group {
+  display: flex;
+  gap: 10px;
+}
+
+.date-group p {
+  font-size: 14px;
+  min-width: 110px;
+}
+
+.date-group input {
+  width: 100%;
+  text-align: center;
+}
+
+/* BUTTON */
+.form-container button {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #4e2bbf;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* HOVER BUTTON */
+.form-container button:hover {
+  background: #6b3df5;
+}
+
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
