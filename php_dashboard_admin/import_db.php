@@ -87,17 +87,29 @@ $private = "CREATE TABLE IF NOT EXIST private(
     id_akun INT,
     nama VARCHAR(100) NOT NULL,
     no_hp VARCHAR(20) NOT NULL,
+    tujuan VARCHAR(100) NOT NULL,
     tgl_berangkat DATE NOT NULL,
     tgl_pulang DATE NOT NULL,
     catatan TEXT,
     jumlah_peserta INT NOT NULL,
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";
+$member = "CREATE TABLE IF NOT EXIST member(
+    id_member INT AUTO_INCREMENT PRIMARY KEY,
+    id_private INT,
+    nama VARCHAR(100) NOT NULL,
+    tgl_lahir DATE NOT NULL,
+    alamat VARCHAR(100) NOT NULL,
+    riwayat VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_private) REFERENCES private(id_private) ON DELETE CASCADE
+)";
+
 mysqli_query($konek, $trip);
 mysqli_query($konek, $katalog);
 mysqli_query($konek, $akun);
 mysqli_query($konek, $peserta);
 mysqli_query($konek, $private);
+mysqli_query($konek, $member);
 mysqli_query($konek, $gambar);
 mysqli_query($konek, $itenerary);
 mysqli_query($konek, $meetpoint);
@@ -111,11 +123,38 @@ $insert_trip = "INSERT INTO trip (id_trip, tujuan, tgl_berangkat, tgl_pulang, ha
 ('', 'Gunung Slamet', '2026-04-05', '2026-04-05', 350000, 10, 'Harap Membawa Perlengkapan Memasak'),
 ('', 'Gunung Prau', '2026-04-01', '2026-04-02', 200000, 25, ''),
 ('', 'Gunung Lawu', '2026-04-10', '2026-04-12', 720000, 15, ''),
-('', 'Gunung Merapi', '2026-04-07', '2026-04-07', 400000, 45, 'Dilarang Membuang Sampah di kawah'),";
+('', 'Gunung Merapi', '2026-04-07', '2026-04-07', 400000, 45, 'Dilarang Membuang Sampah di kawah')";
 
 $insert_katalog = "INSERT INTO katalog (id_katalog, id_trip, deskripsi) VALUES 
-('', 1, 'Gunung Ciremai merupakan salah satu gunung dengan tinggi lebih dari 3000 Mdpl yang menawarkan pemandangan yang luar biasa ...'),
-";
+('', 1, 'Gunung Ciremai memiliki tinggi lebih dari 3000 Mdpl dan menawarkan pemandangan yang luar biasa ...'),
+('', 2, 'Gunung Slamet merupakan salah satu gunung dengan pemandangan yang asri di Jawa Tengah ...'),
+('', 3, 'Gunung Prau berada di Dieng, Wonosobo, gunung ini memiliki tinggi lebih 2500 Mdpl ...'),
+('', 4, 'Gunung Lawu berada di Jawa Timur dan menjadi gunung paling favorit untuk didaki ...'),
+('', 5, 'Gunung Merapi merupakan gunung yang sudah lama menjadi primadona bagi para pendaki ...')";
+
+$insert_akun = "INSERT INTO akun (id_akun, username, password, role) VALUES 
+('', 'admin', 'admin', 'admin'),
+('', '123', '123', 'admin'),
+('', 'user', 'user', 'user'),
+('', '123', '123', 'user'),
+('', 'radza', 'radza', 'user'),
+('', 'orang', 'orang', 'user'),
+('', 'bot', 'bot', 'admin')";
+
+$insert_peserta = "INSERT INTO peserta (id_peserta, id_akun, nama, no_hp, tgl_lahir, alamat, riwayat) VALUES 
+('', 3, 'najib', '0896', '2006-02-12', 'Cirebon Kota', ''),
+('', 5, 'yayat', '0831', '2007-05-01', 'Kecamatan Kroya', ''),
+('', 5, 'angga', '0858', '2004-03-17', 'Desa Bunder', 'Maag'),
+('', 6, 'dai', '0878', '2005-07-21', 'Kecamatan Indramayu', 'Alergi dingin'),
+('', 7, 'aryadi', '0821', '2009-08-17', 'Kabupaten Cirebon', 'Tulang geser')";
+
+$insert_private = "INSERT INTO private (id_private, id_akun, nama, no_hp, tujuan, tgl_berangkat, tgl_pulang, catatan, jumlah_peserta) VALUES 
+('', 6, 'gilang', '0896', 'Gunung Prau', '2026-02-12', '2026-02-14', '', 3),
+('', 6, 'rohman', '0831', 'Gunung Slamet', '2027-05-01', '2027-05-02', 'Menggunakan Mobil Toyota Hiace', 2),
+('', 7, 'adinda', '0858', 'Gunung Semeru', '2025-03-17', '2025-03-17', '', 4),
+('', 5, 'sintia', '0878', 'Gunung Gede', '2025-07-21', '2025-07-22', 'Makan di RM Cita Rasa', 2),
+('', 5, 'wildan', '0821', 'Gunung Sumbing', '2026-03-17', '2026-03-17', 'Berangkat via Full Tol', 3)";
+
 
 mysqli_query($konek, $katalog);
 $insert_katalog = "INSERT INTO katalog (Id_Trip, Nama_Trip, Jadwal_Trip, Tujuan_Destinasi, Itinerary, Meeting_Point, Harga_Trip, Fasilitas_Trip, Kapasitas_Peserta, Sisa_Kuota, Catatan_Trip) VALUES 
