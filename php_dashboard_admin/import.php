@@ -8,7 +8,7 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$trip = "CREATE TABLE IF NOT EXIST trip(
+$trip = "CREATE TABLE IF NOT EXISTS trip (
     id_trip INT AUTO_INCREMENT PRIMARY KEY,
     tujuan VARCHAR(50) NOT NULL,
     tgl_berangkat DATE NOT NULL,
@@ -17,13 +17,13 @@ $trip = "CREATE TABLE IF NOT EXIST trip(
     kuota INT NOT NULL,
     catatan TEXT
 )";
-$gambar = "CREATE TABLE IF NOT EXIST gambar(
+$gambar = "CREATE TABLE IF NOT EXISTS gambar(
     id_gambar INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     nama_file VARCHAR(100) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$itenerary = "CREATE TABLE IF NOT EXIST itenerary(
+$itenerary = "CREATE TABLE IF NOT EXISTS itenerary(
     id_itenerary INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     mulai TIME NOT NULL,
@@ -31,7 +31,7 @@ $itenerary = "CREATE TABLE IF NOT EXIST itenerary(
     kegiatan VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$meetpoint = "CREATE TABLE IF NOT EXIST meetpoint(
+$meetpoint = "CREATE TABLE IF NOT EXISTS meetpoint(
     id_meetoint INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     waktu TIME NOT NULL,
@@ -39,14 +39,14 @@ $meetpoint = "CREATE TABLE IF NOT EXIST meetpoint(
     daerah VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$fasilitas = "CREATE TABLE IF NOT EXIST fasilitas(
+$fasilitas = "CREATE TABLE IF NOT EXISTS fasilitas(
     id_fasilitas INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     fasilitas VARCHAR(100) NOT NULL,
     jenis VARCHAR(20) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$booking = "CREATE TABLE IF NOT EXIST booking(
+$booking = "CREATE TABLE IF NOT EXISTS booking(
     id_booking INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     id_peserta INT,
@@ -55,7 +55,7 @@ $booking = "CREATE TABLE IF NOT EXIST booking(
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE,
     FOREIGN KEY (id_peserta) REFERENCES peserta(id_peserta) ON DELETE CASCADE
 )";
-$payment = "CREATE TABLE IF NOT EXIST payment(
+$payment = "CREATE TABLE IF NOT EXISTS payment(
     id_payment INT AUTO_INCREMENT PRIMARY KEY,
     id_booking INT,
     tgl_bayar TIME NOT NULL,
@@ -64,7 +64,7 @@ $payment = "CREATE TABLE IF NOT EXIST payment(
     status VARCHAR(30) NOT NULL,
     FOREIGN KEY (id_booking) REFERENCES booking(id_booking) ON DELETE CASCADE
 )";
-$peserta = "CREATE TABLE IF NOT EXIST peserta(
+$peserta = "CREATE TABLE IF NOT EXISTS peserta(
     id_peserta INT AUTO_INCREMENT PRIMARY KEY,
     id_akun INT,
     nama VARCHAR(100) NOT NULL,
@@ -74,13 +74,13 @@ $peserta = "CREATE TABLE IF NOT EXIST peserta(
     riwayat VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";
-$akun = "CREATE TABLE IF NOT EXIST akun(
+$akun = "CREATE TABLE IF NOT EXISTS akun(
     id_akun INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL,
     role VARCHAR(10) NOT NULL,
 )";
-$private = "CREATE TABLE IF NOT EXIST private(
+$private = "CREATE TABLE IF NOT EXISTS private(
     id_private INT AUTO_INCREMENT PRIMARY KEY,
     id_akun INT,
     nama VARCHAR(100) NOT NULL,
@@ -92,7 +92,7 @@ $private = "CREATE TABLE IF NOT EXIST private(
     jumlah_peserta INT NOT NULL,
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";
-$member = "CREATE TABLE IF NOT EXIST member(
+$member = "CREATE TABLE IF NOT EXISTS member(
     id_member INT AUTO_INCREMENT PRIMARY KEY,
     id_private INT,
     nama VARCHAR(100) NOT NULL,
