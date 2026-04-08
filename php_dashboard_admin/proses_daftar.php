@@ -3,10 +3,10 @@ session_start();
 require "konek.php";
 
 // CEK LOGIN
-if (!isset($_SESSION['username'])) {
-    header("Location: login_user.html");
-    exit;
-}
+// if (!isset($_SESSION['username'])) {
+//     header("Location: login_user.html");
+//     exit;
+// }
 
 $nama = $_POST['nama'];
 $dd = $_POST['dd'];
@@ -24,12 +24,16 @@ $query = "INSERT INTO pendaftaran
 VALUES 
 ('$nama','$tanggal','$alamat','$telepon','$penyakit','$detail')";
 
-if (mysqli_query($conn, $query)) {
+// var_dump($_POST);
+// die();
+
+
+if (mysqli_query($konek, $query)) {
     echo "<script>
             alert('Data berhasil disimpan!');
             window.location='form.php';
           </script>";
 } else {
-    echo "Error: " . mysqli_error($conn);
+    echo "Error: " . mysqli_error($konek);
 }
 ?>

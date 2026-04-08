@@ -28,7 +28,11 @@
       <div class="form-container">
         <h2>FORMULIR PENDAFTARAN</h2>
 
-        <form id="formPendaftaran" action="pros.php" method="POST">
+        <form
+          id="formPendaftaran"
+          action="php_dashboard_admin/proses_daftar.php"
+          method="POST"
+        >
           <input
             type="text"
             name="nama"
@@ -64,7 +68,12 @@
             <option>Tidak Ada</option>
           </select>
 
-          <input type="text" id="detail" placeholder="Detail Penyakit" />
+          <input
+            type="text"
+            name="detail"
+            id="detail"
+            placeholder="Detail Penyakit"
+          />
 
           <button type="submit">Pesan sekarang</button>
         </form>
@@ -127,6 +136,6 @@
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
 
-    <script src="form_user_op.js"></script>
+    <!-- <script src="form_user_op.js"></script> -->
   </body>
 </html>
