@@ -1,5 +1,5 @@
 <?php
-$konek = mysqli_connect("localhost", "root", "", "rebon_adventure");
+$konek = mysqli_connect("127.0.0.1", "root", "", "rebon_adventure");
 var_dump($konek);  
 if($konek){
     echo "koneksi berhasilll";
