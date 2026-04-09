@@ -28,13 +28,18 @@
       <div class="login-box">
         <h2>LOGIN USER</h2>
 
-        <form action="proses_login.php" method="post" id="formLogin">
+        <form
+          action="php_dashboard_admin/proses_login.php"
+          method="post"
+          id="formLogin"
+        >
           <label>Username</label>
           <input
             type="text"
             name="username"
             id="username"
             placeholder="Masukkan username"
+            required
           />
 
           <label>Password</label>
@@ -43,12 +48,19 @@
             name="password"
             id="password"
             placeholder="Masukkan password"
+            required
           />
+
+          <!-- hidden redirect -->
+          <input type="hidden" name="redirect" id="redirect" />
 
           <button type="submit">Login</button>
 
           <p class="forgot">Lupa password?</p>
-          <p class="register">Belum punya akun? <span>Daftar di sini</span></p>
+          <p class="register">
+            Belum punya akun?
+            <a href="daftar_user.html"><span>Daftar di sini</span></a>
+          </p>
         </form>
       </div>
     </section>
@@ -108,6 +120,5 @@
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
-    <script src="login_user.js"></script>
   </body>
 </html>

@@ -3,7 +3,7 @@ session_start();
 
 // CEK LOGIN
 if (!isset($_SESSION['username'])) {
-    header("Location: login_user.html");
+    header("Location: ../login_user.html");
     exit;
 }
 ?>

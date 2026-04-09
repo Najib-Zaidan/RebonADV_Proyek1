@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="form_user_op.css" />
-    <title>formulir registrasi user</title>
+    <link rel="stylesheet" href="login_user.css" />
+    <title>login user</title>
   </head>
   <body>
     <header class="navbar">
@@ -24,58 +24,39 @@
       </nav>
     </header>
 
-    <section class="form-section">
-      <div class="form-container">
-        <h2>FORMULIR PENDAFTARAN</h2>
+    <section class="login-section">
+      <div class="login-box">
+        <h2>DAFTAR USER</h2>
 
         <form
-          id="formPendaftaran"
-          action="php_dashboard_admin/proses_form.php"
-          method="POST"
+          action="php_dashboard_admin/proses_daftar_user.php"
+          method="post"
+          id="formDaftar"
         >
+          <label>Username</label>
           <input
             type="text"
-            name="nama"
-            id="nama"
-            placeholder="Nama Lengkap *"
+            name="username"
+            id="username"
+            placeholder="Daftarkan username"
+            required
           />
 
-          <div class="date-wrapper">
-            <label>Tanggal Lahir *</label>
-            <div class="date-group">
-              <input type="text" name="dd" id="dd" placeholder="DD" />
-              <input type="text" name="mm" id="mm" placeholder="MM" />
-              <input type="text" name="yyyy" id="yyyy" placeholder="YYYY" />
-            </div>
-          </div>
-
+          <label>Password</label>
           <input
-            type="text"
-            name="alamat"
-            id="alamat"
-            placeholder="Alamat Lengkap *"
-          />
-          <input
-            type="text"
-            name="telepon"
-            id="telepon"
-            placeholder="Nomor Telepon *"
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Buat password"
+            required
           />
 
-          <select name="penyakit" id="penyakit">
-            <option value="">Riwayat Penyakit *</option>
-            <option>Ada</option>
-            <option>Tidak Ada</option>
-          </select>
+          <button type="submit">Daftar</button>
 
-          <input
-            type="text"
-            name="detail"
-            id="detail"
-            placeholder="Detail Penyakit"
-          />
-
-          <button type="submit">Pesan sekarang</button>
+          <p class="forgot">Lupa password?</p>
+          <p class="register">
+            Sudah punya akun? <a href="login_user.html"><span>Masuk</span></a>
+          </p>
         </form>
       </div>
     </section>
@@ -135,5 +116,6 @@
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
+    <script src="login_user.js"></script>
   </body>
 </html>
