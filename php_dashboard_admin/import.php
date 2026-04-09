@@ -5,6 +5,7 @@ mysqli_query($konek, $buat_db);
 mysqli_select_db($konek, "rebon_adventure");
 $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     id_katalog INT AUTO_INCREMENT PRIMARY KEY,
+    id_trip INT,
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
@@ -17,13 +18,13 @@ $trip = "CREATE TABLE IF NOT EXISTS trip (
     kuota INT NOT NULL,
     catatan TEXT
 )";
-$gambar = "CREATE TABLE IF NOT EXISTS gambar(
+$gambar = "CREATE TABLE IF NOT EXISTS gambar (
     id_gambar INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     nama_file VARCHAR(100) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$itenerary = "CREATE TABLE IF NOT EXISTS itenerary(
+$itenerary = "CREATE TABLE IF NOT EXISTS itenerary (
     id_itenerary INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     mulai TIME NOT NULL,
@@ -31,7 +32,7 @@ $itenerary = "CREATE TABLE IF NOT EXISTS itenerary(
     kegiatan VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$meetpoint = "CREATE TABLE IF NOT EXISTS meetpoint(
+$meetpoint = "CREATE TABLE IF NOT EXISTS meetpoint (
     id_meetoint INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     waktu TIME NOT NULL,
@@ -39,32 +40,32 @@ $meetpoint = "CREATE TABLE IF NOT EXISTS meetpoint(
     daerah VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$fasilitas = "CREATE TABLE IF NOT EXISTS fasilitas(
+$fasilitas = "CREATE TABLE IF NOT EXISTS fasilitas (
     id_fasilitas INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     fasilitas VARCHAR(100) NOT NULL,
     jenis VARCHAR(20) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$booking = "CREATE TABLE IF NOT EXISTS booking(
+$booking = "CREATE TABLE IF NOT EXISTS booking (
     id_booking INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     id_peserta INT,
-    tgl_booking TIME NOT NULL,
+    tgl_booking DATETIME NOT NULL,
     status VARCHAR(20) NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE,
     FOREIGN KEY (id_peserta) REFERENCES peserta(id_peserta) ON DELETE CASCADE
 )";
-$payment = "CREATE TABLE IF NOT EXISTS payment(
+$payment = "CREATE TABLE IF NOT EXISTS payment (
     id_payment INT AUTO_INCREMENT PRIMARY KEY,
     id_booking INT,
-    tgl_bayar TIME NOT NULL,
+    tgl_bayar DATETIME NOT NULL,
     nominal INT NOT NULL,
     bukti_bayar VARCHAR(100) NOT NULL,
     status VARCHAR(30) NOT NULL,
     FOREIGN KEY (id_booking) REFERENCES booking(id_booking) ON DELETE CASCADE
 )";
-$peserta = "CREATE TABLE IF NOT EXISTS peserta(
+$peserta = "CREATE TABLE IF NOT EXISTS peserta (
     id_peserta INT AUTO_INCREMENT PRIMARY KEY,
     id_akun INT,
     nama VARCHAR(100) NOT NULL,
@@ -74,13 +75,13 @@ $peserta = "CREATE TABLE IF NOT EXISTS peserta(
     riwayat VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";
-$akun = "CREATE TABLE IF NOT EXISTS akun(
+$akun = "CREATE TABLE IF NOT EXISTS akun (
     id_akun INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    role VARCHAR(10) NOT NULL,
+    role VARCHAR(10) NOT NULL
 )";
-$private = "CREATE TABLE IF NOT EXISTS private(
+$private = "CREATE TABLE IF NOT EXISTS private (
     id_private INT AUTO_INCREMENT PRIMARY KEY,
     id_akun INT,
     nama VARCHAR(100) NOT NULL,
@@ -92,7 +93,7 @@ $private = "CREATE TABLE IF NOT EXISTS private(
     jumlah_peserta INT NOT NULL,
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";
-$member = "CREATE TABLE IF NOT EXISTS member(
+$member = "CREATE TABLE IF NOT EXISTS member (
     id_member INT AUTO_INCREMENT PRIMARY KEY,
     id_private INT,
     nama VARCHAR(100) NOT NULL,
@@ -158,7 +159,7 @@ $insert_member = "INSERT INTO member (id_private, nama, tgl_lahir, alamat, riway
 (2, 'yayat', '2007-05-01', 'Kecamatan Kroya', ''),
 (3, 'angga', '2004-03-17', 'Desa Bunder', 'Maag'),
 (4, 'dai', '2005-07-21', 'Kecamatan Indramayu', 'Alergi dingin'),
-(5, 'aryadi', '2009-08-17', 'Kabupaten Cirebon', 'Tulang geser')
+(5, 'aryadi', '2009-08-17', 'Kabupaten Cirebon', 'Tulang geser'),
 (1, 'Budi', '1990-05-12', 'Kabupaten Indramayu', ''),
 (1, 'Siti', '1985-11-20', 'Kecamatan Sliyeg', 'Alergi debu'),
 (2, 'Andi', '1998-02-28', 'Cirebon', 'Pernah operasi'),
@@ -243,7 +244,7 @@ VALUES
 (3, 'P3K & Safety Kit', 'include'),
 (3, 'Makan di Luar Program', 'exclude'),
 (3, 'Penginapan Hotel', 'exclude'),
-(3, 'Tips Guide', 'exclude')
+(3, 'Tips Guide', 'exclude'),
 
 (4, 'Sewa Jeep 4x4', 'include'),
 (4, 'Tiket Masuk Taman Nasional', 'include'),
@@ -261,36 +262,36 @@ VALUES
 
 $insert_booking = "INSERT INTO booking (id_trip, id_peserta, tgl_booking, status)
 VALUES 
-(1, 3, '2026-04-01', 'Lunas'),
-(1, 1, '2026-04-02', 'DP'),
-(1, 5, '2026-04-03', 'Belum Bayar'),
-(2, 2, '2026-04-01', 'Lunas'),
-(2, 4, '2026-04-04', 'Dibatalkan'),
-(2, 1, '2026-04-05', 'DP'),
-(3, 5, '2026-04-02', 'Lunas'),
-(3, 3, '2026-04-03', 'Belum Bayar'),
-(3, 2, '2026-04-06', 'DP'),
-(4, 4, '2026-04-01', 'Dibatalkan'),
-(4, 1, '2026-04-04', 'Lunas'),
-(4, 5, '2026-04-05', 'Belum Bayar'),
-(5, 2, '2026-04-02', 'DP'),
-(5, 4, '2026-04-03', 'Lunas'),
-(5, 3, '2026-04-06', 'Dibatalkan')";
+(1, 3, '2026-04-01 07:00:00', 'Lunas'),
+(1, 1, '2026-04-02 09:00:00', 'DP'),
+(1, 5, '2026-04-03 07:40:00', 'Belum Bayar'),
+(2, 2, '2026-04-01 21:10:00', 'Lunas'),
+(2, 4, '2026-04-04 17:50:00', 'Dibatalkan'),
+(2, 1, '2026-04-05 07:20:00', 'DP'),
+(3, 5, '2026-04-02 20:30:00', 'Lunas'),
+(3, 3, '2026-04-03 13:20:00', 'Belum Bayar'),
+(3, 2, '2026-04-06 17:10:00', 'DP'),
+(4, 4, '2026-04-01 07:50:00', 'Dibatalkan'),
+(4, 1, '2026-04-04 23:50:00', 'Lunas'),
+(4, 5, '2026-04-05 03:10:00', 'Belum Bayar'),
+(5, 2, '2026-04-02 05:00:00', 'DP'),
+(5, 4, '2026-04-03 06:00:00', 'Lunas'),
+(5, 3, '2026-04-06 10:00:00', 'Dibatalkan')";
 
 $insert_payment = "INSERT INTO payment (id_booking, tgl_bayar, nominal, bukti_bayar, status)
 VALUES 
-(1, '2026-04-02', 500000, '', 'Diverifikasi'),
-(2, '2026-04-03', 250000, '', 'Diverifikasi'),
-(3, '2026-04-03', 150000, '', 'Belum Diverifikasi'),
-(4, '2026-04-04', 500000, '', 'Diverifikasi'),
-(6, '2026-04-05', 350000, '', 'Diverifikasi'),
-(7, '2026-04-05', 500000, '', 'Diverifikasi'),
-(8, '2026-04-06', 200000, '', 'Belum Diverifikasi'),
-(9, '2026-04-06', 300000, '', 'Diverifikasi'),
-(11, '2026-04-07', 500000, '', 'Diverifikasi'),
-(12, '2026-04-07', 450000, '', 'Diverifikasi'),
-(13, '2026-04-08', 250000, '', 'Belum Diverifikasi'),
-(14, '2026-04-08', 500000, '', 'Diverifikasi')";
+(1, '2026-04-02 09:00:00', 500000, '', 'Diverifikasi'),
+(2, '2026-04-03 21:00:00', 250000, '', 'Diverifikasi'),
+(3, '2026-04-03 17:00:00', 150000, '', 'Belum Diverifikasi'),
+(4, '2026-04-04 13:10:00', 500000, '', 'Diverifikasi'),
+(6, '2026-04-05 05:00:00', 350000, '', 'Diverifikasi'),
+(7, '2026-04-05 08:30:00', 500000, '', 'Diverifikasi'),
+(8, '2026-04-06 11:00:00', 200000, '', 'Belum Diverifikasi'),
+(9, '2026-04-06 12:20:00', 300000, '', 'Diverifikasi'),
+(11, '2026-04-07 14:00:00', 500000, '', 'Diverifikasi'),
+(12, '2026-04-07 16:00:00', 450000, '', 'Diverifikasi'),
+(13, '2026-04-08 19:30:00', 250000, '', 'Belum Diverifikasi'),
+(14, '2026-04-08 07:20:00', 500000, '', 'Diverifikasi')";
 
 mysqli_query($konek, $insert_trip);
 mysqli_query($konek, $insert_katalog);
