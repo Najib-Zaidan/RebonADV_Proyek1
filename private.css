@@ -175,6 +175,7 @@ nav .active3 {
 }
 .cta-row a {
   text-decoration: none;
+  color: #e9d9ff;
 }
 .btn-whatsapp {
   display: inline-flex;
@@ -189,6 +190,7 @@ nav .active3 {
   box-shadow: 0 6px 20px rgba(64, 0, 160, 0.25);
   cursor: pointer;
   font-size: 16px;
+  text-decoration: none;
   
 }
 .wa-icon {
@@ -278,4 +280,3 @@ footer {
   font-weight: bold;
   color: #333;
 }
-

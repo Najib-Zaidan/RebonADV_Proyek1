@@ -1,144 +1,116 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Private Trip</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Private Trip</title>
 
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- File CSS -->
-    <link rel="stylesheet" href="private.css" />
-  </head>
-  <body>
-    <header class="navbar">
-      <div class="logo">
-        <img
-          src="../gambar/REBON LOGO GRADIENT presisi.png"
-          alt="Rebon Adventure"
-        />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="private.css" />
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">
+    <img src="../gambar/REBON LOGO GRADIENT presisi.png" alt="Rebon Adventure" />
+  </div>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="Open_Trip.html">Open</a>
+    <a href="private.html" class="active3">Private</a>
+    <a href="tentangkami.html">Tentang Kami</a>
+    <button class="login">Masuk</button>
+  </nav>
+</header>
+
+<main class="hero-area">
+  <div class="hero-inner">
+
+    <!-- KIRI (GAMBAR) -->
+    <div class="card-image">
+      <div class="image-wrap">
+        <img src="../gambar/123.jpg" alt="Destinasi" />
+        <h1 class="hero-title">Rencanakan<br>Trip Anda</h1>
       </div>
+    </div>
 
-      <nav>
-        <a href="home.html" class="active1">Home</a>
-        <a href="Open_Trip.html" class="active2">Open</a>
-        <a href="private.html" class="active3">Private</a>
-        <a href="tentangkami.html" class="active4">Tentang Kami</a>
-        <button class="login" class="active5">Masuk</button>
-      </nav>
-    </header>
+    <!-- KANAN (FORM) -->
+    <aside class="card-form">
+      <form action="formulir_private.html" class="trip-form">
 
-    <main class="hero-area">
-      <div class="hero-inner">
-        <!-- left: image card -->
-        <div class="card-image">
-          <div class="image-wrap">
-            <img src="../gambar/123.jpg" alt="Rinjani / destinasi" />
-            <h1 class="hero-title">Rencanakan<br />Trip Anda</h1>
-          </div>
+        <input type="text" placeholder="Nama Lengkap" required />
+        <input type="tel" placeholder="Nomor Telepon" required />
+        <input type="text" placeholder="Lokasi Destinasi" required />
+
+        <div class="row">
+          <p>tanggal masuk</p>
+          <input type="date" class="half" required />
+          <input type="date" id="half" required />
         </div>
 
-        <!-- right: form -->
-        <aside class="card-form">
-<<<<<<< HEAD
-          <form class="trip-form" action="#">
-            <input type="text" placeholder="Nama Lengkap" required />
-            <input type="tel" placeholder="Nomor Telepon" required />
-            <input type="text" placeholder="Lokasi Destinasi" required />
-=======
-          <form
-            class="trip-form"
-            action="#"
-           
-          >
-            <input type="text" placeholder="Nama Lengkap" />
-            <input type="tel" placeholder="Nomor Telepon"  />
-            <input type="text" placeholder="Lokasi Destinasi" />
->>>>>>> c26e4f80761776d2c3b8d2e862b700845c3fab7c
+        <textarea placeholder="Catatan Tambahan" rows="5"></textarea>
+        <input type="number" placeholder="Jumlah Peserta" min="1" required />
 
-            <div class="row">
-              <input type="date" class="half" placeholder="Pilih Tanggal" />
-              <input type="text" class="half" placeholder="Durasi Trip" />
-            </div>
-
-            <textarea placeholder="Catatan Tambahan" rows="5"></textarea>
-            <input type="number" placeholder="Jumlah Peserta" min="1" />
-
-            <div class="cta-row">
-<<<<<<< HEAD
-              <button class="btn-whatsapp" title="Pesan via WhatsApp">
-                <span class="📞"><i class="fab fa-whatsapp"></i></span>
-                <a href="formulir_private.html"> <span>Pesan Sekarang</span></a>
-=======
-              <a href = "formulir_private.html" class = "btn-whatsapp" title = "Pesan via WhatsApp" >
-                 <i class = "fab fa-whatsapp" ></i>
-                  <span> Pesan Sekarang </span> </a>   
->>>>>>> c26e4f80761776d2c3b8d2e862b700845c3fab7c
-              </button>
-            </div>
-          </form>
-        </aside>
-      </div>
-    </main>
-
-    <footer>
-      <div class="footer-content">
-        <div class="footer-column logo-col">
-          <img
-            src="../gambar/logo-rebon.png"
-            alt="Rebon Adventure Logo"
-            class="footer-logo-img"
-          />
+        <div class="cta-row">
+          <a href="formulir_private.html">
+          <button type="submit" class="btn-whatsapp">
+            <i class="fab fa-whatsapp"></i>
+            <span>Pesan Sekarang</span>
+            </a>
+          </button>
         </div>
 
-        <div class="footer-column">
-          <h4>KONTAK KAMI</h4>
-          <div class="contact-item">
-            <span class="icon">✉</span>
-            <p>rebonadventure@gmail.com</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📞</span>
-            <p>+62 812-3456-7890</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📍</span>
-            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
-          </div>
-        </div>
+      </form>
+    </aside>
 
-        <div class="footer-column">
-          <h4>LAYANAN KAMI</h4>
-          <ul>
-            <li>OPEN TRIP</li>
-            <li>PRIVATE TRIP</li>
-          </ul>
-        </div>
+  </div>
+</main>
 
-        <div class="footer-column">
-          <h4>INFORMASI</h4>
-          <ul>
-            <li>TENTANG KAMI</li>
-            <li>TRIP TERSEDIA</li>
-            <li>FAQ</li>
-          </ul>
+<footer>
+  <div class="footer-content">
 
-          <div class="social-section">
-            <h4>FOLLOW US ON</h4>
-            <div class="social-icons">
-              <img src="../gambar/fb-icon.png" alt="FB" />
-              <img src="../gambar/ig-icon.png" alt="IG" />
-              <img src="../gambar/tt-icon.png" alt="TK" />
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="footer-column logo-col">
+      <img src="../gambar/logo-rebon.png" class="footer-logo-img" />
+    </div>
 
-      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
-    </footer>
-  </body>
+    <div class="footer-column">
+      <h4>KONTAK KAMI</h4>
+      <div class="contact-item">✉ rebonadventure@gmail.com</div>
+      <div class="contact-item">📞 +62 812-3456-7890</div>
+      <div class="contact-item">📍 Cirebon, Indonesia</div>
+    </div>
+
+    <div class="footer-column">
+      <h4>LAYANAN KAMI</h4>
+      <ul>
+        <li>OPEN TRIP</li>
+        <li>PRIVATE TRIP</li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>INFORMASI</h4>
+      <ul>
+        <li>TENTANG KAMI</li>
+        <li>TRIP TERSEDIA</li>
+        <li>FAQ</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="copyright">
+    © 2026 REBON ADVENTURE
+  </div>
+</footer>
+
+</body>
 </html>
