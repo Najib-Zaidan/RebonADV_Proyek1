@@ -13,8 +13,8 @@ if (empty($username) || empty($password)) {
 $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
 // simpan ke tabel akun
-$query = "INSERT INTO akun (username, password)
-VALUES ('$username','$password_hash')";
+$query = "INSERT INTO akun (username, password, role)
+VALUES ('$username','$password','user')";
 
 if (mysqli_query($konek, $query)) {
     echo "<script>
