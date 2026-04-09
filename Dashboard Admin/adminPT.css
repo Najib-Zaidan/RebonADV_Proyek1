@@ -95,39 +95,3 @@ body {
 .header h1 {
   color: #321180;
 }
-
-/* Button */
-.btn {
-  background-color: #5a1ee6;
-  color: white;
-  border: none;
-  font-size: 20px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Card */
-.card-container {
-  display: flex;
-  gap: 20px;
-}
-
-.card {
-  width: 200px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.card img {
-  width: 100%;
-  display: block;
-}
-
-.card p {
-  padding: 10px;
-  text-align: center;
-  color: #321180;
-}
