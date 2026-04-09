@@ -19,7 +19,7 @@ VALUES ('$username','$password_hash')";
 if (mysqli_query($konek, $query)) {
     echo "<script>
             alert('Daftar berhasil!');
-            window.location='../login_user.html';
+            window.location='login_user.php';
           </script>";
 } else {
     echo "Gagal: " . mysqli_error($konek);

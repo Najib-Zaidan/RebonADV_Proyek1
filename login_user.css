@@ -37,7 +37,8 @@ nav .active2 {
   color: #6b3df5;
 }
 
-.login {
+.active5,
+.active6 {
   background: #6b3df5;
   color: white;
   border: none;

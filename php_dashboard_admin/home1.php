@@ -449,7 +449,7 @@ footer {
 
         <?php else: ?>
             <!-- JIKA BELUM LOGIN -->
-            <a href="../login_user.html">
+            <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
         <?php endif; ?>
@@ -478,11 +478,11 @@ footer {
     <section class="trip">
       <div class="trip-header">
         <h2>Trip Tersedia</h2>
-        <a href="Open_Trip.html">Lihat Selengkapnya →</a>
+        <a href="open_trip.php">Lihat Selengkapnya →</a>
       </div>
 
       <div class="trip-container">
-        <a href="ot_katalog.html">
+        <a href="ot_katalog.php">
           <div class="trip-card">
             <img src="../gambar/ciremai.jpeg" />
             <h3>GN. Ciremai</h3>
@@ -492,7 +492,7 @@ footer {
           </div>
         </a>
         <div class="trip-card">
-          <a href="ot_katalog.html">
+          <a href="ot_katalog.php">
             <img src="../gambar/prau.jpg" />
             <h3>GN. Prau</h3>
             <p>Via Patak Banteng</p>
@@ -502,7 +502,7 @@ footer {
         </div>
 
         <div class="trip-card">
-          <a href="ot_katalog.html">
+          <a href="ot_katalog.php">
             <img src="../gambar/sumbing.jpg" />
             <h3>GN. Sumbing</h3>
             <p>Via Garung</p>

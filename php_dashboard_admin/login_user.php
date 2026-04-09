@@ -1,27 +1,25 @@
 <?php
 session_start();
+$redirect = isset($_GET['redirect']) ? $_GET['redirect'] : 'home';
 ?>
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Open Trip</title>
+  <title>Home</title>
 
   <style>
-    * {
+   * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: linear-gradient(180deg, #5b2bbf, #8e74db);
+  background: #e7e2c8;
 }
-
-/* NAVBAR */
 
 .navbar {
   display: flex;
@@ -51,7 +49,8 @@ nav .active2 {
   color: #6b3df5;
 }
 
-.active5 {
+.active5,
+.active6 {
   background: #6b3df5;
   color: white;
   border: none;
@@ -60,83 +59,77 @@ nav .active2 {
   cursor: pointer;
 }
 
-/* GRID TRIP */
-
-.trip-container {
-  padding: 60px 80px;
-}
-
-.trip-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-}
-
-/* CARD */
-
-.card {
-  background: #f4f0e5;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-}
-
-.card-img {
-  position: relative;
-}
-
-.card-img img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.badge {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: #6b3df5;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-.card-body {
-  padding: 15px;
-}
-
-.title-row {
+.login-section {
+  height: 85vh;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470")
+      no-repeat center/cover;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-.seat {
+.login-box {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 35px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+}
+
+.login-box label {
+  display: block;
+  text-align: left;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.login-box button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #6b3df5;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-box button:hover {
+  background: #4e2bbf;
+}
+
+.forgot {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #6b3df5;
+  cursor: pointer;
+}
+
+.register {
+  margin-top: 5px;
   font-size: 12px;
 }
 
-.via {
-  font-size: 13px;
-  margin-bottom: 10px;
+.register span {
+  color: #6b3df5;
+  cursor: pointer;
 }
-
-.date {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.price {
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.price span {
-  font-size: 14px;
-  font-weight: normal;
-}
-
-/* FOOTER */
 
 footer {
   background-color: #fdfae6;
@@ -202,6 +195,7 @@ footer {
   height: auto;
   display: block;
 }
+
 .copyright {
   text-align: center;
   font-size: 12px;
@@ -210,15 +204,17 @@ footer {
   color: #333;
 }
 
-</style>
-<head>
+    </style>
+    
+<!doctype html>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="home.css" />
-    <title>Open Trip</title>
+    <link rel="stylesheet" href="login_user.css" />
+    <title>login user</title>
   </head>
   <body>
-    <!-- NAVBAR -->
     <header class="navbar">
       <div class="logo">
         <img
@@ -251,117 +247,35 @@ footer {
       </nav>
     </header>
 
-    <!-- OPEN TRIP -->
-    <section class="trip-container">
-      <div class="trip-grid">
-        <!-- CARD -->
-        <a href="ot_katalog.php">
-          <div class="card">
-            <div class="card-img">
-              <img src="../gambar/gunung.jpg" />
-              <span class="badge">1 Hari</span>
-            </div>
+    <section class="login-section">
+      <div class="login-box">
+        <h2>LOGIN USER</h2>
 
-            <div class="card-body">
-              <div class="title-row">
-                <h3>GN. Ciremai</h3>
-                <span class="seat">5 / 10 SEAT</span>
-              </div>
+        <form
+          action="proses_login.php"
+          method="post"
+          id="formLogin"
+        >
+        
+          <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
 
-              <p class="via">Via Apuy</p>
+        <label>Username</label><br>
+        <input type="text" name="username" required><br><br>
 
-              <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+          <label>Password</label><br>
+    <input type="password" name="password" required><br><br>
 
-              <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-            </div>
-          </div>
-        </a>
 
-        <!-- DUPLIKASI CARD -->
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
+          <button type="submit">Login</button>
 
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
+          <p class="forgot">Lupa password?</p>
+          <p class="register">
+            Belum punya akun?
+            <a href="daftar_user.php"><span>Daftar di sini</span></a>
+          </p>
+        </form>
       </div>
     </section>
-
-    <!-- FOOTER -->
 
     <footer>
       <div class="footer-content">
@@ -418,5 +332,10 @@ footer {
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      document.getElementById("redirect").value =
+        params.get("redirect") || "home";
+    </script>
   </body>
 </html>

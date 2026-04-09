@@ -383,7 +383,7 @@ footer {
 
         <?php else: ?>
             <!-- JIKA BELUM LOGIN -->
-            <a href="../login_user.html">
+            <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
         <?php endif; ?>
