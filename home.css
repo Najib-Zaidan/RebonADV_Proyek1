@@ -37,7 +37,7 @@ nav .active1 {
   color: #6b3df5;
 }
 
-.login {
+.active5 {
   background: #6b3df5;
   color: white;
   border: none;
@@ -50,7 +50,7 @@ nav .active1 {
 
 .hero {
   height: 600px;
-  background: url("gunung.jpg") center/cover no-repeat;
+  background: url("gambar/prau.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
   padding-left: 80px;
@@ -116,6 +116,10 @@ nav .active1 {
 
   display: flex;
   gap: 25px;
+}
+
+.trip-container a {
+  text-decoration: none;
 }
 
 .trip-card {
@@ -296,4 +300,107 @@ footer {
   margin-top: 20px;
   font-weight: bold;
   color: #333;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 20px 40px;
+  }
+
+  .hero {
+    padding-left: 40px;
+    height: 500px;
+  }
+
+  .trip {
+    padding: 40px;
+  }
+
+  .trip-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .private-trip {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .private-img img {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .galeri-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  /* NAVBAR */
+  .navbar {
+    flex-direction: column;
+    padding: 20px;
+    gap: 15px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  /* HERO */
+  .hero {
+    height: auto;
+    padding: 40px 20px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero-logo {
+    width: 150px;
+  }
+
+  /* TRIP */
+  .trip {
+    padding: 30px 20px;
+  }
+
+  .trip-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .trip-card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* PRIVATE */
+  .private-trip {
+    margin: 30px 20px;
+    padding: 20px;
+  }
+
+  /* GALERI */
+  .galeri {
+    padding: 30px 20px;
+  }
+
+  .galeri-container {
+    grid-template-columns: 1fr;
+  }
+
+  /* FOOTER */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
 }
