@@ -30,7 +30,7 @@ require 'fungsi.php';
   }
 </style>
 <body>
-    <h1>Selamat Datang, <?php echo $_SESSION['nama']; ?></h1>
+    <h1>Selamat Datang, <?php echo $_SESSION['username']; ?></h1>
     <p>Ini adalah halaman admin Rebon Adventure.</p>
     <a href="logout.php" onclick="return confirm('Yakin Ingin Keluar?')">Logout</a>
     <ul>
@@ -52,29 +52,49 @@ require 'fungsi.php';
     /*var_dump($menu);
     die();*/
     $hasil = kueri("SELECT * FROM $menu");
-    if($menu == "katalog"): ?>
+    if($menu == "katalog"): 
+    $hasil = kueri("SELECT * FROM trip")
+    ?>
       <table cellspacing = 0>
       <tr>
         <th>No.</th>
-        <th>Id Trip</th>
         <th>Destinasi</th>
         <th>Jadwal Berangkat</th>
+        <th>Durasi</th>
         <th>Titik Jemput</th>
         <th>Harga</th>
-        <th>Kapasitas Peserta</th>
         <th>Sisa Kuota</th>
       </tr>
       <?php
         if(mysqli_num_rows($hasil)){
           $nomer = 1;
           while($row=ambil($hasil)){
+            $id = $row['id_trip'];
+            $data = kueri("SELECT
+            (DATEDIFF(tgl_pulang, tgl_berangkat) + 1) durasi,
+            (t.kuota - COUNT(b.id_trip)) sisa
+            FROM trip t
+            JOIN booking b
+            ON t.id_trip = b.id_trip
+            WHERE t.id_trip = $id AND status != 'Dibatalkan'
+            ");
+            $ambil = ambil($data);
+            $durasi = $ambil['durasi'];
+            $sisa = $ambil['sisa'];
+            $data = kueri("SELECT 
+            m.kota 
+            FROM trip t 
+            JOIN meetpoint m 
+            ON t.id_trip = m.id_trip 
+            WHERE t.id_trip = $id");
+            
             echo "<tr>";
             echo "<td>" . $nomer . "</td>";
-            echo "<td>" . $row['Id_Trip'] . "</td>";
-            echo "<td>" . $row['Tujuan_Destinasi'] . "</td>";
-            echo "<td>" . $row['Jadwal_Trip'] . "</td>";
+            echo "<td>" . $row['tujuan'] . "</td>";
+            echo "<td>" . $row['tgl_berangkat'] . "</td>";
+            echo "<td>" . $durasi . "</td>";
             echo "<td>" . $row['Meeting_Point'] . "</td>";
-            echo "<td>" . $row['Harga_Trip'] . "</td>";
+            echo "<td>" . $row['harga'] . "</td>";
             echo "<td>" . $row['Kapasitas_Peserta'] . "</td>";
             echo "<td>" . $row['Sisa_Kuota'] . "</td>";
             echo "</tr>";
