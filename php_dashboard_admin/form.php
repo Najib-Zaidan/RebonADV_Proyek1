@@ -233,6 +233,7 @@ footer {
   color: #333;
 }
 
+
 </style>
 
 <!doctype html>
@@ -278,9 +279,7 @@ footer {
 
     <section class="form-section">
       <div class="form-container">
-        <h2>FORMULIR PENDAFTARAN</h2>
-
-        <p>Login sebagai: <b><?php echo $_SESSION['username']; ?></b></p>
+        <h2>TAMBAH PESERTA OPEN TRIP</h2>
 
         <form
           id="formPendaftaran"
@@ -297,9 +296,7 @@ footer {
           <div class="date-wrapper">
             <label>Tanggal Lahir *</label>
             <div class="date-group">
-              <input type="text" name="dd" id="dd" placeholder="DD" />
-              <input type="text" name="mm" id="mm" placeholder="MM" />
-              <input type="text" name="yyyy" id="yyyy" placeholder="YYYY" />
+              <input type="date" name="tglLahir" id="dd" placeholder="DD" />
             </div>
           </div>
 
@@ -315,12 +312,6 @@ footer {
             id="telepon"
             placeholder="Nomor Telepon *"
           />
-
-          <select name="penyakit" id="penyakit">
-            <option value="">Riwayat Penyakit *</option>
-            <option>Ada</option>
-            <option>Tidak Ada</option>
-          </select>
 
           <input
             type="text"
@@ -391,3 +382,4 @@ footer {
     </footer>
   </body>
 </html>
+
