@@ -185,6 +185,7 @@ nav .active3 {
   box-shadow: 0 6px 20px rgba(64, 0, 160, 0.25);
   cursor: pointer;
   font-size: 16px;
+  
 }
 .wa-icon {
   display: inline-flex;
@@ -201,62 +202,77 @@ nav .active3 {
 }
 
 /* Footer */
-.site-footer {
-  background: var(--cream);
-  margin-top: 44px;
-  border-top: 6px solid rgba(0, 0, 0, 0.03);
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
 }
-.footer-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 22px;
-  padding: 48px 28px;
-  align-items: start;
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
 }
-.footer-brand img {
-  width: 230px;
-  filter: grayscale(0);
-}
-.footer-col h4 {
-  margin: 0 0 12px 0;
+
+.footer-column h4 {
   font-size: 16px;
-  letter-spacing: 0.6px;
+  margin-bottom: 15px;
   font-weight: 800;
 }
-.footer-col ul {
+
+.footer-column ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
-  color: #111;
-  font-weight: 500;
 }
-.contact-list li {
-  margin-bottom: 10px;
-  font-weight: 500;
+
+.footer-column ul li {
+  margin-bottom: 8px;
   font-size: 14px;
+  font-weight: 600;
 }
 
-.follow {
-  margin-top: 12px;
-}
-.socials i {
-  margin-right: 10px;
-  font-size: 18px;
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* bottom */
-.footer-bottom {
-  background: linear-gradient(
-    180deg,
-    rgba(63, 19, 139, 1),
-    rgba(63, 19, 139, 1)
-  );
-  color: white;
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+.copyright {
   text-align: center;
-  padding: 10px 16px;
-  font-size: 13px;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
 }
 
 /* responsive */
