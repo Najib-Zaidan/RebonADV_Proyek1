@@ -47,12 +47,12 @@
           <form
             class="trip-form"
             action="#"
-            method="post"
-            onsubmit="return false;"
+           
           >
-            <input type="text" placeholder="Nama Lengkap" required />
-            <input type="tel" placeholder="Nomor Telepon" required />
-            <input type="text" placeholder="Lokasi Destinasi" required />
+            <input type="text" placeholder="Nama Lengkap" />
+            <input type="tel" placeholder="Nomor Telepon"  />
+            <input type="text" placeholder="Lokasi Destinasi" />
+
 
             <div class="row">
               <input type="date" class="half" placeholder="Pilih Tanggal" />
@@ -63,9 +63,9 @@
             <input type="number" placeholder="Jumlah Peserta" min="1" />
 
             <div class="cta-row">
-              <button class="btn-whatsapp" title="Pesan via WhatsApp">
-                <span class="📞"><i class="fab fa-whatsapp"></i></span>
-                <span>Pesan Sekarang</span>
+              <a href = "formulir_private.html" class = "btn-whatsapp" title = "Pesan via WhatsApp" >
+                 <i class = "fab fa-whatsapp" ></i>
+                  <span> Pesan Sekarang </span> </a>   
               </button>
             </div>
           </form>
@@ -73,25 +73,33 @@
       </div>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div class="footer-brand">
+        <footer>
+      <div class="footer-content">
+        <div class="footer-column logo-col">
           <img
-            src="../gambar/REBON LOGO GRADIENT presisi.png"
-            alt="Rebon Adventure"
+            src="../gambar/logo-rebon.png"
+            alt="Rebon Adventure Logo"
+            class="footer-logo-img"
           />
         </div>
 
-        <div class="footer-col">
+        <div class="footer-column">
           <h4>KONTAK KAMI</h4>
-          <ul class="contact-list">
-            <li>📧 rebonadventure@gmail.com</li>
-            <li>📞 +62 812-3456-7890</li>
-            <li>📍 Jl. sukawera No. 15, Cirebon, Indonesia</li>
-          </ul>
+          <div class="contact-item">
+            <span class="icon">✉</span>
+            <p>rebonadventure@gmail.com</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📞</span>
+            <p>+62 812-3456-7890</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📍</span>
+            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
+          </div>
         </div>
 
-        <div class="footer-col">
+        <div class="footer-column">
           <h4>LAYANAN KAMI</h4>
           <ul>
             <li>OPEN TRIP</li>
@@ -99,7 +107,7 @@
           </ul>
         </div>
 
-        <div class="footer-col">
+        <div class="footer-column">
           <h4>INFORMASI</h4>
           <ul>
             <li>TENTANG KAMI</li>
@@ -107,20 +115,18 @@
             <li>FAQ</li>
           </ul>
 
-          <div class="follow">
-            <small>FOLLOW US ON</small>
-            <div class="socials">
-              <i class="fab fa-facebook-f"></i>
-              <i class="fab fa-instagram"></i>
-              <i class="fab fa-tiktok"></i>
+          <div class="social-section">
+            <h4>FOLLOW US ON</h4>
+            <div class="social-icons">
+              <img src="../gambar/fb-icon.png" alt="FB" />
+              <img src="../gambar/ig-icon.png" alt="IG" />
+              <img src="../gambar/tt-icon.png" alt="TK" />
             </div>
           </div>
         </div>
       </div>
 
-      <div class="footer-bottom">
-        © 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.
-      </div>
+      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
   </body>
 </html>

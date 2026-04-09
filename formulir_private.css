@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
 /* Reset & Font */
 body {
     font-family: 'Poppins', sans-serif;
@@ -8,31 +14,40 @@ body {
 
 /* Navbar */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 5%;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #f4f0e5;
 }
 
 .logo img {
-    height: 50px;
+  height: 50px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
 }
 
 nav a {
-    text-decoration: none;
-    color: #333;
-    margin: 0 15px;
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+nav .active1 {
+  color: #6b3df5;
 }
 
 .login {
-    padding: 8px 20px;
-    background: rgb(117, 11, 216);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  background: #6b3df5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 /* Main */
@@ -81,6 +96,7 @@ h1 {
     width: 100%;
     display: flex;
     justify-content: center;
+    
 }
 
 .btn-whatsapp {
@@ -105,52 +121,74 @@ h1 {
 }
 
 /* Footer */
-.site-footer {
-    background: #eaf5bc;
-    color: rgb(0, 0, 0);
-    padding: 50px 5% 20px;
-    margin-top: 50px;
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
 }
 
-.footer-inner {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 30px;
-}
-.footer-brand img {
-  width: 230px;
-  filter: grayscale(0);
-}
-
-.footer-col h4 {
-    font-size: 14px;
-    margin-bottom: 20px;
-    color: #ff8c00;
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
 }
 
-.footer-col ul {
-    list-style: none;
-    padding: 0;
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
 }
 
-.footer-col li {
-    margin-bottom: 10px;
-    font-size: 13px;
-    color: #000000;
+.footer-column ul {
+  list-style: none;
 }
 
-.social {
-    display: flex;
-    gap: 15px;
-    font-size: 20px;
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid #444;
-    padding-top: 20px;
-    margin-top: 30px;
-    font-size: 12px;
-    color: #777;
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
 }

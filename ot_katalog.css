@@ -128,10 +128,21 @@ nav .active2 {
   gap: 40px;
 }
 
+.include li {
+  margin-left: 15px;
+  margin-bottom: 10px;
+}
+
+.exclude li {
+  margin-left: 15px;
+  margin-bottom: 10px;
+}
+
 /* MEETING POINT */
 .meeting-point {
   margin: 10px 0 20px;
   padding-left: 20px;
+  margin-top: 15px;
 }
 
 .meeting-point li {
@@ -286,4 +297,9 @@ footer {
 .timeline span {
   font-weight: bold;
   display: block;
+  margin-left: 15px;
+}
+
+.timeline p {
+  margin-left: 15px;
 }
