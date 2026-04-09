@@ -79,6 +79,10 @@ nav .active2 {
   object-fit: cover;
 }
 
+.trip-container a {
+  text-decoration: none;
+}
+
 .badge {
   position: absolute;
   bottom: 10px;
