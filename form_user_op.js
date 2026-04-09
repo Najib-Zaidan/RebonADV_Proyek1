@@ -40,6 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // SUKSES
     alert("Pendaftaran berhasil!");
-    form.reset();
+    form.submit();
   });
 });

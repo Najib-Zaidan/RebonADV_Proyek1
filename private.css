@@ -193,6 +193,7 @@ nav .active3 {
   background: rgba(0, 0, 0, 0.08);
   padding: 6px 8px;
   border-radius: 6px;
+  width: 50px;
 }
 .wa-icon i {
   color: #fff;
