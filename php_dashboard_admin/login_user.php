@@ -1,22 +1,16 @@
 <?php
 session_start();
-
-// CEK LOGIN
-if (!isset($_SESSION['username'])) {
-    header("Location: login_user.php?redirect=form");
-    exit;
-}
+$redirect = isset($_GET['redirect']) ? $_GET['redirect'] : 'home';
 ?>
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Formulir Pendaftaran Open Trip</title>
+  <title>Home</title>
 
   <style>
-    * {
+   * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -55,7 +49,8 @@ nav .active2 {
   color: #6b3df5;
 }
 
-.active5 {
+.active5,
+.active6 {
   background: #6b3df5;
   color: white;
   border: none;
@@ -64,100 +59,76 @@ nav .active2 {
   cursor: pointer;
 }
 
-/* SECTION BACKGROUND */
-.form-section {
-  background: linear-gradient(135deg, #4e2bbf, #8b6cf6);
-  padding: 80px 0;
+.login-section {
+  height: 85vh;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470")
+      no-repeat center/cover;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-/* CARD FORM */
-.form-container {
-  background: #e9e4c7;
-  padding: 40px;
+.login-box {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 35px;
   border-radius: 15px;
-  width: 420px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-/* JUDUL */
-.form-container h2 {
+  width: 320px;
   text-align: center;
-  margin-bottom: 25px;
-  font-size: 22px;
-  font-weight: bold;
+  backdrop-filter: blur(5px);
 }
 
-/* FORM */
-.form-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.login-box h2 {
+  margin-bottom: 20px;
 }
 
-/* INPUT & SELECT */
-.form-container input,
-.form-container select {
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background: #cfc7ea;
-  font-size: 14px;
-  outline: none;
-}
-
-/* FOCUS EFFECT */
-.form-container input:focus,
-.form-container select:focus {
-  border: 2px solid #6b3df5;
-  background: #e6e0ff;
-}
-
-/* TANGGAL LAHIR */
-
-.date-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.date-wrapper label {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.date-group {
-  display: flex;
-  gap: 10px;
-}
-
-.date-group p {
-  font-size: 14px;
-  min-width: 110px;
-}
-
-.date-group input {
-  width: 100%;
-  text-align: center;
-}
-
-/* BUTTON */
-.form-container button {
+.login-box label {
+  display: block;
+  text-align: left;
   margin-top: 10px;
-  padding: 12px;
+  font-size: 14px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.login-box button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
   border: none;
-  border-radius: 10px;
-  background: #4e2bbf;
+  border-radius: 8px;
+  background: #6b3df5;
   color: white;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-/* HOVER BUTTON */
-.form-container button:hover {
-  background: #6b3df5;
+.login-box button:hover {
+  background: #4e2bbf;
+}
+
+.forgot {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #6b3df5;
+  cursor: pointer;
+}
+
+.register {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.register span {
+  color: #6b3df5;
+  cursor: pointer;
 }
 
 footer {
@@ -233,15 +204,15 @@ footer {
   color: #333;
 }
 
-</style>
-
+    </style>
+    
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="form_user_op.css" />
-    <title>formulir registrasi user</title>
+    <link rel="stylesheet" href="login_user.css" />
+    <title>login user</title>
   </head>
   <body>
     <header class="navbar">
@@ -276,60 +247,32 @@ footer {
       </nav>
     </header>
 
-    <section class="form-section">
-      <div class="form-container">
-        <h2>FORMULIR PENDAFTARAN</h2>
-
-        <p>Login sebagai: <b><?php echo $_SESSION['username']; ?></b></p>
+    <section class="login-section">
+      <div class="login-box">
+        <h2>LOGIN USER</h2>
 
         <form
-          id="formPendaftaran"
-          action="proses_daftar.php"
-          method="POST"
+          action="proses_login.php"
+          method="post"
+          id="formLogin"
         >
-          <input
-            type="text"
-            name="nama"
-            id="nama"
-            placeholder="Nama Lengkap *"
-          />
+        
+          <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
 
-          <div class="date-wrapper">
-            <label>Tanggal Lahir *</label>
-            <div class="date-group">
-              <input type="text" name="dd" id="dd" placeholder="DD" />
-              <input type="text" name="mm" id="mm" placeholder="MM" />
-              <input type="text" name="yyyy" id="yyyy" placeholder="YYYY" />
-            </div>
-          </div>
+        <label>Username</label><br>
+        <input type="text" name="username" required><br><br>
 
-          <input
-            type="text"
-            name="alamat"
-            id="alamat"
-            placeholder="Alamat Lengkap *"
-          />
-          <input
-            type="text"
-            name="telepon"
-            id="telepon"
-            placeholder="Nomor Telepon *"
-          />
+          <label>Password</label><br>
+    <input type="password" name="password" required><br><br>
 
-          <select name="penyakit" id="penyakit">
-            <option value="">Riwayat Penyakit *</option>
-            <option>Ada</option>
-            <option>Tidak Ada</option>
-          </select>
 
-          <input
-            type="text"
-            name="detail"
-            id="detail"
-            placeholder="Detail Penyakit"
-          />
+          <button type="submit">Login</button>
 
-          <button type="submit">Pesan sekarang</button>
+          <p class="forgot">Lupa password?</p>
+          <p class="register">
+            Belum punya akun?
+            <a href="daftar_user.php"><span>Daftar di sini</span></a>
+          </p>
         </form>
       </div>
     </section>
@@ -389,5 +332,10 @@ footer {
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      document.getElementById("redirect").value =
+        params.get("redirect") || "home";
+    </script>
   </body>
 </html>

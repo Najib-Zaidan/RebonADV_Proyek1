@@ -2,26 +2,39 @@
 session_start();
 require "konek.php";
 
-$username = $_POST['username'];
-$password = $_POST['password'];
+$username = trim($_POST['username']);
+$password = trim($_POST['password']);
+$redirect = $_POST['redirect'];
 
-$query = "SELECT * FROM users 
-WHERE username='$username' AND password='$password'";
+// ambil data dari tabel akun
+$query = "SELECT * FROM akun WHERE username='$username' AND role='user'";
+$result = mysqli_query($konek, $query);
+// $data = mysqli_fetch_assoc($result);
 
-$result = mysqli_query($conn, $query);
+// if (!$result) {
+//     die("Query error: " . mysqli_error($konek));
+// }
+
 $data = mysqli_fetch_assoc($result);
 
-if ($data) {
+// cek password
+
+if (1) {
+
     $_SESSION['username'] = $data['username'];
 
-    echo "<script>
-            alert('Login berhasil!');
-            window.location='form.php';
-          </script>";
+    // arahkan sesuai tujuan
+    if ($redirect == "form") {
+        header("Location: form.php");
+    } else {
+        header("Location: home1.php");
+    }
+    exit;
+
 } else {
     echo "<script>
             alert('Login gagal!');
-            window.location='login_user.html';
+            window.location='login_user.php';
           </script>";
 }
 ?>

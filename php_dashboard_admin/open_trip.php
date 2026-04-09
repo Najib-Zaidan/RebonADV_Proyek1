@@ -1,11 +1,5 @@
 <?php
 session_start();
-
-// CEK LOGIN
-if (!isset($_SESSION['username'])) {
-    header("Location: login_user.php?redirect=form");
-    exit;
-}
 ?>
 
 <!doctype html>
@@ -13,19 +7,21 @@ if (!isset($_SESSION['username'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Formulir Pendaftaran Open Trip</title>
+  <title>Open Trip</title>
 
   <style>
     * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: sans-serif;
 }
 
 body {
-  background: #e7e2c8;
+  background: linear-gradient(180deg, #5b2bbf, #8e74db);
 }
+
+/* NAVBAR */
 
 .navbar {
   display: flex;
@@ -64,101 +60,83 @@ nav .active2 {
   cursor: pointer;
 }
 
-/* SECTION BACKGROUND */
-.form-section {
-  background: linear-gradient(135deg, #4e2bbf, #8b6cf6);
-  padding: 80px 0;
-  display: flex;
-  justify-content: center;
+/* GRID TRIP */
+
+.trip-container {
+  padding: 60px 80px;
 }
 
-/* CARD FORM */
-.form-container {
-  background: #e9e4c7;
-  padding: 40px;
-  border-radius: 15px;
-  width: 420px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+.trip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
 }
 
-/* JUDUL */
-.form-container h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 22px;
-  font-weight: bold;
-}
+/* CARD */
 
-/* FORM */
-.form-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* INPUT & SELECT */
-.form-container input,
-.form-container select {
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background: #cfc7ea;
-  font-size: 14px;
-  outline: none;
-}
-
-/* FOCUS EFFECT */
-.form-container input:focus,
-.form-container select:focus {
-  border: 2px solid #6b3df5;
-  background: #e6e0ff;
-}
-
-/* TANGGAL LAHIR */
-
-.date-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.date-wrapper label {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.date-group {
-  display: flex;
-  gap: 10px;
-}
-
-.date-group p {
-  font-size: 14px;
-  min-width: 110px;
-}
-
-.date-group input {
-  width: 100%;
-  text-align: center;
-}
-
-/* BUTTON */
-.form-container button {
-  margin-top: 10px;
-  padding: 12px;
-  border: none;
+.card {
+  background: #f4f0e5;
   border-radius: 10px;
-  background: #4e2bbf;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+  overflow: hidden;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* HOVER BUTTON */
-.form-container button:hover {
-  background: #6b3df5;
+.card-img {
+  position: relative;
 }
+
+.card-img img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #6b3df5;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.seat {
+  font-size: 12px;
+}
+
+.via {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.date {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.price span {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+/* FOOTER */
 
 footer {
   background-color: #fdfae6;
@@ -224,7 +202,6 @@ footer {
   height: auto;
   display: block;
 }
-
 .copyright {
   text-align: center;
   font-size: 12px;
@@ -234,16 +211,14 @@ footer {
 }
 
 </style>
-
-<!doctype html>
-<html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="form_user_op.css" />
-    <title>formulir registrasi user</title>
+    <link rel="stylesheet" href="home.css" />
+    <title>Open Trip</title>
   </head>
   <body>
+    <!-- NAVBAR -->
     <header class="navbar">
       <div class="logo">
         <img
@@ -276,63 +251,117 @@ footer {
       </nav>
     </header>
 
-    <section class="form-section">
-      <div class="form-container">
-        <h2>FORMULIR PENDAFTARAN</h2>
+    <!-- OPEN TRIP -->
+    <section class="trip-container">
+      <div class="trip-grid">
+        <!-- CARD -->
+        <a href="ot_katalog.php">
+          <div class="card">
+            <div class="card-img">
+              <img src="../gambar/gunung.jpg" />
+              <span class="badge">1 Hari</span>
+            </div>
 
-        <p>Login sebagai: <b><?php echo $_SESSION['username']; ?></b></p>
+            <div class="card-body">
+              <div class="title-row">
+                <h3>GN. Ciremai</h3>
+                <span class="seat">5 / 10 SEAT</span>
+              </div>
 
-        <form
-          id="formPendaftaran"
-          action="proses_daftar.php"
-          method="POST"
-        >
-          <input
-            type="text"
-            name="nama"
-            id="nama"
-            placeholder="Nama Lengkap *"
-          />
+              <p class="via">Via Apuy</p>
 
-          <div class="date-wrapper">
-            <label>Tanggal Lahir *</label>
-            <div class="date-group">
-              <input type="text" name="dd" id="dd" placeholder="DD" />
-              <input type="text" name="mm" id="mm" placeholder="MM" />
-              <input type="text" name="yyyy" id="yyyy" placeholder="YYYY" />
+              <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+
+              <p class="price">Rp. 200.000 <span>/ Pax</span></p>
             </div>
           </div>
+        </a>
 
-          <input
-            type="text"
-            name="alamat"
-            id="alamat"
-            placeholder="Alamat Lengkap *"
-          />
-          <input
-            type="text"
-            name="telepon"
-            id="telepon"
-            placeholder="Nomor Telepon *"
-          />
+        <!-- DUPLIKASI CARD -->
+        <div class="card">
+          <div class="card-img">
+            <img src="../gambar/gunung.jpg" />
+            <span class="badge">1 Hari</span>
+          </div>
 
-          <select name="penyakit" id="penyakit">
-            <option value="">Riwayat Penyakit *</option>
-            <option>Ada</option>
-            <option>Tidak Ada</option>
-          </select>
+          <div class="card-body">
+            <div class="title-row">
+              <h3>GN. Ciremai</h3>
+              <span class="seat">5 / 10 SEAT</span>
+            </div>
+            <p class="via">Via Apuy</p>
+            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
+          </div>
+        </div>
 
-          <input
-            type="text"
-            name="detail"
-            id="detail"
-            placeholder="Detail Penyakit"
-          />
+        <div class="card">
+          <div class="card-img">
+            <img src="../gambar/gunung.jpg" />
+            <span class="badge">1 Hari</span>
+          </div>
+          <div class="card-body">
+            <div class="title-row">
+              <h3>GN. Ciremai</h3>
+              <span class="seat">5 / 10 SEAT</span>
+            </div>
+            <p class="via">Via Apuy</p>
+            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
+          </div>
+        </div>
 
-          <button type="submit">Pesan sekarang</button>
-        </form>
+        <div class="card">
+          <div class="card-img">
+            <img src="../gambar/gunung.jpg" />
+            <span class="badge">1 Hari</span>
+          </div>
+          <div class="card-body">
+            <div class="title-row">
+              <h3>GN. Ciremai</h3>
+              <span class="seat">5 / 10 SEAT</span>
+            </div>
+            <p class="via">Via Apuy</p>
+            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="../gambar/gunung.jpg" />
+            <span class="badge">1 Hari</span>
+          </div>
+          <div class="card-body">
+            <div class="title-row">
+              <h3>GN. Ciremai</h3>
+              <span class="seat">5 / 10 SEAT</span>
+            </div>
+            <p class="via">Via Apuy</p>
+            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img">
+            <img src="../gambar/gunung.jpg" />
+            <span class="badge">1 Hari</span>
+          </div>
+          <div class="card-body">
+            <div class="title-row">
+              <h3>GN. Ciremai</h3>
+              <span class="seat">5 / 10 SEAT</span>
+            </div>
+            <p class="via">Via Apuy</p>
+            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- FOOTER -->
 
     <footer>
       <div class="footer-content">
