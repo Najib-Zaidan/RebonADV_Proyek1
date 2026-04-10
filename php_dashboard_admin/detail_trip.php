@@ -10,9 +10,9 @@ $trip = ambil($query_trip);
 // 3. Ambil data dari tabel-tabel relasi (Foreign Key)
 $katalog   = ambil(kueri("SELECT * FROM katalog WHERE id_trip = $id_trip"));
 $gambar    = (kueri("SELECT * FROM gambar WHERE id_trip = $id_trip"));
-$itenerary = ambil(kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC"));
-$meetpoint = ambil(kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip"));
-$fasilitas = ambil(kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip"));
+$itenerary = kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC");
+$meetpoint = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip");
+$fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
 $peserta = kueri("SELECT p.*, b.tgl_booking
            FROM booking b
            JOIN peserta p 
@@ -39,15 +39,9 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
         <tr><th>Deskripsi Trip</th><td><?php echo $katalog['deskripsi']; ?></td></tr>
     </table>
 
-    <ul>
-        <?php while ($kat = ambil($katalog)): ?>
-            <li><?php echo $kat['deskripsi']; ?></li>
-        <?php endwhile; ?>
-    </ul>
-
     <table border="1" cellpadding="5">
         <tr>
-            <?php while ($img = ambil($data_gambar)): ?>
+            <?php while ($img = ambil($gambar)): ?>
                 <td>
                     <p><?php echo $img['nama_file']; ?></p>
                     </td>
@@ -124,7 +118,7 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
             </tr>
         </thead>
         <tbody>
-            $nomer = 1;
+            <?php $nomer = 1; ?>
             <?php while ($row = ambil($peserta)): ?>
                 <tr>
                     <td><?= $nomer ?></td>
@@ -133,7 +127,7 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
                     <td><?php echo $row['tgl_lahir']; ?></td>
                     <td><?php echo $row['no_hp']; ?></td>
                     <td><?php echo $row['riwayat']; ?></td>
-                    <td><?php echo $mepo['tgl_booking']; ?></td>
+                    <td><?php echo $row['tgl_booking']; ?></td>
                     <?php $nomer++; ?>
                 </tr>
             <?php endwhile; ?>
