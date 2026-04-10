@@ -18,18 +18,131 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
            JOIN peserta p 
            ON b.id_peserta = p.id_peserta
            WHERE b.id_trip = $id_trip");
+$jumlah = mysqli_num_rows($gambar);
 ?>
+
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Detail Trip - <?php echo $trip['tujuan']; ?></title>
 </head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    color: #fff;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('bg1.jpeg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+a {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    background-color: crimson;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    transition: 0.3s;
+    font-size: 0.9em;
+}
+
+a:hover {
+    background-color: #a80a2c;
+    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 20px 0;
+}
+
+table {
+    width: 100%;
+    max-width: 900px;
+    margin: 25px auto;
+    border-collapse: collapse;
+    border: none !important; 
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+    background-color: rgba(220, 20, 60, 0.8);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+thead th[colspan], tr th[colspan] {
+    background-color: rgba(220, 20, 60, 0.9);
+    text-align: center;
+    font-size: 1.1em;
+    letter-spacing: 1px;
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: 0.2s;
+}
+
+table:nth-of-type(2) td {
+    text-align: center;
+}
+
+table:nth-of-type(2) p {
+    background: rgba(220, 20, 60, 0.2);
+    padding: 40px 10px; 
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        font-size: 12px;
+    }
+    th, td {
+        padding: 8px;
+    }
+}
+
+</style>
 <body>
     <h1>Detail Trip: <?php echo $trip['tujuan']; ?></h1>
     <a href="index.php">Kembali ke Daftar Trip</a>
     <hr>
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table border="1" cellpadding="10" cellspacing="0">
+        <tr><th colspan="2">Informasi Trip</th></tr>
         <tr><th>Tujuan</th><td><?php echo $trip['tujuan']; ?></td></tr>
         <tr><th>Tanggal Berangkat</th><td><?php echo $trip['tgl_berangkat']; ?></td></tr>
         <tr><th>Tanggal Pulang</th><td><?php echo $trip['tgl_pulang']; ?></td></tr>
@@ -39,18 +152,20 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
         <tr><th>Deskripsi Trip</th><td><?php echo $katalog['deskripsi']; ?></td></tr>
     </table>
 
-    <table border="1" cellpadding="5">
+    <table border="1" cellpadding="10" cellspacing="0">
+        <tr><th colspan="<?= $jumlah ?>">Galeri Trip</th></tr>
         <tr>
             <?php while ($img = ambil($gambar)): ?>
                 <td>
                     <p><?php echo $img['nama_file']; ?></p>
-                    </td>
+                </td>
             <?php endwhile; ?>
         </tr>
     </table>
     
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table border="1" cellpadding="10" cellspacing="0">
         <thead>
+            <tr><th colspan="3">Itinerary</th></tr>
             <tr>
                 <th>Mulai</th>
                 <th>Selesai</th>
@@ -68,8 +183,9 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
         </tbody>
     </table>
 
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table border="1" cellpadding="10" cellspacing="0">
         <thead>
+            <tr><th colspan="3">Meeting Point</th></tr>
             <tr>
                 <th>Waktu</th>
                 <th>Kota</th>
@@ -87,8 +203,9 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
         </tbody>
     </table>
 
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table border="1" cellpadding="10" cellspacing="0">
         <thead>
+            <tr><th colspan="2">Fasilitas Trip</th></tr>
             <tr>
                 <th>Nama Fasilitas</th>
                 <th>Jenis</th>
@@ -104,9 +221,9 @@ $peserta = kueri("SELECT p.*, b.tgl_booking
         </tbody>
     </table>
     
-    <table border="1" cellpadding="8" cellspacing="0">
-        <th>Daftar Peserta</th>
+    <table border="1" cellpadding="10" cellspacing="0">
         <thead>
+            <tr><th colspan="7">Daftar Peserta</th></tr>
             <tr>
                 <th>No.</th>
                 <th>Nama</th>
