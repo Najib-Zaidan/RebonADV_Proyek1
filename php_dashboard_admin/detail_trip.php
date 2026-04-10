@@ -8,11 +8,16 @@ $query_trip = kueri("SELECT * FROM trip WHERE id_trip = $id_trip");
 $trip = ambil($query_trip);
 
 // 3. Ambil data dari tabel-tabel relasi (Foreign Key)
-$data_katalog   = kueri("SELECT * FROM katalog WHERE id_trip = $id_trip");
-$data_gambar    = kueri("SELECT * FROM gambar WHERE id_trip = $id_trip");
-$data_itinerary = kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC");
-$data_meetpoint = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip");
-$data_fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
+$katalog   = ambil(kueri("SELECT * FROM katalog WHERE id_trip = $id_trip"));
+$gambar    = (kueri("SELECT * FROM gambar WHERE id_trip = $id_trip"));
+$itenerary = ambil(kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC"));
+$meetpoint = ambil(kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip"));
+$fasilitas = ambil(kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip"));
+$peserta = kueri("SELECT p.*, b.tgl_booking
+           FROM booking b
+           JOIN peserta p 
+           ON b.id_peserta = p.id_peserta
+           WHERE b.id_trip = $id_trip");
 ?>
 
 <!DOCTYPE html>
@@ -21,32 +26,25 @@ $data_fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
     <title>Detail Trip - <?php echo $trip['tujuan']; ?></title>
 </head>
 <body>
-
     <h1>Detail Trip: <?php echo $trip['tujuan']; ?></h1>
     <a href="index.php">Kembali ke Daftar Trip</a>
     <hr>
-
-    <h3>Informasi Utama Trip</h3>
     <table border="1" cellpadding="8" cellspacing="0">
-        <tr><th>ID Trip</th><td><?php echo $trip['id_trip']; ?></td></tr>
         <tr><th>Tujuan</th><td><?php echo $trip['tujuan']; ?></td></tr>
         <tr><th>Tanggal Berangkat</th><td><?php echo $trip['tgl_berangkat']; ?></td></tr>
         <tr><th>Tanggal Pulang</th><td><?php echo $trip['tgl_pulang']; ?></td></tr>
         <tr><th>Harga</th><td>Rp <?php echo number_format($trip['harga'], 0, ',', '.'); ?></td></tr>
         <tr><th>Kuota</th><td><?php echo $trip['kuota']; ?></td></tr>
         <tr><th>Catatan</th><td><?php echo $trip['catatan']; ?></td></tr>
+        <tr><th>Deskripsi Trip</th><td><?php echo $katalog['deskripsi']; ?></td></tr>
     </table>
 
-    <hr>
-
-    <h3>Katalog & Deskripsi</h3>
     <ul>
-        <?php while ($kat = ambil($data_katalog)): ?>
+        <?php while ($kat = ambil($katalog)): ?>
             <li><?php echo $kat['deskripsi']; ?></li>
         <?php endwhile; ?>
     </ul>
 
-    <h3>Galeri Gambar</h3>
     <table border="1" cellpadding="5">
         <tr>
             <?php while ($img = ambil($data_gambar)): ?>
@@ -56,8 +54,7 @@ $data_fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
             <?php endwhile; ?>
         </tr>
     </table>
-
-    <h3>Itinerary (Jadwal Kegiatan)</h3>
+    
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
@@ -67,17 +64,16 @@ $data_fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
             </tr>
         </thead>
         <tbody>
-            <?php while ($itiner = ambil($data_itinerary)): ?>
+            <?php while ($itn = ambil($itenerary)): ?>
                 <tr>
-                    <td><?php echo $itiner['mulai']; ?></td>
-                    <td><?php echo $itiner['selesai']; ?></td>
-                    <td><?php echo $itiner['kegiatan']; ?></td>
+                    <td><?php echo $itn['mulai']; ?></td>
+                    <td><?php echo $itn['selesai']; ?></td>
+                    <td><?php echo $itn['kegiatan']; ?></td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
     </table>
 
-    <h3>Meetpoint (Titik Kumpul)</h3>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
@@ -87,17 +83,16 @@ $data_fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
             </tr>
         </thead>
         <tbody>
-            <?php while ($mp = ambil($data_meetpoint)): ?>
+            <?php while ($mepo = ambil($meetpoint)): ?>
                 <tr>
-                    <td><?php echo $mp['waktu']; ?></td>
-                    <td><?php echo $mp['kota']; ?></td>
-                    <td><?php echo $mp['daerah']; ?></td>
+                    <td><?php echo $mepo['waktu']; ?></td>
+                    <td><?php echo $mepo['kota']; ?></td>
+                    <td><?php echo $mepo['daerah']; ?></td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
     </table>
 
-    <h3>Fasilitas</h3>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
@@ -106,10 +101,40 @@ $data_fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
             </tr>
         </thead>
         <tbody>
-            <?php while ($fas = ambil($data_fasilitas)): ?>
+            <?php while ($fas = ambil($fasilitas)): ?>
                 <tr>
                     <td><?php echo $fas['fasilitas']; ?></td>
                     <td><?php echo $fas['jenis']; ?></td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
+    
+    <table border="1" cellpadding="8" cellspacing="0">
+        <th>Daftar Peserta</th>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Tanggal Lahir</th>
+                <th>Nomor HP</th>
+                <th>Riwayat</th>
+                <th>Tanggal Pesan</th>
+            </tr>
+        </thead>
+        <tbody>
+            $nomer = 1;
+            <?php while ($row = ambil($peserta)): ?>
+                <tr>
+                    <td><?= $nomer ?></td>
+                    <td><?php echo $row['nama']; ?></td>
+                    <td><?php echo $row['alamat']; ?></td>
+                    <td><?php echo $row['tgl_lahir']; ?></td>
+                    <td><?php echo $row['no_hp']; ?></td>
+                    <td><?php echo $row['riwayat']; ?></td>
+                    <td><?php echo $mepo['tgl_booking']; ?></td>
+                    <?php $nomer++; ?>
                 </tr>
             <?php endwhile; ?>
         </tbody>
