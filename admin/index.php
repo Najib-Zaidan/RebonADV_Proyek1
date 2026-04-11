@@ -33,6 +33,7 @@ require 'fungsi.php';
     <h1>Selamat Datang, <?php echo $_SESSION['username']; ?></h1>
     <p>Ini adalah halaman admin Rebon Adventure.</p>
     <a href="logout.php" onclick="return confirm('Yakin Ingin Keluar?')">Logout</a>
+    
     <ul>
       <li>
         <a href="index.php?menu=trip">Open Trip</a>
@@ -53,8 +54,10 @@ require 'fungsi.php';
     die();*/
     $hasil = kueri("SELECT * FROM $menu");
     if($menu == "trip"): 
+    
     $hasil = kueri("SELECT * FROM trip")
     ?>
+      <a href="tambah_trip_v2.php">Tambah Trip</a>
       <table cellspacing = 0>
       <tr>
         <th>No.</th>
@@ -102,7 +105,7 @@ require 'fungsi.php';
             echo "<td>" . $sisa . " / " . $row['kuota'] . "</td>";
             echo "<td>";
             echo "<a href='detail_trip.php?id=" . $id . "'>Detail</a> | ";
-            echo "<a href='ubah_trip.php?id=" . $id . "'>Ubah</a> | ";
+            echo "<a href='ubah_tripv2.php?id=" . $id . "'>Ubah</a> | ";
             echo "<a href='hapus_trip.php?id=" . $id . "' onclick=\"return confirm('Yakin ingin menghapus trip ke " . $row['tujuan'] . "?')\">Hapus</a>";
             echo "</td>";
             echo "</tr>";
