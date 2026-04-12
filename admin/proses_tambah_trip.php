@@ -47,6 +47,16 @@ if (!empty($_FILES['files']['name'][0])) {
         $tmp_name  = $_FILES['files']['tmp_name'][$key];
         $ekstensi = strtolower(pathinfo($nama_asli, PATHINFO_EXTENSION));
         if (in_array($ekstensi, $ekstensi_diperbolehkan)) {
+            $target_dir = "upload/";
+
+if (!is_dir($target_dir)) {
+    die("Error: Folder tujuan tidak ditemukan.");
+}
+
+if (!is_writable($target_dir)) {
+    die("Error: Folder tidak memiliki izin tulis (Permission Denied).");
+}
+
             $nama_file_baru = time() . "_" . $key . "." . $ekstensi;
             $path_tujuan = "../gambar/upload/" . $nama_file_baru;
             if (move_uploaded_file($tmp_name, $path_tujuan)) {

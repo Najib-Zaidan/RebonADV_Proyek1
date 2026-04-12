@@ -74,15 +74,21 @@ require 'fungsi.php';
           while($row=ambil($hasil)){
             $id = $row['id_trip'];
             $data = kueri("SELECT
-            (DATEDIFF(tgl_pulang, tgl_berangkat) + 1) durasi,
             (t.kuota - COUNT(b.id_trip)) sisa
             FROM trip t
             JOIN booking b
             ON t.id_trip = b.id_trip
             WHERE t.id_trip = $id AND status != 'Dibatalkan'");
             $ambil = ambil($data);
-            $durasi = $ambil['durasi'];
             $sisa = $ambil['sisa'];
+            if (empty($sisa)){
+              $sisa = $row['kuota'];
+            }
+            $data = kueri("SELECT
+            (DATEDIFF(tgl_pulang, tgl_berangkat) + 1) durasi
+            FROM trip WHERE id_trip = $id");
+            $ambil = ambil($data);
+            $durasi = $ambil['durasi'];
             $data = kueri("SELECT 
             m.kota 
             FROM trip t 
@@ -94,14 +100,14 @@ require 'fungsi.php';
             echo "<td>" . $nomer . "</td>";
             echo "<td>" . $row['tujuan'] . "</td>";
             echo "<td>" . $row['tgl_berangkat'] . "</td>";
-            echo "<td>" . $durasi . "</td>";
+            echo "<td>" . $durasi . " Hari</td>";
             echo "<td>"; 
             while ($row1 = ambil($data)) {
             echo $row1['kota'] . "<br>"; 
             }
             echo "</td>";
             echo "<td>" . $row['harga'] . "</td>";
-            echo "<td>" . $sisa . " / " . $row['kuota'] . "</td>";
+            echo "<td>" . $sisa . " / " . $row['kuota'] . " Pax</td>";
             echo "<td>";
             echo "<a href='detail_trip.php?id=" . $id . "'>Detail</a> | ";
             echo "<a href='ubah_tripv2.php?id=" . $id . "'>Ubah</a> | ";
@@ -123,7 +129,8 @@ require 'fungsi.php';
             t.tgl_berangkat, 
             t.harga, 
             b.status AS status_pemesanan,
-            (SELECT SUM(nominal) FROM payment WHERE id_booking = b.id_booking) AS total_bayar
+            (SELECT SUM(nominal) FROM payment 
+            WHERE id_booking = b.id_booking AND status = 'Diverifikasi') AS total_bayar
         FROM booking b
         JOIN trip t ON b.id_trip = t.id_trip
         JOIN peserta p ON b.id_peserta = p.id_peserta
@@ -141,6 +148,7 @@ echo "<thead>
             <th>Jadwal Trip</th>
             <th>Progress Pembayaran</th>
             <th>Status</th>
+            <th>Aksi</th>
         </tr>
       </thead>";
 echo "<tbody>";
@@ -162,6 +170,7 @@ while ($row = ambil($data_booking)) {
     echo "<td>Rp. " . number_format($sudah_bayar, 0, ',', '.') . " / " . number_format($harga_total, 0, ',', '.') . "</td>";
     
     echo "<td>" . $row['status_pemesanan'] . "</td>";
+    echo "<td><a href='detail_booking.php?id=" . $row['id_booking'] . "'>Detail</a></td>";
     echo "</tr>";
 }
 

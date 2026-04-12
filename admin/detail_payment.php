@@ -5,12 +5,35 @@ $id = $_GET['id'];
 
 if (isset($_POST['verifikasi'])) {
     kueri("UPDATE payment SET status = 'Diverifikasi' WHERE id_payment = $id");
+    $data = ambil(kueri("SELECT p.nominal, b.*, t.harga FROM payment p
+    JOIN booking b ON p.id_booking = b.id_booking 
+    JOIN trip t ON b.id_trip = t.id_trip 
+    WHERE p.id_payment = $id"));
+    $id_book = $data['id_booking'];
+    if($data['nominal'] < $data['harga']){
+      kueri("UPDATE booking SET status = 'DP' WHERE id_booking = '$id_book'");
+    }
+    else if($data['nominal'] >= $data['harga']){
+      kueri("UPDATE booking SET status = 'Lunas' WHERE id_booking = '$id_book'");
+    }
     header("Location: detail_payment.php?id=" . $id);
     exit;
 }
 
 if (isset($_POST['batal_verifikasi'])) {
     kueri("UPDATE payment SET status = 'Belum Diverifikasi' WHERE id_payment = $id");
+    $data = ambil(kueri("SELECT SUM(p.nominal) total, p.nominal, b.*, t.harga FROM payment p
+    JOIN booking b ON p.id_booking = b.id_booking 
+    JOIN trip t ON b.id_trip = t.id_trip 
+    WHERE p.id_payment = $id"));
+    $id_book = $data['id_booking'];
+    $bayar = ($data['total'] - $data['nominal']);
+    if($bayar == 0){
+      kueri("UPDATE booking SET status = 'Belum Bayar' WHERE id_booking = '$id_book'");
+    }
+    else if(($bayar < $data['harga']) && ($bayar != 0)){
+      kueri("UPDATE booking SET status = 'DP' WHERE id_booking = '$id_book'");
+    }
     header("Location: detail_payment.php?id=" . $id);
     exit;
 }

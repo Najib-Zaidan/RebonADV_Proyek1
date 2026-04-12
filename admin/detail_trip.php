@@ -127,6 +127,22 @@ table:nth-of-type(2) p {
     margin: 0;
 }
 
+.galeri-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+img {
+    width: calc(50% - 8px); 
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 8px;
+}
+
 @media screen and (max-width: 600px) {
     table {
         font-size: 12px;
@@ -155,11 +171,15 @@ table:nth-of-type(2) p {
     <table border="1" cellpadding="10" cellspacing="0">
         <tr><th colspan="<?= $jumlah ?>">Galeri Trip</th></tr>
         <tr>
-            <?php while ($img = ambil($gambar)): ?>
-                <td>
-                    <p><?php echo $img['nama_file']; ?></p>
-                </td>
-            <?php endwhile; ?>
+            <td>
+              <div class="galeri-container">
+              <?php while ($img = ambil($gambar)): ?>
+                
+                    <img src="../gambar/upload/<?php echo $img['nama_file']; ?>"></img>
+                
+              <?php endwhile; ?>
+            </div>
+          </td>
         </tr>
     </table>
     

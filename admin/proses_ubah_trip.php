@@ -52,13 +52,16 @@ if (!empty($gambar_tetap)) {
     }
 }
 
-if (!empty($_FILES['files']['name'][0])) {
+if (isset($_FILES['files'])){
     foreach ($_FILES['files']['name'] as $key => $val) {
         if ($_FILES['files']['name'][$key] != "") {
-            $nama_file = time() . "_" . $_FILES['files']['name'][$key];
+            $nama_asli = $_FILES['files']['name'][$key];
+            $ekstensi = strtolower(pathinfo($nama_asli, PATHINFO_EXTENSION));
+            $nama_file_baru = time() . "_" . $key . "." . $ekstensi;
+            /* $nama_file = time() . "_" . $_FILES['files']['name'][$key]; */
             $tmp_name = $_FILES['files']['tmp_name'][$key];
-            move_uploaded_file($tmp_name, "uploads/" . $nama_file);
-            kueri("INSERT INTO gambar (id_trip, nama_file) VALUES ($id_trip, '$nama_file')");
+            move_uploaded_file($tmp_name, "../gambar/upload/" . $nama_file_baru);
+            kueri("INSERT INTO gambar (id_trip, nama_file) VALUES ($id_trip, '$nama_file_baru')");
         }
     }
 }

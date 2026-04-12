@@ -271,6 +271,7 @@ hr {
     <div id="section_gambar">
         <h3>Gambar</h3>
         <div class="row">
+            <label>Upload Gambar : </label>
             <input type="file" name="files[]" required>
         </div>
     </div>
@@ -289,25 +290,29 @@ function removeRow(btn) {
 
 function addItinerary() {
     let div = document.createElement('div');
-    div.innerHTML = '<hr><label>Waktu Mulai : </label><input type="time" name="mulai[]" required> <br><label>Waktu Selesai : </label><input type="time" name="selesai[]" required> <br><input type="text" name="kegiatan[]" placeholder="Kegiatan" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<hr><label>Waktu Mulai : </label><input type="time" name="mulai[]" required> <br><label>Waktu Selesai : </label><input type="time" name="selesai[]" required> <br><label>Kegiatan : </label><input type="text" name="kegiatan[]" placeholder="Kegiatan" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_itinerary').appendChild(div);
 }
 
 function addMeetpoint() {
     let div = document.createElement('div');
-    div.innerHTML = '<hr><label>Waktu Penjemputan : </label><input type="time" name="waktu_mp[]" required> <br><input type="text" name="kota_mp[]" placeholder="Kota" required> <br><input type="text" name="daerah_mp[]" placeholder="Daerah" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<hr><label>Waktu Penjemputan : </label><input type="time" name="waktu_mp[]" required> <br><label>Kota : </label><input type="text" name="kota_mp[]" placeholder="Kota" required> <br><label>Daerah : </label><input type="text" name="daerah_mp[]" placeholder="Daerah" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_meetpoint').appendChild(div);
 }
 
 function addFasilitas() {
     let div = document.createElement('div');
-    div.innerHTML = '<input type="text" name="fasilitas[]" placeholder="Nama Fasilitas" required> <select name="jenis_fasilitas[]"><option value="include">Include</option><option value="exclude">Exclude</option></select> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<label>Fasilitas : </label><input type="text" name="fasilitas[]" placeholder="Nama Fasilitas" required><label>Jenis : </label> <select name="jenis_fasilitas[]"><option value="include">Include</option><option value="exclude">Exclude</option></select> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_fasilitas').appendChild(div);
 }
 
 function addGambar() {
     let div = document.createElement('div');
-    div.innerHTML = '<input type="file" name="files[]" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<label>Upload Gambar : </label><input type="file" name="files[]" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_gambar').appendChild(div);
 }
 

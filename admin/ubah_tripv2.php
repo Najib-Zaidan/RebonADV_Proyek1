@@ -197,7 +197,7 @@ hr {
     <a href="index.php" class="btn-kembali">Kembali ke Daftar Trip</a>
 </div>
 
-<form action="proses_ubah_trip.php" method="POST" enctype="multipart/form-data">
+<form action="proses_ubah_trip.php" method="POST" enctype="multipart/form-data" onsubmit="return validasiForm()">
     <input type="hidden" name="id_trip" value="<?php echo $id_trip; ?>">
     <div id="section_trip">
     <h3>Informasi Trip</h3>
@@ -247,7 +247,7 @@ hr {
             <input type="time" name="selesai[]" value="<?php echo $row['selesai']; ?>" required> <br>
             <label>Kegiatan : </label>
             <input type="text" name="kegiatan[]" placeholder="Kegiatan" value="<?php echo $row['kegiatan']; ?>" required>
-            <?php if($i > 0): ?>
+            <?php if($i >= 0): ?>
                 <button type="button" onclick="removeRow(this)">Hapus</button>
             <?php endif; ?>
         </div>
@@ -271,7 +271,7 @@ hr {
             <input type="text" name="kota_mp[]" placeholder="Kota" value="<?php echo $row['kota']; ?>" required> <br>
             <label>Daerah : </label>
             <input type="text" name="daerah_mp[]" placeholder="Daerah" value="<?php echo $row['daerah']; ?>" required>
-            <?php if($i > 0): ?>
+            <?php if($i >= 0): ?>
                 <button type="button" onclick="removeRow(this)">Hapus</button>
             <?php endif; ?>
         </div>
@@ -295,7 +295,7 @@ hr {
                 <option value="include" <?php if($row['jenis'] == 'include') echo 'selected'; ?>>Include</option>
                 <option value="exclude" <?php if($row['jenis'] == 'exclude') echo 'selected'; ?>>Exclude</option>
             </select>
-            <?php if($i > 0): ?>
+            <?php if($i >= 0): ?>
                 <button type="button" onclick="removeRow(this)">Hapus</button>
             <?php endif; ?>
         </div>
@@ -314,8 +314,9 @@ hr {
         <div>
             <p>File lama: <?php echo $row['nama_file']; ?></p>
             <input type="hidden" name="gambar_lama[]" value="<?php echo $row['nama_file']; ?>">
+            <label>Upload Gambar : </label>
             <input type="file" name="files[]">
-            <?php if($i > 0): ?>
+            <?php if($i >= 0): ?>
                 <button type="button" onclick="removeRow(this)">Hapus</button>
             <?php endif; ?>
         </div>
@@ -335,30 +336,56 @@ function removeRow(btn) {
 
 function addItinerary() {
     let div = document.createElement('div');
-    div.innerHTML = '<hr><label>Waktu Mulai : </label><input type="time" name="mulai[]" required> <br><label>Waktu Selesai : </label><input type="time" name="selesai[]" required> <br><input type="text" name="kegiatan[]" placeholder="Kegiatan" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<hr><label>Waktu Mulai : </label><input type="time" name="mulai[]" required> <br><label>Waktu Selesai : </label><input type="time" name="selesai[]" required> <br><label>Kegiatan : </label><input type="text" name="kegiatan[]" placeholder="Kegiatan" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_itinerary').appendChild(div);
 }
 
 function addMeetpoint() {
     let div = document.createElement('div');
-    div.innerHTML = '<hr><label>Waktu Penjemputan : </label><input type="time" name="waktu_mp[]" required> <br><input type="text" name="kota_mp[]" placeholder="Kota" required> <br><input type="text" name="daerah_mp[]" placeholder="Daerah" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<hr><label>Waktu Penjemputan : </label><input type="time" name="waktu_mp[]" required> <br><label>Kota : </label><input type="text" name="kota_mp[]" placeholder="Kota" required> <br><label>Daerah : </label><input type="text" name="daerah_mp[]" placeholder="Daerah" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_meetpoint').appendChild(div);
 }
 
 function addFasilitas() {
     let div = document.createElement('div');
-    div.innerHTML = '<input type="text" name="fasilitas[]" placeholder="Nama Fasilitas" required> <select name="jenis_fasilitas[]"><option value="include">Include</option><option value="exclude">Exclude</option></select> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<label>Fasilitas : </label><input type="text" name="fasilitas[]" placeholder="Nama Fasilitas" required><label>Jenis : </label> <select name="jenis_fasilitas[]"><option value="include">Include</option><option value="exclude">Exclude</option></select> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_fasilitas').appendChild(div);
 }
 
 function addGambar() {
     let div = document.createElement('div');
-    div.innerHTML = '<input type="file" name="files[]" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.classList.add('item-row');
+    div.innerHTML = '<label>Upload Gambar : </label><input type="file" name="files[]" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_gambar').appendChild(div);
 }
 
 document.querySelectorAll('#section_trip > div, #section_itinerary > div, #section_meetpoint > div, #section_fasilitas > div, #section_gambar > div').forEach(el => {
     el.classList.add('item-row');
 });
+
+function validasiForm() {
+    const sections = [
+        { id: 'section_itinerary', nama: 'Itinerary' },
+        { id: 'section_meetpoint', nama: 'Meetpoint' },
+        { id: 'section_fasilitas', nama: 'Fasilitas' },
+        { id: 'section_gambar', nama: 'Gambar' }
+    ];
+
+    for (let sec of sections) {
+        const container = document.getElementById(sec.id);
+        const jumlahItem = container.querySelectorAll('.item-row').length;
+
+        if (jumlahItem === 0) {
+            alert("Gagal mengirim! Bagian " + sec.nama + " minimal harus memiliki 1 data.");
+            container.scrollIntoView({ behavior: 'smooth' });
+            return false;
+        }
+    }
+
+    return true;
+}
 </script>
 </html>
