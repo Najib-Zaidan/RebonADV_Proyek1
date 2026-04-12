@@ -33,7 +33,6 @@ require 'fungsi.php';
     <h1>Selamat Datang, <?php echo $_SESSION['username']; ?></h1>
     <p>Ini adalah halaman admin Rebon Adventure.</p>
     <a href="logout.php" onclick="return confirm('Yakin Ingin Keluar?')">Logout</a>
-    
     <ul>
       <li>
         <a href="index.php?menu=trip">Open Trip</a>

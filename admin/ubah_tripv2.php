@@ -24,6 +24,8 @@ $res_gambar = kueri("SELECT * FROM gambar WHERE id_trip = $id_trip");
     margin: 0;
     padding: 50px 20px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     color: #333;
 }
@@ -147,8 +149,54 @@ hr {
     display: none;
 }
 
+.header-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 30px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 20px 30px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.header-container h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.8rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.btn-kembali {
+    background: #4a0004;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-kembali:hover {
+    background: #9d0208;
+    transform: translateX(-5px);
+}
+
 </style>
 <body>
+<div class="header-container">
+    <h1>Ubah Trip ke <?= $trip['tujuan']; ?></h1>
+    <a href="index.php" class="btn-kembali">Kembali ke Daftar Trip</a>
+</div>
+
 <form action="proses_ubah_trip.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="id_trip" value="<?php echo $id_trip; ?>">
     <div id="section_trip">
