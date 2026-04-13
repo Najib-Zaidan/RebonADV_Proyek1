@@ -357,23 +357,23 @@ footer {
 
     <!-- KANAN (FORM) -->
     <aside class="card-form">
-      <form action="form_private.php" class="trip-form">
+      <form action="proses_form_private.php" method="post" class="trip-form">
 
-        <input type="text" placeholder="Nama Lengkap" required />
-        <input type="tel" placeholder="Nomor Telepon" required />
-        <input type="text" placeholder="Lokasi Destinasi" required />
+        <input type="text" name="nama" placeholder="Nama Lengkap" required />
+        <input type="text" name="nohp" placeholder="Nomor Telepon" required />
+        <input type="text" name="destinasi" placeholder="Lokasi Destinasi" required />
 
         <div class="row">
-          <input type="date" class="half" required />
-          <input type="date" id="half" required />
+          <input type="date" name="tgl_mulai" class="half" required />
+          <input type="date" name="tgl_selesai" id="half" required />
         </div>
 
-        <textarea placeholder="Catatan Tambahan" rows="5"></textarea>
-        <input type="number" placeholder="Jumlah Peserta" min="1" required />
+        <textarea name="catatan" placeholder="Catatan Tambahan" rows="5"></textarea>
+        <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" required />
 
         <div class="cta-row">
           <a href="form_private.php">
-          <button type="submit" class="btn-whatsapp">
+          <button type="submit" name="submit" class="btn-whatsapp">
             <i class="fab fa-whatsapp"></i>
             <span>Pesan Sekarang</span>
             </a>
