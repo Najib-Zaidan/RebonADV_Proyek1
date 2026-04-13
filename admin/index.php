@@ -53,8 +53,10 @@ require 'fungsi.php';
     die();*/
     $hasil = kueri("SELECT * FROM $menu");
     if($menu == "trip"): 
+    
     $hasil = kueri("SELECT * FROM trip")
     ?>
+      <a href="tambah_trip_v2.php">Tambah Trip</a>
       <table cellspacing = 0>
       <tr>
         <th>No.</th>
@@ -72,15 +74,21 @@ require 'fungsi.php';
           while($row=ambil($hasil)){
             $id = $row['id_trip'];
             $data = kueri("SELECT
-            (DATEDIFF(tgl_pulang, tgl_berangkat) + 1) durasi,
             (t.kuota - COUNT(b.id_trip)) sisa
             FROM trip t
             JOIN booking b
             ON t.id_trip = b.id_trip
             WHERE t.id_trip = $id AND status != 'Dibatalkan'");
             $ambil = ambil($data);
-            $durasi = $ambil['durasi'];
             $sisa = $ambil['sisa'];
+            if (empty($sisa)){
+              $sisa = $row['kuota'];
+            }
+            $data = kueri("SELECT
+            (DATEDIFF(tgl_pulang, tgl_berangkat) + 1) durasi
+            FROM trip WHERE id_trip = $id");
+            $ambil = ambil($data);
+            $durasi = $ambil['durasi'];
             $data = kueri("SELECT 
             m.kota 
             FROM trip t 
@@ -92,22 +100,19 @@ require 'fungsi.php';
             echo "<td>" . $nomer . "</td>";
             echo "<td>" . $row['tujuan'] . "</td>";
             echo "<td>" . $row['tgl_berangkat'] . "</td>";
-            echo "<td>" . $durasi . "</td>";
+            echo "<td>" . $durasi . " Hari</td>";
             echo "<td>"; 
             while ($row1 = ambil($data)) {
             echo $row1['kota'] . "<br>"; 
             }
             echo "</td>";
             echo "<td>" . $row['harga'] . "</td>";
-            echo "<td>" . $sisa . " / " . $row['kuota'] . "</td>";
-<<<<<<< HEAD
+            echo "<td>" . $sisa . " / " . $row['kuota'] . " Pax</td>";
             echo "<td>";
             echo "<a href='detail_trip.php?id=" . $id . "'>Detail</a> | ";
-            echo "<a href='ubah_trip.php?id=" . $id . "'>Ubah</a> | ";
+            echo "<a href='ubah_tripv2.php?id=" . $id . "'>Ubah</a> | ";
             echo "<a href='hapus_trip.php?id=" . $id . "' onclick=\"return confirm('Yakin ingin menghapus trip ke " . $row['tujuan'] . "?')\">Hapus</a>";
             echo "</td>";
-=======
->>>>>>> ce63055f07fd6b8c65ce718282cc0fae68d0b1e4
             echo "</tr>";
             $nomer++;
           }
@@ -124,7 +129,8 @@ require 'fungsi.php';
             t.tgl_berangkat, 
             t.harga, 
             b.status AS status_pemesanan,
-            (SELECT SUM(nominal) FROM payment WHERE id_booking = b.id_booking) AS total_bayar
+            (SELECT SUM(nominal) FROM payment 
+            WHERE id_booking = b.id_booking AND status = 'Diverifikasi') AS total_bayar
         FROM booking b
         JOIN trip t ON b.id_trip = t.id_trip
         JOIN peserta p ON b.id_peserta = p.id_peserta
@@ -142,6 +148,7 @@ echo "<thead>
             <th>Jadwal Trip</th>
             <th>Progress Pembayaran</th>
             <th>Status</th>
+            <th>Aksi</th>
         </tr>
       </thead>";
 echo "<tbody>";
@@ -160,9 +167,10 @@ while ($row = ambil($data_booking)) {
     echo "<td>" . $row['tgl_berangkat'] . "</td>";
     
     // Menampilkan progress pembayaran: Terbayar / Harga Total
-    echo "<td>" . number_format($sudah_bayar, 0, ',', '.') . " / " . number_format($harga_total, 0, ',', '.') . "</td>";
+    echo "<td>Rp. " . number_format($sudah_bayar, 0, ',', '.') . " / " . number_format($harga_total, 0, ',', '.') . "</td>";
     
     echo "<td>" . $row['status_pemesanan'] . "</td>";
+    echo "<td><a href='detail_booking.php?id=" . $row['id_booking'] . "'>Detail</a></td>";
     echo "</tr>";
 }
 
@@ -174,16 +182,9 @@ echo "</table>"; ?>
 $sql = "SELECT 
             t.tujuan AS nama_trip, 
             p.nama AS nama_peserta, 
-            pay.tgl_bayar, 
             b.tgl_booking, 
-            pay.nominal, 
-<<<<<<< HEAD
-            pay.status AS status_verifikasi,
-            pay.id_payment,
-            pay.bukti_bayar
-=======
-            pay.status AS status_verifikasi
->>>>>>> ce63055f07fd6b8c65ce718282cc0fae68d0b1e4
+            b.status AS status_book,
+            pay.*
         FROM payment pay
         JOIN booking b ON pay.id_booking = b.id_booking
         JOIN trip t ON b.id_trip = t.id_trip
@@ -201,13 +202,9 @@ echo "<thead>
             <th>Tanggal Bayar</th>
             <th>Tanggal Booking</th>
             <th>Nominal</th>
-<<<<<<< HEAD
             <th>Bukti Bayar</th>
             <th>Status Verifikasi</th>
             <th>Aksi</th>
-=======
-            <th>Status Verifikasi</th>
->>>>>>> ce63055f07fd6b8c65ce718282cc0fae68d0b1e4
         </tr>
       </thead>";
 echo "<tbody>";
@@ -221,13 +218,9 @@ while ($row = ambil($data_pembayaran)) {
     echo "<td>" . $row['tgl_bayar'] . "</td>";
     echo "<td>" . $row['tgl_booking'] . "</td>";
     echo "<td>Rp " . number_format($row['nominal'], 0, ',', '.') . "</td>";
-<<<<<<< HEAD
     echo "<td>" . $row['bukti_bayar'] . "</td>";
-    echo "<td>" . $row['status_verifikasi'] . "</td>";
+    echo "<td>" . $row['status'] . "</td>";
     echo "<td><a href='detail_payment.php?id=" . $row['id_payment'] . "'>Detail</a></td>";
-=======
-    echo "<td>" . $row['status_verifikasi'] . "</td>";
->>>>>>> ce63055f07fd6b8c65ce718282cc0fae68d0b1e4
     echo "</tr>";
 }
 
