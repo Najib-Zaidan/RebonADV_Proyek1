@@ -4,37 +4,37 @@ require "konek.php";
 
 $username = trim($_POST['username']);
 $password = trim($_POST['password']);
-$redirect = $_POST['redirect'];
 
-// ambil data dari tabel akun
-$query = "SELECT * FROM akun WHERE username='$username' AND role='user'";
+$query = "SELECT * FROM akun WHERE username='$username'";
 $result = mysqli_query($konek, $query);
-// $data = mysqli_fetch_assoc($result);
-
-// if (!$result) {
-//     die("Query error: " . mysqli_error($konek));
-// }
-
 $data = mysqli_fetch_assoc($result);
 
-// cek password
+if ($data) {
 
-if (1) {
+    // kalau password belum di-hash pakai ini:
+    if ($password == $data['password']) {
 
-    $_SESSION['username'] = $data['username'];
+        $_SESSION['username'] = $data['username'];
 
-    // arahkan sesuai tujuan
-    if ($redirect == "form") {
-        header("Location: form.php");
+        echo "<script>
+                alert('Login berhasil!');
+                window.location.href='home1.php';
+              </script>";
+        exit;
+
     } else {
-        header("Location: home1.php");
+        echo "<script>
+                alert('Password salah!');
+                window.location.href='login_user.php';
+              </script>";
+        exit;
     }
-    exit;
 
 } else {
     echo "<script>
-            alert('Login gagal!');
-            window.location='login_user.php';
+            alert('Username tidak ditemukan!');
+            window.location.href='login_user.php';
           </script>";
+    exit;
 }
 ?>

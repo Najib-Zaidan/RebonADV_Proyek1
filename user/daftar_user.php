@@ -6,7 +6,7 @@ session_start();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Home</title>
+  <title>Daftar User</title>
 
   <style>
    * {
@@ -48,7 +48,7 @@ nav .active2 {
   color: #6b3df5;
 }
 
-.login {
+.active5 {
   background: #6b3df5;
   color: white;
   border: none;
@@ -211,7 +211,7 @@ footer {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="login_user.css" />
-    <title>login user</title>
+    <title>Daftar User user</title>
   </head>
   <body>
     <header class="navbar">
@@ -275,9 +275,8 @@ footer {
 
           <button type="submit">Daftar</button>
 
-          <p class="forgot">Lupa password?</p>
           <p class="register">
-            Sudah punya akun? <a href="login_user.html"><span>Masuk</span></a>
+            Sudah punya akun? <a href="login_user.php"><span>Masuk</span></a>
           </p>
         </form>
       </div>

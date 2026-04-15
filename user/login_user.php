@@ -257,18 +257,30 @@ footer {
           id="formLogin"
         >
         
-          <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
+          <!-- <input type="hidden" name="redirect" value="<?php echo $redirect; ?>"> -->
 
-        <label>Username</label><br>
-        <input type="text" name="username" required><br><br>
+        <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Masukkan username"
+            required
+          />
 
-          <label>Password</label><br>
-    <input type="password" name="password" required><br><br>
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Masukkan password"
+            required
+          />
 
 
           <button type="submit">Login</button>
 
-          <p class="forgot">Lupa password?</p>
+          <a href="#"><p class="forgot">Lupa password?</p></a>
           <p class="register">
             Belum punya akun?
             <a href="daftar_user.php"><span>Daftar di sini</span></a>

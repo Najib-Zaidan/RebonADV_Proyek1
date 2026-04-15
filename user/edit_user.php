@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// CEK LOGIN
 if (!isset($_SESSION['username'])) {
     header("Location: login_user.php");
     exit;
@@ -9,24 +8,39 @@ if (!isset($_SESSION['username'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <style>
-        /* Global Styles */
-        * {
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Profile</title>
+
+<style>
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* BACKGROUND */
 body {
-  background: #e7e2c8;
+  background: url('../gambar/bg-profile.jpg') no-repeat center center/cover;
+  min-height: 100vh;
 }
 
+/* overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: -1;
+}
+
+/* ================= NAVBAR (TIDAK DIUBAH) ================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -64,100 +78,130 @@ nav .active6 {
   cursor: pointer;
 }
 
-        /* Hero & Content Section */
-        .hero {
-    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+/* ================= CONTAINER ================= */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
-.card-container {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    width: 100%;
-    max-width: 500px;
-    border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    animation: fadeIn 0.5s ease;
+/* FORM BOX */
+.form-box {
+  position: relative;
+  width: 420px;
+  padding: 40px 30px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
+  text-align: center;
+  transition: 0.3s;
 }
 
-/* Animasi */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.form-box:hover {
+  transform: translateY(-5px);
 }
 
-/* Text */
-.profile-view h2 {
-    text-transform: uppercase;
-    font-size: 1rem;
-    color: #555;
+/* Tombol kembali */
+.back-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 35px;
+  height: 35px;
+  background: #eee;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 35px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-.profile-view h1 {
-    font-size: 2.2rem;
-    margin: 15px 0 25px;
+.back-btn:hover {
+  background: #6b3df5;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* TEXT */
+.form-box h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-box h3 {
+  margin-bottom: 20px;
+  font-weight: normal;
 }
 
 .username {
-    color: #007bff;
-    font-size: 1.5rem;
+  color: #6b3df5;
+  font-weight: bold;
 }
 
-/* Button group */
-.btn-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+/* INPUT */
+.input-group {
+  text-align: left;
+  margin-bottom: 15px;
 }
 
-/* Button umum */
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.2s;
+  background: #f9f9f9;
+}
+
+.input-group input:focus {
+  border-color: #6b3df5;
+  box-shadow: 0 0 6px rgba(107,61,245,0.4);
+  background: white;
+}
+
+/* BUTTON */
 .btn {
-    padding: 12px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
+  width: 100%;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #00c851, #00a844);
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* Hover effect */
 .btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* Variasi tombol */
-.btn-edit {
-    background: linear-gradient(to right, #4facfe, #00f2fe);
+/* RESPONSIVE */
+@media(max-width:600px){
+  .form-box {
+    width: 100%;
+  }
 }
 
-.btn-logout {
-    background: #ff4b2b;
-}
-
-.btn-delete {
-    background: #ff416c;
-}
-
-.btn-home {
-    background: #6c757d;
-}
-
-/* Responsive */
-@media (max-width: 500px) {
-    .profile-view h1 {
-        font-size: 1.8rem;
-    }
-}
-
-        /* Footer */
-        footer {
+footer {
   background-color: #fdfae6;
   padding: 40px 10% 20px 10%;
   color: #333;
@@ -229,19 +273,19 @@ nav .active6 {
   font-weight: bold;
   color: #333;
 }
-    </style>
+
+</style>
 </head>
+
 <body>
 
-   <header class="navbar">
-      <div class="logo">
-        <img
-          src="../gambar/REBON LOGO GRADIENT presisi.png"
-          alt="Rebon Adventure"
-        />
-      </div>
+<!-- ================= HEADER ================= -->
+<header class="navbar">
+  <div class="logo">
+    <img src="../gambar/REBON LOGO GRADIENT presisi.png" alt="Rebon Adventure"/>
+  </div>
 
-      <nav>
+  <nav>
         <a href="home1.php" class="active1">Home</a>
         <a href="open_trip.php" class="active2">Open</a>
         <a href="private_trip.php" class="active3">Private</a>
@@ -263,33 +307,62 @@ nav .active6 {
             </a>
         <?php endif; ?>
       </nav>
-    </header>
+</header>
 
-    <main class="hero">
-    <div class="card-container">
-        
-        <div class="profile-view">
-            <h2>Profile</h2>
-            <h1>Welcome, <br>
-            
-            <?php if (isset($_SESSION['username'])): ?>
-                <span class="username">
-                    👤 <?php echo $_SESSION['username']; ?>
-                </span>
-            <?php endif; ?>
+<!-- ================= FORM ================= -->
+<div class="container">
+  <div class="form-box">
 
-            <div class="btn-group">
-                <a href="edit_user.php" class="btn btn-edit">Ubah Profil</a>
-                <a href="logout_user.php" class="btn btn-logout">Log Out</a>
-                <a href="delete_user.php" class="btn btn-delete" onclick="return confirm('Yakin hapus akun?')">Hapus Akun</a>
-                <a href="home1.php" class="btn btn-home">🏠 Kembali ke Home</a>
-            </div>
-        </div>
+    <!-- Tombol kembali -->
+    <a href="profile.php" class="back-btn">←</a>
 
-    </div>
-      </main>
+    <h2>EDIT PROFILE</h2>
 
-    <footer>
+    <h3>
+      Hi,<br>
+      <?php if (isset($_SESSION['username'])): ?>
+        <span class="username">
+          👤 <?php echo $_SESSION['username']; ?>
+        </span>
+      <?php endif; ?>
+    </h3>
+
+    <form method="POST" action="proses_edit_user.php">
+
+      <div class="input-group">
+        <label>Username Saat Ini</label>
+        <input type="text" value="<?php echo $_SESSION['username']; ?>" readonly>
+      </div>
+
+      <div class="input-group">
+        <label>Username Baru</label>
+        <input type="text" name="username" placeholder="Masukkan username baru">
+      </div>
+
+      <div class="input-group">
+        <label>Password Lama</label>
+        <input type="password" name="old_password" placeholder="Masukkan password lama">
+      </div>
+
+      <div class="input-group">
+        <label>Password Baru</label>
+        <input type="password" name="new_password" placeholder="Password baru">
+      </div>
+
+      <div class="input-group">
+        <label>Konfirmasi Password Baru</label>
+        <input type="password" name="confirm_password" placeholder="Ulangi password baru">
+      </div>
+
+      <a href="#"><p class="forgot">Lupa password?</p></a>
+
+      <button type="submit" class="btn">Simpan Perubahan</button>
+
+    </form>
+  </div>
+</div>
+<!-- ================= FOOTER ================= -->
+<footer>
       <div class="footer-content">
         <div class="footer-column logo-col">
           <img
@@ -344,6 +417,5 @@ nav .active6 {
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
-
 </body>
 </html>
