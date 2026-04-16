@@ -482,35 +482,38 @@ footer {
       </div>
 
       <div class="trip-container">
-        <a href="ot_katalog.php">
-          <div class="trip-card">
-            <img src="../gambar/ciremai.jpeg" />
-            <h3>GN. Ciremai</h3>
-            <p>Via Apuy</p>
-            <p class="date">Tanggal 28 - 29 Maret 2026</p>
-            <span class="price">Rp. 325.000 / Pax</span>
-          </div>
-        </a>
-        <div class="trip-card">
-          <a href="ot_katalog.php">
-            <img src="../gambar/prau.jpg" />
-            <h3>GN. Prau</h3>
-            <p>Via Patak Banteng</p>
-            <p class="date">Tanggal 28 - 29 Maret 2026</p>
-            <span class="price">Rp. 350.000 / Pax</span>
-          </a>
-        </div>
+        <?php
+// Pastikan file functions.php sudah di-require di bagian atas file
+require 'fungsi.php';
 
+// Query mengambil data trip dan satu gambar terkait
+$data_trip = kueri("SELECT t.*, 
+                   (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) AS foto 
+                   FROM trip t LIMIT 5");
+
+// Melakukan looping untuk setiap baris data
+while ($row = ambil($data_trip)) :
+    // Mengolah format tanggal (Berangkat - Pulang Bulan Tahun)
+    $tgl_berangkat = date('d', strtotime($row['tgl_berangkat']));
+    $tgl_pulang = date('d F Y', strtotime($row['tgl_pulang']));
+    $display_tgl = "Tanggal $tgl_berangkat - $tgl_pulang";
+?>
+
+    <a href="ot_katalog.php?id=<?= $row['id_trip']; ?>">
         <div class="trip-card">
-          <a href="ot_katalog.php">
-            <img src="../gambar/sumbing.jpg" />
-            <h3>GN. Sumbing</h3>
-            <p>Via Garung</p>
-            <p class="date">Tanggal 28 - 29 Maret 2026</p>
-            <span class="price">Rp. 350.000 / Pax</span>
-          </a>
+            <img src="../gambar/upload/<?= $row['foto'] ? $row['foto'] : 'default.jpg'; ?>" />
+            
+            <h3><?= htmlspecialchars($row['tujuan']); ?></h3>
+            
+            <p><?= htmlspecialchars($row['catatan']); ?></p>
+            
+            <p class="date"><?= $display_tgl; ?></p>
+            
+            <span class="price">Rp. <?= number_format($row['harga'], 0, ',', '.'); ?> / Pax</span>
         </div>
-      </div>
+    </a>
+
+<?php endwhile; ?>
     </section>
 
     <!-- TRIP SESUKA HATI -->
