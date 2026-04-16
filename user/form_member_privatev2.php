@@ -278,57 +278,45 @@ footer {
     </header>
 
     <section class="form-section">
-    <?php
-// Tangkap jumlah peserta dari URL, default ke 1 jika tidak ada
-$jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
-?>
+      <div class="form-container">
+        <h2>TAMBAH PESERTA PRIVATE TRIP</h2>
 
-<div class="form-container">
-    <h2>TAMBAH PESERTA PRIVATE TRIP</h2>
+        <form
+          id="formPendaftaran"
+          action="proses_form_member.php"
+          method="POST"
+        >
+          <input
+            type="text"
+            name="nama"
+            id="nama"
+            placeholder="Nama Lengkap *"
+          />
 
-    <form id="formPendaftaran" action="proses_form_member.php" method="POST">
-        <?php 
-        $i = 1;
-        while ($i <= $jumlah_peserta) : 
-        ?>
-            
-                <h4>Peserta Ke-<?php echo $i; ?></h4>
-                
-                <input
-                    type="text"
-                    name="nama[]"
-                    placeholder="Nama Lengkap Peserta <?php echo $i; ?> *"
-                    required
-                />
+          <div class="date-wrapper">
+            <label>Tanggal Lahir *</label>
+            <div class="date-group">
+              <input type="date" name="tglLahir" id="dd" placeholder="DD" />
+            </div>
+          </div>
 
-                <div class="date-wrapper">
-                    <label>Tanggal Lahir Peserta <?php echo $i; ?> *</label>
-                    <div class="date-group">
-                        <input type="date" name="tglLahir[]" required />
-                    </div>
-                </div>
+          <input
+            type="text"
+            name="alamat"
+            id="alamat"
+            placeholder="Alamat Lengkap *"
+          />
+          
+          <input
+            type="text"
+            name="detail"
+            id="detail"
+            placeholder="Detail Penyakit"
+          />
 
-                <input
-                    type="text"
-                    name="alamat[]"
-                    placeholder="Alamat Lengkap Peserta <?php echo $i; ?> *"
-                    required
-                />
-                
-                <input
-                    type="text"
-                    name="detail[]"
-                    placeholder="Detail Penyakit Peserta <?php echo $i; ?> (Opsional)"
-                />
-            
-        <?php 
-            $i++;
-        endwhile; 
-        ?>
-
-        <button type="submit">Pesan sekarang</button>
-    </form>
-</div>
+          <button type="submit">Pesan sekarang</button>
+        </form>
+      </div>
     </section>
 
     <footer>
