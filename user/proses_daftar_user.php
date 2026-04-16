@@ -10,7 +10,17 @@ if (empty($username) || empty($password)) {
 }
 
 // HASH PASSWORD
-$password_hash = password_hash($password, PASSWORD_DEFAULT);
+// $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+$cek = mysqli_query($konek, "SELECT * FROM akun WHERE username='$username'");
+
+if (mysqli_num_rows($cek) > 0) {
+    echo "<script>
+            alert('Username sudah digunakan!');
+            window.history.back();
+          </script>";
+    exit;
+}
 
 // simpan ke tabel akun
 $query = "INSERT INTO akun (username, password, role)

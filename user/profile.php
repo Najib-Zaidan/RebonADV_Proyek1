@@ -280,7 +280,7 @@ nav .active6 {
 
             <div class="btn-group">
                 <a href="edit_user.php" class="btn btn-edit">Ubah Profil</a>
-                <a href="logout_user.php" class="btn btn-logout">Log Out</a>
+                <a href="logout_user.php" class="btn btn-logout" onclick="return confirm('Yakin ingin logout?')">Log Out</a>
                 <a href="delete_user.php" class="btn btn-delete" onclick="return confirm('Yakin hapus akun?')">Hapus Akun</a>
                 <a href="home1.php" class="btn btn-home">🏠 Kembali ke Home</a>
             </div>

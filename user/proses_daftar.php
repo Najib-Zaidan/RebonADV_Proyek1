@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'konek.php';
+$id = $_SESSION['id_akun'];
 
 $nama = $_POST['nama'];
 $alamat = $_POST['alamat'];
@@ -10,9 +11,9 @@ $detail = $_POST['detail'];
 
 
 $query = "INSERT INTO peserta 
-(nama, no_hp, tgl_lahir, alamat, riwayat)
+(id_akun, nama, no_hp, tgl_lahir, alamat, riwayat)
 VALUES 
-('$nama','$telepon','$tglLahir','$alamat','$detail')";
+($id, '$nama','$telepon','$tglLahir','$alamat','$detail')";
 
 // var_dump($_POST);
 // die();
