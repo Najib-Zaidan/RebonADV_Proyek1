@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 
 <!doctype html>
@@ -255,110 +256,63 @@ footer {
     <section class="trip-container">
       <div class="trip-grid">
         <!-- CARD -->
-        <a href="ot_katalog.php">
+        <?php
+// Koneksi ke database
+require 'fungsi.php'; 
+
+// Query untuk mengambil data trip, satu gambar, dan menghitung sisa kuota
+$sql = "SELECT t.*, 
+        (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
+        (SELECT COUNT(id_booking) FROM booking b WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
+        FROM trip t";
+
+$result = kueri($sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = ambil($result)) {
+        
+        $tgl_berangkat = new DateTime($row['tgl_berangkat']);
+        $tgl_pulang = new DateTime($row['tgl_pulang']);
+        $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1; 
+
+        
+        $sisa_kuota = $row['kuota'] - $row['terisi'];
+        
+        
+        $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
+?>
+
+        <a href="ot_katalog.php?id=<?php echo $row['id_trip']; ?>">
           <div class="card">
             <div class="card-img">
-              <img src="../gambar/gunung.jpg" />
-              <span class="badge">1 Hari</span>
+              <img src="../gambar/upload/<?php echo $row['gambar'] ? $row['gambar'] : 'default.jpg'; ?>" />
+              <span class="badge"><?php echo $durasi; ?> Hari</span>
             </div>
 
             <div class="card-body">
               <div class="title-row">
-                <h3>GN. Ciremai</h3>
-                <span class="seat">5 / 10 SEAT</span>
+                <h3><?php echo htmlspecialchars($row['tujuan']); ?></h3>
+                <span class="seat"><?php echo $sisa_kuota; ?> / <?php echo $row['kuota']; ?> SEAT</span>
               </div>
 
-              <p class="via">Via Apuy</p>
+              <p class="via"><?php echo htmlspecialchars($row['catatan']); ?></p>
 
-              <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
+              <p class="date">📅 Tanggal <?php echo $tgl_tampil; ?></p>
 
-              <p class="price">Rp. 200.000 <span>/ Pax</span></p>
+              <p class="price">Rp. <?php echo number_format($row['harga'], 0, ',', '.'); ?> <span>/ Pax</span></p>
             </div>
           </div>
         </a>
 
+<?php
+    }
+} else {
+    echo "Belum ada paket perjalanan tersedia.";
+}
+?>
+
         <!-- DUPLIKASI CARD -->
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-img">
-            <img src="../gambar/gunung.jpg" />
-            <span class="badge">1 Hari</span>
-          </div>
-          <div class="card-body">
-            <div class="title-row">
-              <h3>GN. Ciremai</h3>
-              <span class="seat">5 / 10 SEAT</span>
-            </div>
-            <p class="via">Via Apuy</p>
-            <p class="date">📅 Tanggal 28 - 29 Maret 2026</p>
-            <p class="price">Rp. 200.000 <span>/ Pax</span></p>
-          </div>
-        </div>
-      </div>
+        
     </section>
 
     <!-- FOOTER -->
