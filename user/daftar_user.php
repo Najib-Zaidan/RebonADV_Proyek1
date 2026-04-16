@@ -234,7 +234,7 @@ footer {
             </span>
         </a>
             <a href="logout_user.php">
-              <button class="active5">Logout</button>
+              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
             </a>
 
         <?php else: ?>

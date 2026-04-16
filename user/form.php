@@ -3,7 +3,7 @@ session_start();
 
 // CEK LOGIN
 if (!isset($_SESSION['username'])) {
-    header("Location: login_user.php?redirect=form");
+    header("Location: login_user.php");
     exit;
 }
 ?>
@@ -265,7 +265,7 @@ footer {
             </span>
         </a>
             <a href="logout_user.php">
-              <button class="active5">Logout</button>
+              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
             </a>
 
         <?php else: ?>
