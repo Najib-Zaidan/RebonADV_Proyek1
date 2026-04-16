@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Formulir Pendaftaran Open Trip</title>
+  <title>Formulir Pendaftaran Private Trip</title>
 
   <style>
     * {
@@ -51,7 +51,7 @@ nav a {
   font-weight: 500;
 }
 
-nav .active2 {
+nav .active3 {
   color: #6b3df5;
 }
 
@@ -279,7 +279,7 @@ footer {
 
     <section class="form-section">
       <div class="form-container">
-        <h2>TAMBAH PESERTA OPEN TRIP</h2>
+        <h2>TAMBAH PESERTA PRIVATE TRIP</h2>
 
         <form
           id="formPendaftaran"
