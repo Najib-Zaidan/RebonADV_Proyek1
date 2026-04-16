@@ -235,7 +235,7 @@ footer {
             </span>
         </a>
             <a href="logout_user.php">
-              <button class="active5">Logout</button>
+              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
             </a>
 
         <?php else: ?>
@@ -280,7 +280,7 @@ footer {
 
           <button type="submit">Login</button>
 
-          <a href="#"><p class="forgot">Lupa password?</p></a>
+          <a href="lupa_password.php"><p class="forgot">Lupa password?</p></a>
           <p class="register">
             Belum punya akun?
             <a href="daftar_user.php"><span>Daftar di sini</span></a>

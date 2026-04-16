@@ -15,6 +15,7 @@ if ($data) {
     if ($password == $data['password']) {
 
         $_SESSION['username'] = $data['username'];
+        $_SESSION['id_akun'] = $data['id_akun'];
 
         echo "<script>
                 alert('Login berhasil!');
