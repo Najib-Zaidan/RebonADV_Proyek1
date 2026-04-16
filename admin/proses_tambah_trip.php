@@ -47,7 +47,7 @@ if (!empty($_FILES['files']['name'][0])) {
         $tmp_name  = $_FILES['files']['tmp_name'][$key];
         $ekstensi = strtolower(pathinfo($nama_asli, PATHINFO_EXTENSION));
         if (in_array($ekstensi, $ekstensi_diperbolehkan)) {
-            $target_dir = "upload/";
+            $target_dir = "../gambar/upload/";
 
 if (!is_dir($target_dir)) {
     die("Error: Folder tujuan tidak ditemukan.");

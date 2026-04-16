@@ -123,8 +123,6 @@ nav .active2 {
 
 .thumbs img {
   width: 120px;
-  aspect-ratio: 3 / 2;
-    object-fit: cover;
   border-radius: 8px;
 }
 
@@ -353,7 +351,7 @@ footer {
             </span>
         </a>
             <a href="logout_user.php">
-              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
+              <button class="active5">Logout</button>
             </a>
 
         <?php else: ?>
@@ -365,132 +363,158 @@ footer {
       </nav>
     </header>
 
-    <?php
-
-require 'fungsi.php';
-
-$id_trip = $_GET['id'];
-$sisa = mysqli_num_rows(kueri("SELECT id_booking FROM booking b JOIN trip t ON b.id_trip = $id_trip WHERE b.status != 'Dibatalkan'"));
-$sisa = ambil(kueri("SELECT
-            (t.kuota - COUNT(b.id_trip)) sisa
-            FROM trip t
-            JOIN booking b
-            ON t.id_trip = b.id_trip
-            WHERE t.id_trip = $id_trip AND status != 'Dibatalkan'"));
-$data_trip = kueri("SELECT * FROM trip 
-                   INNER JOIN katalog ON trip.id_trip = katalog.id_trip 
-                   WHERE trip.id_trip = $id_trip");
-$trip = ambil($data_trip);
-
-
-$data_gambar = kueri("SELECT * FROM gambar WHERE id_trip = $id_trip");
-
-$data_include = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip AND jenis = 'Include'");
-$data_exclude = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip AND jenis = 'Exclude'");
-
-$data_meet = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip ORDER BY waktu ASC");
-
-$data_iten = kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC");
-
-function tgl_indo($tanggal) {
-    $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-    $pecahkan = explode('-', $tanggal);
-    return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
-}
-?>
-
-<main class="container">
-  <div class="top-header">
+    <main class="container">
+      <!-- TITLE + PAX -->
+      <div class="top-header">
         <div>
-          <h1><?= $trip['tujuan']; ?></h1>
+          <h1>Gn. Ciremai</h1>
           <p>Via Apuy, Majalengka, Jawa Barat</p>
         </div>
 
         <div class="pax-box">
-          <strong><?= $sisa['sisa'] ?> / <?= $trip['kuota']; ?> Pax</strong>
-          <span>Sisa <?= $sisa['sisa'] ?> pax lagi!</span>
+          <strong>8 / 15 Pax</strong>
+          <span>Sisa 7 pax lagi!</span>
         </div>
       </div>
-    <div class="grid">
+
+      <!-- MAIN GRID -->
+      <div class="grid">
+        <!-- LEFT -->
         <div class="left">
-            <?php 
-            // Ambil gambar pertama untuk main-img
-            $gambar_list = [];
-            while($g = ambil($data_gambar)) { $gambar_list[] = $g; }
-            $main_img = !empty($gambar_list) ? $gambar_list[0]['nama_file'] : 'gunung.jpg';
-            ?>
-            <img src="../gambar/upload/<?= $main_img; ?>" class="main-img" />
+          <img src="../gambar/gunung.jpg" class="main-img" />
 
-            <div class="thumbs">
-                <?php foreach($gambar_list as $img) : ?>
-                    <img src="../gambar/upload/<?= $img['nama_file']; ?>" />
-                <?php endforeach; ?>
+          <div class="thumbs">
+            <img src="../gambar/gunung.jpg" />
+            <img src="../gambar/gunung.jpg" />
+          </div>
+
+          <!-- CARD -->
+          <div class="price-card">
+            <p class="date">Sabtu, 28 Maret 2026</p>
+
+            <div class="price-box">
+              <p>Harga Per Pax</p>
+              <h2>Rp. 200.000</h2>
             </div>
 
-            <div class="price-card">
-                <p class="date"><?= tgl_indo($trip['tgl_berangkat']); ?></p>
-
-                <div class="price-box">
-                    <p>Harga Per Pax</p>
-                    <h2>Rp. <?= number_format($trip['harga'], 0, ',', '.'); ?></h2>
-                </div>
-
-                <a href="form.php?id=<?= $trip['id_trip']; ?>"> <button>Pesan sekarang</button></a>
-            </div>
+            <a href="form.php"> <button>Pesan sekarang</button></a>
+          </div>
         </div>
 
+        <!-- RIGHT -->
         <div class="right">
-            <div class="deskripsi">
-                <?= nl2br($trip['deskripsi']); ?>
+          <p>
+            Gunung Ciremai (sering kali secara salah kaprah dinamakan Ceremai)
+            adalah gunung berapi kerucut yang secara administratif termasuk
+            dalam wilayah Kabupaten Kuningan dan Kabupaten Majalengka, Provinsi
+            Jawa Barat. Gunung ini memiliki ketinggian 3.078 mdpl dan merupakan
+            gunung tertinggi di Jawa Barat.
+          </p>
+
+          <p>
+            Gunung ini memiliki kawah ganda. Kawah barat berdiameter sekitar 400
+            m dan kawah timur sekitar 600 m. Pada ketinggian sekitar 2.900 mdpl
+            di lereng selatan terdapat bekas titik letusan yang dinamakan Gowa
+            Walet.
+          </p>
+
+          <p>
+            Saat ini, Gunung Ciremai termasuk dalam kawasan Taman Nasional
+            Gunung Ciremai (TNGC) dengan luas total sekitar 15.000 hektar.
+          </p>
+
+          <h3>FASILITAS</h3>
+
+          <div class="fasilitas">
+            <div class="include">
+              <p class="label">INCLUDE</p>
+              <ul>
+                <li>Transportasi PP</li>
+                <li>SIMAKSI</li>
+                <li>Tenda</li>
+                <li>Guide</li>
+              </ul>
             </div>
 
-            <h3>FASILITAS</h3>
-            <div class="fasilitas">
-                <div class="include">
-                    <p class="label">INCLUDE</p>
-                    <ul>
-                        <?php while($inc = ambil($data_include)) : ?>
-                            <li><?= $inc['fasilitas']; ?></li>
-                        <?php endwhile; ?>
-                    </ul>
-                </div>
-
-                <div class="exclude">
-                    <p class="label">EXCLUDE</p>
-                    <ul>
-                        <?php while($exc = ambil($data_exclude)) : ?>
-                            <li><?= $exc['fasilitas']; ?></li>
-                        <?php endwhile; ?>
-                    </ul>
-                </div>
+            <div class="exclude">
+              <p class="label">EXCLUDE</p>
+              <ul>
+                <li>Ojek</li>
+                <li>Obat pribadi</li>
+              </ul>
             </div>
+          </div>
 
-            <h3>MEETING POINT</h3>
-            <ul class="meeting-point">
-                <?php while($mp = ambil($data_meet)) : ?>
-                    <li><?= date('H.i', strtotime($mp['waktu'])); ?> WIB - <?= $mp['kota']; ?> (<?= $mp['daerah']; ?>)</li>
-                <?php endwhile; ?>
-            </ul>
+          <h3>MEETING POINT</h3>
 
-            <h3>CATATAN TAMBAHAN</h3>
-            <div class="catatan">
-                <?= nl2br($trip['catatan']); ?>
-            </div>
+          <ul class="meeting-point">
+            <li>19.00 WIB - Indramayu (Bundaran Kijang)</li>
+            <li>21.00 WIB - Cirebon (Stasiun Kejaksan)</li>
+            <li>08.00 WIB - Majalengka (Basecamp Apuy)</li>
+          </ul>
+
+          <h3>CATATAN TAMBAHAN</h3>
+
+          <ol class="catatan">
+            <li>Pendaftaran ditutup 1 bulan sebelum keberangkatan</li>
+            <li>DP minimal Rp. 200.000 sebagai tanda jadi</li>
+            <li>Apabila cancel, DP hangus</li>
+            <li>Pelunasan H-10 sebelum keberangkatan</li>
+            <li>Datang ke meeting point sesuai jadwal</li>
+            <li>Persiapkan fisik dan mental dengan baik</li>
+            <li>Jaga pola tidur dan istirahat</li>
+            <li>Wajib menaati peraturan basecamp & guide</li>
+            <li>Info lengkap tersedia di grup WhatsApp</li>
+          </ol>
         </div>
-    </div>
-
-    <div class="itinerary">
+      </div>
+      <!-- ITINERARY -->
+      <div class="itinerary">
         <h3>ITINERARY</h3>
+
         <ul class="timeline">
-            <?php while($it = ambil($data_iten)) : ?>
-                <li>
-                    <span><?= date('H.i', strtotime($it['mulai'])); ?> - <?= date('H.i', strtotime($it['selesai'])); ?></span>
-                    <p><?= $it['kegiatan']; ?></p>
-                </li>
-            <?php endwhile; ?>
+          <li>
+            <span>00.00 - 01.00</span>
+            <p>Meeting point & briefing peserta</p>
+          </li>
+
+          <li>
+            <span>01.00 - 01.30</span>
+            <p>Perjalanan ke basecamp</p>
+          </li>
+
+          <li>
+            <span>01.30 - 02.00</span>
+            <p>Pemanasan & mulai pendakian</p>
+          </li>
+
+          <li>
+            <span>02.00 - 05.30</span>
+            <p>Trek awal hutan & tanjakan stabil</p>
+          </li>
+
+          <li>
+            <span>05.30 - 07.00</span>
+            <p>Menuju puncak & summit attack</p>
+          </li>
+
+          <li>
+            <span>07.00 - 08.00</span>
+            <p>Tiba di puncak & foto</p>
+          </li>
+
+          <li>
+            <span>08.00 - 13.00</span>
+            <p>Turun ke basecamp</p>
+          </li>
+
+          <li>
+            <span>13.00 - 14.00</span>
+            <p>Trip selesai</p>
+          </li>
         </ul>
-    </div>
-</main>
+      </div>
+    </main>
     <!-- FOOTER -->
 
     <footer>
