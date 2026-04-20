@@ -435,7 +435,7 @@ function tgl_indo($tanggal) {
                     <h2>Rp. <?= number_format($trip['harga'], 0, ',', '.'); ?></h2>
                 </div>
 
-                <a href="form.php?id=<?= $trip['id_trip']; ?>"> <button>Pesan sekarang</button></a>
+                <a href="pilih_peserta.php?id=<?= $trip['id_trip']; ?>"> <button>Pesan sekarang</button></a>
             </div>
         </div>
 

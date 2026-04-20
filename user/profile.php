@@ -283,6 +283,8 @@ nav .active6 {
                 <a href="logout_user.php" class="btn btn-logout" onclick="return confirm('Yakin ingin logout?')">Log Out</a>
                 <a href="delete_user.php" class="btn btn-delete" onclick="return confirm('Yakin hapus akun?')">Hapus Akun</a>
                 <a href="home1.php" class="btn btn-home">🏠 Kembali ke Home</a>
+                <a href="daftar_pesanan.php" class="btn btn-home">Daftar Pesanan</a>
+                <a href="daftar_pembayaran.php" class="btn btn-home">Riwayat Pembayaran</a>
             </div>
         </div>
 

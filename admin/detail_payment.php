@@ -57,6 +57,14 @@ $data = ambil($eksekusi);
 <head>
     <title>Detail Pembayaran</title>
 </head>
+<style>
+  img {
+    width: 200px; 
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
+</style>
 <body>
     <h2>Detail Pembayaran</h2>
     <a href="index.php?menu=payment">Kembali ke Daftar</a>
@@ -80,7 +88,10 @@ $data = ambil($eksekusi);
         </tr>
         <tr>
             <th>Bukti Bayar (Nama File)</th>
-            <td><?php echo $data['bukti_bayar']; ?></td>
+            <?php 
+            $bb = $data['bukti_bayar'];
+            echo "<td><a href='../gambar/payment/". $bb . "' target='_blank'><img src='../gambar/payment/" . $bb . "'></a></td>";
+            ?>
         </tr>
         <tr>
             <th>Status Saat Ini</th>

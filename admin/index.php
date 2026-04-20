@@ -28,6 +28,12 @@ require 'fungsi.php';
     color: aliceblue;
     background-color: crimson;
   }
+  img {
+    width: 100px; 
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
 </style>
 <body>
     <h1>Selamat Datang, <?php echo $_SESSION['username']; ?></h1>
@@ -211,6 +217,7 @@ echo "<tbody>";
 
 $no = 1;
 while ($row = ambil($data_pembayaran)) {
+  $bb = $row['bukti_bayar'];
     echo "<tr>";
     echo "<td>" . $no++ . "</td>";
     echo "<td>" . $row['nama_trip'] . "</td>";
@@ -218,7 +225,7 @@ while ($row = ambil($data_pembayaran)) {
     echo "<td>" . $row['tgl_bayar'] . "</td>";
     echo "<td>" . $row['tgl_booking'] . "</td>";
     echo "<td>Rp " . number_format($row['nominal'], 0, ',', '.') . "</td>";
-    echo "<td>" . $row['bukti_bayar'] . "</td>";
+    echo "<td><a href='../gambar/payment/". $bb . "' target='_blank'><img src='../gambar/payment/" . $bb . "'></a></td>";
     echo "<td>" . $row['status'] . "</td>";
     echo "<td><a href='detail_payment.php?id=" . $row['id_payment'] . "'>Detail</a></td>";
     echo "</tr>";
