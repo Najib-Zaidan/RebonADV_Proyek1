@@ -17,7 +17,7 @@ if (isset($_POST['login'])) {
       //echo "cek proses php";
       //die();
         $_SESSION['login'] = true;
-        $_SESSION['username'] = $nama['username'];
+        $_SESSION['nama'] = $nama['username'];
         header("Location: index.php");
         exit;
     } else {
