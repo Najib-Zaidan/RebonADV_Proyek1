@@ -5,7 +5,7 @@ require "konek.php";
 $username = trim($_POST['username']);
 $password = trim($_POST['password']);
 
-$query = "SELECT * FROM akun WHERE username='$username'";
+$query = "SELECT * FROM akun WHERE username='$username' AND role='user'";
 $result = mysqli_query($konek, $query);
 $data = mysqli_fetch_assoc($result);
 
