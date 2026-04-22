@@ -71,7 +71,7 @@ if ($exec) {
 
     echo "<script>
             alert('Profil berhasil diupdate!');
-            window.location.href='profile.php';
+            window.location.href='profiluser.php';
           </script>";
 
 } else {
