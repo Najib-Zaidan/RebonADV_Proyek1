@@ -258,7 +258,7 @@ footer {
         <a href="open_trip.php" class="active2">Open</a>
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-        <a href="profile.php"><?php if (isset($_SESSION['username'])): ?>
+        <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
             <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
@@ -290,13 +290,13 @@ footer {
             type="text"
             name="nama"
             id="nama"
-            placeholder="Nama Lengkap *"
+            placeholder="Nama Lengkap *"  required
           />
 
           <div class="date-wrapper">
             <label>Tanggal Lahir *</label>
             <div class="date-group">
-              <input type="date" name="tglLahir" id="dd" placeholder="DD" />
+              <input type="date" name="tglLahir" id="dd" placeholder="DD"  required/>
             </div>
           </div>
 
@@ -304,13 +304,13 @@ footer {
             type="text"
             name="alamat"
             id="alamat"
-            placeholder="Alamat Lengkap *"
+            placeholder="Alamat Lengkap *" required
           />
           <input
             type="text"
             name="telepon"
             id="telepon"
-            placeholder="Nomor Telepon *"
+            placeholder="Nomor Telepon *" required
           />
 
           <input

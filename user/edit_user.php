@@ -290,7 +290,7 @@ footer {
         <a href="open_trip.php" class="active2">Open</a>
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-        <a href="profile.php" class="active6" ><?php if (isset($_SESSION['username'])): ?>
+        <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
             <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
@@ -302,7 +302,7 @@ footer {
 
         <?php else: ?>
             <!-- JIKA BELUM LOGIN -->
-            <a href="../login_user.html">
+            <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
         <?php endif; ?>
@@ -314,7 +314,7 @@ footer {
   <div class="form-box">
 
     <!-- Tombol kembali -->
-    <a href="profile.php" class="back-btn">←</a>
+    <a href="profiluser.php" class="back-btn">←</a>
 
     <h2>EDIT PROFILE</h2>
 

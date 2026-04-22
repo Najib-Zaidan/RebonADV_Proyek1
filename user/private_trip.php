@@ -325,7 +325,7 @@ footer {
         <a href="open_trip.php" class="active2">Open</a>
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-        <a href="profile.php"><?php if (isset($_SESSION['username'])): ?>
+        <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
             <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
