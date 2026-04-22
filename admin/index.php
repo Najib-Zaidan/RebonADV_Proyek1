@@ -183,7 +183,7 @@ td img {
 <div class="content">
 
 <div class="header">
-  <h1>Selamat Datang, <?php echo $_SESSION['username']; ?></h1>
+  <h1>Selamat Datang, <?php echo $_SESSION['nama']; ?></h1>
   <p>Dashboard Admin Rebon Adventure</p>
 </div>
 
