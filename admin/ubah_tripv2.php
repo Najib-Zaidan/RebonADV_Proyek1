@@ -387,5 +387,17 @@ function validasiForm() {
 
     return true;
 }
+
+const inputHarga = document.querySelector('input[name="harga"]');
+const form = inputHarga.closest('form');
+
+form.addEventListener('submit', function(e) {
+    if (inputHarga.value <= 0) {
+        e.preventDefault();
+        alert('Harga harus lebih besar dari 0!');
+        inputHarga.focus();
+    }
+});
+
 </script>
 </html>
