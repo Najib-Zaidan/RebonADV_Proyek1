@@ -170,6 +170,7 @@ td img {
     <a href="index.php?menu=trip">Open Trip</a>
     <a href="index.php?menu=booking">Pesanan</a>
     <a href="index.php?menu=payment">Pembayaran</a>
+    <a href="index.php?menu=peserta">Peserta</a>
   </div>
 
   <div class="logout">
@@ -341,7 +342,99 @@ $no++;
 ?>
 </table>
 
+
+
+<?php elseif($menu == "peserta"): ?>
+
+<div style="margin-bottom: 20px;">
+  <a href="index.php?menu=peserta&tab=open" class="btn-tambah" style="background: <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'open') ? '#321180' : '#6b3df5'; ?>;">Open Trip</a>
+  <a href="index.php?menu=peserta&tab=private" class="btn-tambah" style="background: <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'private') ? '#321180' : '#6b3df5'; ?>;">Private Trip</a>
+</div>
+
+<?php
+$tab = $_GET['tab'] ?? 'open';
+
+if($tab == "open"):
+  $data_peserta = kueri("SELECT p.*, a.username, 
+  (SELECT t.tujuan FROM booking b JOIN trip t ON b.id_trip = t.id_trip WHERE b.id_peserta = p.id_peserta AND b.status = 'Lunas' ORDER BY t.tgl_berangkat DESC LIMIT 1) AS trip_terakhir,
+  (SELECT COUNT(*) FROM booking b WHERE b.id_peserta = p.id_peserta AND b.status = 'Lunas') AS total_trip
+  FROM peserta p 
+  JOIN akun a ON p.id_akun = a.id_akun");
+?>
+
+<table>
+<tr>
+  <th>No</th>
+  <th>Username</th>
+  <th>Nama Lengkap</th>
+  <th>No. HP</th>
+  <th>Tanggal Lahir</th>
+  <th>Alamat</th>
+  <th>Riwayat Kesehatan</th>
+  <th>Trip Terakhir</th>
+  <th>Total Trip</th>
+</tr>
+
+<?php
+  $no = 1;
+  while($row = ambil($data_peserta)){
+    $trip = $row['trip_terakhir'] ?? '-';
+    echo "<tr>";
+    echo "<td>$no</td>";
+    echo "<td>{$row['username']}</td>";
+    echo "<td>{$row['nama']}</td>";
+    echo "<td>{$row['no_hp']}</td>";
+    echo "<td>{$row['tgl_lahir']}</td>";
+    echo "<td>{$row['alamat']}</td>";
+    echo "<td>{$row['riwayat']}</td>";
+    echo "<td>$trip</td>";
+    echo "<td>{$row['total_trip']} Kali</td>";
+    echo "</tr>";
+    $no++;
+  }
+?>
+</table>
+
+<?php else: ?>
+
+<?php
+  $data_member = kueri("SELECT m.*, pr.tujuan, pr.nama AS penanggung_jawab 
+  FROM member m 
+  JOIN private pr ON m.id_private = pr.id_private");
+?>
+
+<table>
+<tr>
+  <th>No</th>
+  <th>Nama Member</th>
+  <th>Tanggal Lahir</th>
+  <th>Alamat</th>
+  <th>Riwayat Kesehatan</th>
+  <th>Tujuan Trip</th>
+  <th>Penanggung Jawab</th>
+</tr>
+
+<?php
+  $no = 1;
+  while($row = ambil($data_member)){
+    echo "<tr>";
+    echo "<td>$no</td>";
+    echo "<td>{$row['nama']}</td>";
+    echo "<td>{$row['tgl_lahir']}</td>";
+    echo "<td>{$row['alamat']}</td>";
+    echo "<td>{$row['riwayat']}</td>";
+    echo "<td>{$row['tujuan']}</td>";
+    echo "<td>{$row['penanggung_jawab']}</td>";
+    echo "</tr>";
+    $no++;
+  }
+?>
+</table>
+
 <?php endif; ?>
+
+<?php endif; ?>
+
 
 </div>
 </div>
