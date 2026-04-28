@@ -307,11 +307,14 @@ footer {
             placeholder="Alamat Lengkap *" required
           />
           <input
-            type="text"
-            name="telepon"
-            id="telepon"
-            placeholder="Nomor Telepon *" required
-          />
+  type="tel"
+  name="telepon"
+  id="telepon"
+  placeholder="Nomor Telepon *"
+  pattern="[0-9]+"
+  title="Hanya boleh angka"
+  required
+/>
 
           <input
             type="text"
