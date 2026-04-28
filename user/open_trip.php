@@ -1,28 +1,25 @@
 <?php
 session_start();
-
 ?>
 
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Open Trip</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Open Trip</title>
 
-  <style>
+<style>
     * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: linear-gradient(180deg, #5b2bbf, #8e74db);
+  background: #e7e2c8;
 }
-
-/* NAVBAR */
 
 .navbar {
   display: flex;
@@ -61,35 +58,69 @@ nav .active2 {
   cursor: pointer;
 }
 
-/* GRID TRIP */
+/* ================= ISI (DI BAGUSIN) ================= */
 
+/* sorting */
+.sort-container {
+  padding: 0 80px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sort-container select {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: white;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  transition: 0.3s;
+}
+
+.sort-container select:hover {
+  transform: translateY(-2px);
+}
+
+/* grid */
 .trip-container {
-  padding: 60px 80px;
+  padding: 50px 80px;
 }
 
 .trip-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
 }
 
-/* CARD */
-
+/* card modern */
 .card {
-  background: #f4f0e5;
-  border-radius: 10px;
+  background: white;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-.card-img {
-  position: relative;
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .card-img img {
   width: 100%;
   height: 200px;
   object-fit: cover;
+  transition: 0.3s;
+}
+
+.card:hover .card-img img {
+  transform: scale(1.05);
+}
+
+.card-img {
+  position: relative;
 }
 
 .badge {
@@ -98,46 +129,50 @@ nav .active2 {
   right: 10px;
   background: #6b3df5;
   color: white;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 6px;
   font-size: 12px;
 }
 
 .card-body {
-  padding: 15px;
+  padding: 18px;
 }
 
 .title-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  margin-bottom: 8px;
+}
+
+.title-row h3 {
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .seat {
   font-size: 12px;
+  color: #777;
 }
 
 .via {
   font-size: 13px;
-  margin-bottom: 10px;
+  color: #555;
+  margin-bottom: 8px;
 }
 
 .date {
-  font-size: 14px;
+  font-size: 13px;
+  color: #666;
   margin-bottom: 10px;
 }
 
 .price {
-  font-weight: bold;
   font-size: 20px;
+  font-weight: bold;
+  color: #6b3df5;
 }
 
-.price span {
-  font-size: 14px;
-  font-weight: normal;
-}
-
-/* FOOTER */
+/* ================= FOOTER (TETAP) ================= */
 
 footer {
   background-color: #fdfae6;
@@ -203,6 +238,7 @@ footer {
   height: auto;
   display: block;
 }
+
 .copyright {
   text-align: center;
   font-size: 12px;
@@ -211,16 +247,115 @@ footer {
   color: #333;
 }
 
-</style>
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="home.css" />
-    <title>Open Trip</title>
-  </head>
-  <body>
-    <!-- NAVBAR -->
-    <header class="navbar">
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 20px 40px;
+  }
+
+  .hero {
+    padding-left: 40px;
+    height: 500px;
+  }
+
+  .trip {
+    padding: 40px;
+  }
+
+  .trip-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .private-trip {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .private-img img {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .galeri-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  /* NAVBAR */
+  .navbar {
+    flex-direction: column;
+    padding: 20px;
+    gap: 15px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  /* HERO */
+  .hero {
+    height: auto;
+    padding: 40px 20px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero-logo {
+    width: 150px;
+  }
+
+  /* TRIP */
+  .trip {
+    padding: 30px 20px;
+  }
+
+  .trip-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .trip-card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* PRIVATE */
+  .private-trip {
+    margin: 30px 20px;
+    padding: 20px;
+  }
+
+  /* GALERI */
+  .galeri {
+    padding: 30px 20px;
+  }
+
+  .galeri-container {
+    grid-template-columns: 1fr;
+  }
+
+  /* FOOTER */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+}
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="navbar">
       <div class="logo">
         <img
           src="../gambar/REBON LOGO GRADIENT presisi.png"
@@ -252,72 +387,83 @@ footer {
       </nav>
     </header>
 
-    <!-- OPEN TRIP -->
-    <section class="trip-container">
-      <div class="trip-grid">
-        <!-- CARD -->
-        <?php
-// Koneksi ke database
-require 'fungsi.php'; 
+<?php
+require 'fungsi.php';
 
-// Query untuk mengambil data trip, satu gambar, dan menghitung sisa kuota
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
+
+$order_by = "t.id_trip DESC";
+
+if ($sort == 'harga_terendah') $order_by = "t.harga ASC";
+elseif ($sort == 'harga_tertinggi') $order_by = "t.harga DESC";
+elseif ($sort == 'nama') $order_by = "t.tujuan ASC";
+elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
+
 $sql = "SELECT t.*, 
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
         (SELECT COUNT(id_booking) FROM booking b WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
-        FROM trip t";
+        FROM trip t
+        ORDER BY $order_by";
 
 $result = kueri($sql);
-
-if (mysqli_num_rows($result) > 0) {
-    while($row = ambil($result)) {
-        
-        $tgl_berangkat = new DateTime($row['tgl_berangkat']);
-        $tgl_pulang = new DateTime($row['tgl_pulang']);
-        $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1; 
-
-        
-        $sisa_kuota = $row['kuota'] - $row['terisi'];
-        
-        
-        $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
 ?>
 
-        <a href="ot_katalog.php?id=<?php echo $row['id_trip']; ?>">
-          <div class="card">
-            <div class="card-img">
-              <img src="../gambar/upload/<?php echo $row['gambar'] ? $row['gambar'] : 'default.jpg'; ?>" />
-              <span class="badge"><?php echo $durasi; ?> Hari</span>
-            </div>
+<!-- SORT -->
+<div class="sort-container">
+  <form method="GET">
+    <select name="sort" onchange="this.form.submit()">
+      <option value="default" <?= $sort=='default'?'selected':'' ?>>Urutkan</option>
+      <option value="harga_terendah" <?= $sort=='harga_terendah'?'selected':'' ?>>Harga Termurah</option>
+      <option value="harga_tertinggi" <?= $sort=='harga_tertinggi'?'selected':'' ?>>Harga Termahal</option>
+      <option value="nama" <?= $sort=='nama'?'selected':'' ?>>Nama A-Z</option>
+      <option value="keberangkatan" <?= $sort=='keberangkatan'?'selected':'' ?>>Keberangkatan Terdekat</option>
+    </select>
+  </form>
+</div>
 
-            <div class="card-body">
-              <div class="title-row">
-                <h3><?php echo htmlspecialchars($row['tujuan']); ?></h3>
-                <span class="seat"><?php echo $sisa_kuota; ?> / <?php echo $row['kuota']; ?> SEAT</span>
-              </div>
-
-              <p class="via"><?php echo htmlspecialchars($row['catatan']); ?></p>
-
-              <p class="date">📅 Tanggal <?php echo $tgl_tampil; ?></p>
-
-              <p class="price">Rp. <?php echo number_format($row['harga'], 0, ',', '.'); ?> <span>/ Pax</span></p>
-            </div>
-          </div>
-        </a>
+<!-- KATALOG -->
+<section class="trip-container">
+<div class="trip-grid">
 
 <?php
-    }
-} else {
-    echo "Belum ada paket perjalanan tersedia.";
-}
+if (mysqli_num_rows($result) > 0) {
+  while($row = ambil($result)) {
+
+    $tgl_berangkat = new DateTime($row['tgl_berangkat']);
+    $tgl_pulang = new DateTime($row['tgl_pulang']);
+    $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1;
+    $sisa_kuota = $row['kuota'] - $row['terisi'];
+
+    $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
 ?>
 
-        <!-- DUPLIKASI CARD -->
-        
-    </section>
+<a href="ot_katalog.php?id=<?php echo $row['id_trip']; ?>">
+  <div class="card">
+    <div class="card-img">
+      <img src="../gambar/upload/<?php echo $row['gambar'] ? $row['gambar'] : 'default.jpg'; ?>" />
+      <span class="badge"><?php echo $durasi; ?> Hari</span>
+    </div>
 
-    <!-- FOOTER -->
+    <div class="card-body">
+      <div class="title-row">
+        <h3><?php echo htmlspecialchars($row['tujuan']); ?></h3>
+        <span class="seat"><?php echo $sisa_kuota; ?> / <?php echo $row['kuota']; ?> SEAT</span>
+      </div>
 
-    <footer>
+      <p class="via"><?php echo htmlspecialchars($row['catatan']); ?></p>
+      <p class="date">📅 <?php echo $tgl_tampil; ?></p>
+      <p class="price">Rp. <?php echo number_format($row['harga'],0,',','.'); ?></p>
+    </div>
+  </div>
+</a>
+
+<?php }} ?>
+
+</div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
       <div class="footer-content">
         <div class="footer-column logo-col">
           <img
@@ -372,5 +518,6 @@ if (mysqli_num_rows($result) > 0) {
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
-  </body>
+
+</body>
 </html>
