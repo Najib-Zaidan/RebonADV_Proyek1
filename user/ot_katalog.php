@@ -403,7 +403,7 @@ function tgl_indo($tanggal) {
   <div class="top-header">
         <div>
           <h1><?= $trip['tujuan']; ?></h1>
-          <p>Via Apuy, Majalengka, Jawa Barat</p>
+          <p>Via <?= $trip['rute']; ?></p>
         </div>
 
         <div class="pax-box">

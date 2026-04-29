@@ -3,8 +3,9 @@ require 'fungsi.php';
 
 $id_booking = $_POST['id_booking'];
 $nominal = $_POST['nominal'];
-$tgl_bayar = date('Y-m-d H:i:s');
+$catatan = $_POST['catatan'];
 $status = "Belum Diverifikasi";
+
 
 $nama_asli = $_FILES['bukti_bayar']['name'];
 $ekstensi = strtolower(pathinfo($nama_asli, PATHINFO_EXTENSION));
@@ -13,8 +14,8 @@ $tmp_file = $_FILES['bukti_bayar']['tmp_name'];
 $path = "../gambar/payment/" . $nama_file;
 
 if (move_uploaded_file($tmp_file, $path)) {
-    $query = "INSERT INTO payment (id_booking, tgl_bayar, nominal, bukti_bayar, status) 
-              VALUES ('$id_booking', '$tgl_bayar', '$nominal', '$nama_file', '$status')";
+    $query = "INSERT INTO payment_open (id_booking, nominal, bukti_bayar, status, catatan) 
+              VALUES ('$id_booking', '$nominal', '$nama_file', '$status', '$catatan')";
     
     if (kueri($query)) {
         header("Location: profiluser.php");

@@ -8,7 +8,39 @@ session_start();
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Open Trip</title>
+<audio id="backsound" loop>
+  <source src="../gambar/upload/dan.mp3" type="audio/mpeg">
+</audio>
 
+<div id="overlay-transparan"></div>
+
+<style>#overlay-transparan {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999; /* Sangat tinggi agar tidak tertutup elemen lain */
+  background-color: transparent; /* Benar-benar bening */
+  cursor: default; /* Cursor tetap standar agar user tidak curiga ada tombol */
+}
+
+</style>
+<script>
+  const overlay = document.getElementById('overlay-transparan');
+const musik = document.getElementById('backsound');
+
+overlay.addEventListener('click', function() {
+    // Putar musik
+    musik.play().catch(e => console.log("Gagal putar:", e));
+
+    // Hapus total elemen pelapis agar user bisa klik menu/tombol asli di web
+    overlay.remove();
+    
+    console.log("Overlay dihapus, musik dimulai.");
+}, { once: true });
+
+</script>
 <style>
     * {
   margin: 0;
@@ -235,6 +267,10 @@ nav .active2 {
   font-size: 20px;
   font-weight: bold;
   color: #6b3df5;
+}
+
+a {
+  text-decoration:none;
 }
 
 /* ================= FOOTER (TETAP) ================= */
@@ -466,11 +502,12 @@ elseif ($sort == 'nama') $order_by = "t.tujuan ASC";
 elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 
 /* QUERY UTAMA */
-$sql = "SELECT t.*, 
+$sql = "SELECT t.*, k.*,
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
         (SELECT COUNT(id_booking) FROM booking b 
          WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
         FROM trip t
+        JOIN katalog k ON t.id_trip = k.id_trip
         WHERE 1";
 
 /* SEARCH */
@@ -551,7 +588,7 @@ if (mysqli_num_rows($result) > 0) {
         <span class="seat"><?php echo $sisa_kuota; ?> / <?php echo $row['kuota']; ?> SEAT</span>
       </div>
 
-      <p class="via"><?php echo htmlspecialchars($row['catatan']); ?></p>
+      <p class="via"><?php echo htmlspecialchars($row['deskripsi']); ?></p>
       <p class="date">📅 <?php echo $tgl_tampil; ?></p>
       <p class="price">Rp. <?php echo number_format($row['harga'],0,',','.'); ?></p>
     </div>

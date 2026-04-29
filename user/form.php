@@ -293,12 +293,12 @@ footer {
             placeholder="Nama Lengkap *"  required
           />
 
-          <div class="date-wrapper">
-            <label>Tanggal Lahir *</label>
-            <div class="date-group">
-              <input type="date" name="tglLahir" id="dd" placeholder="DD"  required/>
-            </div>
-          </div>
+          <input
+            type="text"
+            name="usia"
+            id="usia"
+            placeholder="Usia *" required
+          />
 
           <input
             type="text"
