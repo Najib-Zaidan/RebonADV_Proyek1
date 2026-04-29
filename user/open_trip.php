@@ -446,6 +446,9 @@ footer {
     align-items: center;
   }
 }
+a {
+  text-decoration: none;
+}
     </style>
 </head>
 
