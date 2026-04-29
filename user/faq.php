@@ -17,7 +17,7 @@ session_start();
 }
 
 body {
-  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
+  background: linear-gradient(180deg, #4b00ff , #7a2cff) ;
    min-height: 100svh;
 }
 
@@ -76,6 +76,8 @@ h1 {
   margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   width: auto;
+  margin: 15px;
+  padding: 3px;
 }
 
 .faq-question {
@@ -224,6 +226,16 @@ footer {
         <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
       </div>
 
+      <div class="faq">
+        <div class="faq-question">cara logout?</div>
+        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-question">Cara edit profil?</div>
+        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
+      </div>
+      
     </div>
 
     <script>
