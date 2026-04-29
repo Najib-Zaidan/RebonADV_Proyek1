@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 $id_akun = $_SESSION['id_akun'];
 
 $peserta = kueri("SELECT * FROM peserta WHERE id_akun = '$id_akun'");
-$pesanan = kueri("SELECT b.*, t.tujuan, t.tgl_berangkat
+$pesanan = kueri("SELECT b.*, t.tujuan, t.tgl_berangkat, p.nama
 FROM booking b
 JOIN trip t ON b.id_trip = t.id_trip
 JOIN peserta p ON b.id_peserta = p.id_peserta
@@ -38,10 +38,79 @@ nav{display:flex;gap:30px;align-items:center;}
 nav a{text-decoration:none;color:black;}
 .active5{background:#6b3df5;color:white;padding:10px 18px;border-radius:8px;border:none;}
 
-footer{background:#fdfae6;padding:40px 10%;}
-.footer-content{display:flex;justify-content:space-between;flex-wrap:wrap;}
-.footer-logo-img{width:220px;}
-.copyright{text-align:center;margin-top:20px;}
+/* Footer */
+        footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
 
 /* HERO */
 .hero{height:150px;background:linear-gradient(#321180,#5A1EE6);}
@@ -172,7 +241,7 @@ footer{background:#fdfae6;padding:40px 10%;}
 
   <div class="data-right">
     <a href="edit_peserta.php?id=<?= $p['id_peserta']; ?>" class="btn purple">Ubah</a>
-    <a href="hapus_peserta.php?id=<?= $p['id_peserta']; ?>" class="btn red">Hapus</a>
+    <a href="hapus_peserta.php?id=<?= $p['id_peserta']; ?>" onclick="return confirm('Yakin hapus akun?')" class="btn red">Hapus</a>
   </div>
 </div>
 <?php endwhile; ?>
@@ -184,6 +253,7 @@ footer{background:#fdfae6;padding:40px 10%;}
 <div class="data-card">
   <div class="data-left">
     <p><b><?= $b['tujuan']; ?></b></p>
+    <p>👤 Peserta: <?= $b['nama']; ?></p>
     <p>📅 Booking: <?= $b['tgl_booking']; ?></p>
     <p>🚍 Berangkat: <?= $b['tgl_berangkat']; ?></p>
     <p>Status: <?= $b['status']; ?></p>
@@ -216,11 +286,60 @@ footer{background:#fdfae6;padding:40px 10%;}
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-content">
-    <img src="../gambar/logo-rebon.png" class="footer-logo-img">
-  </div>
-  <div class="copyright">© 2026 REBON ADVENTURE</div>
-</footer>
+      <div class="footer-content">
+        <div class="footer-column logo-col">
+          <img
+            src="../gambar/logo-rebon.png"
+            alt="Rebon Adventure Logo"
+            class="footer-logo-img"
+          />
+        </div>
+
+        <div class="footer-column">
+          <h4>KONTAK KAMI</h4>
+          <div class="contact-item">
+            <span class="icon">✉</span>
+            <p>rebonadventure@gmail.com</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📞</span>
+            <p>+62 812-3456-7890</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📍</span>
+            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>LAYANAN KAMI</h4>
+          <ul>
+            <li>OPEN TRIP</li>
+            <li>PRIVATE TRIP</li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>INFORMASI</h4>
+          <ul>
+            <li>TENTANG KAMI</li>
+            <li>TRIP TERSEDIA</li>
+            <li>FAQ</li>
+          </ul>
+
+          <div class="social-section">
+            <h4>FOLLOW US ON</h4>
+            <div class="social-icons">
+              <img src="../gambar/fb-icon.png" alt="FB" />
+              <img src="../gambar/ig-icon.png" alt="IG" />
+              <img src="../gambar/tt-icon.png" alt="TK" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
+    </footer>
 
 <script>
 function tab(id,el){
