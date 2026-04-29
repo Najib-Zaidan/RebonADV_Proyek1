@@ -50,7 +50,7 @@ body {
 
 body {
   background: #e7e2c8;
-  background: linear-gradient(180deg, #cbbee9 0%, #c4a1ff 100%);
+  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
 }
 
 .navbar {
@@ -206,19 +206,13 @@ nav .active3 {
   text-decoration: none;
   
 }
-.wa-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.08);
-  padding: 6px 8px;
-  border-radius: 6px;
-  width: 50px;
-}
-.wa-icon i {
-  color: #fff;
-  font-size: 18px;
-}
+.btn-whatsapp:hover{
+    background-color: #4b00ff;
+    transform: translateY(-7px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
+
+
 
 /* Footer */
 footer {

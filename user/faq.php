@@ -17,7 +17,7 @@ session_start();
 }
 
 body {
-  background: linear-gradient(180deg, #1f1f1f , #6b1dfc) ;
+  background: linear-gradient(180deg, #1f1f1f 10% , #6b1dfc) ;
    min-height: 100svh;
 }
 
