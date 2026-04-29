@@ -113,6 +113,8 @@ nav .active2 {
 .main-img {
   width: 100%;
   border-radius: 10px;
+  aspect-ratio: 3/2;
+  object-fit: cover;
 }
 
 .thumbs {
@@ -319,6 +321,14 @@ footer {
   margin-left: 15px;
 }
 
+.thumbs img {
+    cursor: pointer;
+    transition: 0.3s;
+}
+.thumbs img:hover {
+    opacity: 0.8;
+    border: 2px solid #6b3df5;
+}
 
 
 
@@ -419,11 +429,11 @@ function tgl_indo($tanggal) {
             while($g = ambil($data_gambar)) { $gambar_list[] = $g; }
             $main_img = !empty($gambar_list) ? $gambar_list[0]['nama_file'] : 'gunung.jpg';
             ?>
-            <img src="../gambar/upload/<?= $main_img; ?>" class="main-img" />
+            <img src="../gambar/upload/<?= $main_img; ?>" id="mainImg" class="main-img" />
 
             <div class="thumbs">
                 <?php foreach($gambar_list as $img) : ?>
-                    <img src="../gambar/upload/<?= $img['nama_file']; ?>" />
+                    <img src="../gambar/upload/<?= $img['nama_file']; ?>" / class="thumb-img" onclick="changeImage(this)">
                 <?php endforeach; ?>
             </div>
 
@@ -549,5 +559,12 @@ function tgl_indo($tanggal) {
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
   </body>
+  <script>
+function changeImage(element) {
+    // Mengambil element gambar utama berdasarkan ID, lalu mengubah sumbernya (src)
+    document.getElementById('mainImg').src = element.src;
+}
+</script>
+
 </html>
 

@@ -1,116 +1,171 @@
-<?php
+<?php 
+session_start();
+
+if (!isset($_SESSION["login"])) {
+    header("Location: login.php");
+    exit;
+}
+
+require 'konek.php';
 require 'fungsi.php';
-$id = $_GET['id'];
 
+$id_payment = $_GET['id'];
 
-if (isset($_POST['verifikasi'])) {
-    kueri("UPDATE payment SET status = 'Diverifikasi' WHERE id_payment = $id");
-    $data = ambil(kueri("SELECT p.nominal, b.*, t.harga FROM payment p
-    JOIN booking b ON p.id_booking = b.id_booking 
-    JOIN trip t ON b.id_trip = t.id_trip 
-    WHERE p.id_payment = $id"));
-    $id_book = $data['id_booking'];
-    if($data['nominal'] < $data['harga']){
-      kueri("UPDATE booking SET status = 'DP' WHERE id_booking = '$id_book'");
-    }
-    else if($data['nominal'] >= $data['harga']){
-      kueri("UPDATE booking SET status = 'Lunas' WHERE id_booking = '$id_book'");
-    }
-    header("Location: detail_payment.php?id=" . $id);
-    exit;
+// 1. Logika Update Status Pembayaran
+if (isset($_POST['update_payment'])) {
+    $status_baru = $_POST['status_pembayaran'];
+    kueri("UPDATE payment_open SET status = '$status_baru' WHERE id_payment = $id_payment");
+    echo "<script>alert('Status pembayaran berhasil diperbarui!'); window.location.href='index.php?menu=payment';</script>";
 }
 
-if (isset($_POST['batal_verifikasi'])) {
-    kueri("UPDATE payment SET status = 'Belum Diverifikasi' WHERE id_payment = $id");
-    $data = ambil(kueri("SELECT SUM(p.nominal) total, p.nominal, b.*, t.harga FROM payment p
-    JOIN booking b ON p.id_booking = b.id_booking 
-    JOIN trip t ON b.id_trip = t.id_trip 
-    WHERE p.id_payment = $id"));
-    $id_book = $data['id_booking'];
-    $bayar = ($data['total'] - $data['nominal']);
-    if($bayar == 0){
-      kueri("UPDATE booking SET status = 'Belum Bayar' WHERE id_booking = '$id_book'");
-    }
-    else if(($bayar < $data['harga']) && ($bayar != 0)){
-      kueri("UPDATE booking SET status = 'DP' WHERE id_booking = '$id_book'");
-    }
-    header("Location: detail_payment.php?id=" . $id);
-    exit;
-}
+// 2. Ambil Data Detail Pembayaran & Booking
+$pay = ambil(kueri("SELECT p.*, b.tgl_booking, t.tujuan, a.username, b.jumlah_peserta, t.harga, b.id_booking
+                    FROM payment_open p
+                    JOIN booking b ON p.id_booking = b.id_booking
+                    JOIN trip t ON b.id_trip = t.id_trip
+                    JOIN akun a ON b.id_akun = a.id_akun
+                    WHERE p.id_payment = $id_payment"));
 
-$sql = "SELECT 
-            pay.*, 
-            p.nama AS nama_peserta, 
-            t.tujuan AS nama_trip 
-        FROM payment pay
-        JOIN booking b ON pay.id_booking = b.id_booking
-        JOIN peserta p ON b.id_peserta = p.id_peserta
-        JOIN trip t ON b.id_trip = t.id_trip
-        WHERE pay.id_payment = $id";
+$id_booking = $pay['id_booking'];
+$total_tagihan = $pay['harga'] * $pay['jumlah_peserta'];
 
-$eksekusi = kueri($sql);
-$data = ambil($eksekusi);
+// 3. Ambil Daftar Peserta
+$daftar_peserta = kueri("SELECT p.* FROM peserta_open p 
+                         JOIN detail d ON p.id_peserta = d.id_peserta 
+                         WHERE d.id_booking = $id_booking");
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Detail Pembayaran</title>
+    <title>Verifikasi Pembayaran #<?php echo $id_payment; ?></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #d9d9d9; color: #333; padding: 30px; }
+        .container { max-width: 1300px; margin: auto; }
+        
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #5a1ee6; text-decoration: none; font-weight: bold; }
+        
+        .layout-grid { display: grid; grid-template-columns: 350px 1fr; gap: 25px; align-items: start; }
+
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .card-header { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+        .card-header h2 { color: #321180; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .bukti-container { text-align: center; background: #f0f0f0; padding: 10px; border-radius: 10px; border: 2px dashed #ccc; }
+        .bukti-img { width: 100%; max-height: 800px; object-fit: contain; border-radius: 8px; }
+        
+        .info-item { margin-bottom: 15px; }
+        .info-item label { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 3px; }
+        .info-item p { font-size: 15px; font-weight: 600; color: #321180; }
+
+        .verif-box { background: #f4f0ff; padding: 20px; border-radius: 12px; border: 1px solid #dcd0ff; }
+        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px; outline: none; }
+        
+        .btn-verif { width: 100%; padding: 12px; background: #321180; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-verif:hover { background: #c70039; }
+
+        .tagihan-info { background: #321180; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center;}
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #6b3df5; color: white; padding: 12px; text-align: left; font-size: 12px; }
+        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 13px; }
+
+        .catatan-user { background: #fff9e6; padding: 10px; border-radius: 8px; border-left: 4px solid #ffcc00; font-size: 13px; color: #666; font-style: italic; }
+    </style>
 </head>
-<style>
-  img {
-    width: 200px; 
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    object-position: center;
-}
-</style>
 <body>
-    <h2>Detail Pembayaran</h2>
-    <a href="index.php?menu=payment">Kembali ke Daftar</a>
-    <table border="1" cellpadding="10" cellspacing="0">
-        <hr>
-        <tr>
-            <th>Nama Peserta</th>
-            <td><?php echo $data['nama_peserta']; ?></td>
-        </tr>
-        <tr>
-            <th>Nama Trip</th>
-            <td><?php echo $data['nama_trip']; ?></td>
-        </tr>
-        <tr>
-            <th>Tanggal Bayar</th>
-            <td><?php echo $data['tgl_bayar']; ?></td>
-        </tr>
-        <tr>
-            <th>Nominal</th>
-            <td>Rp <?php echo number_format($data['nominal'], 0, ',', '.'); ?></td>
-        </tr>
-        <tr>
-            <th>Bukti Bayar (Nama File)</th>
-            <?php 
-            $bb = $data['bukti_bayar'];
-            echo "<td><a href='../gambar/payment/". $bb . "' target='_blank'><img src='../gambar/payment/" . $bb . "'></a></td>";
-            ?>
-        </tr>
-        <tr>
-            <th>Status Saat Ini</th>
-            <td><strong><?php echo $data['status']; ?></strong></td>
-        </tr>
-    </table>
 
-    <br>
+<div class="container">
+    <a href="index.php?menu=payment" class="back-btn">&larr; KEMBALI KE DAFTAR PEMBAYARAN</a>
 
-    <form action="" method="POST">
-        <?php if ($data['status'] !== 'Diverifikasi'): ?>
-            <button type="submit" name="verifikasi">Verifikasi Pembayaran</button>
-        <?php else: ?>
-            <p>Pembayaran sudah diverifikasi.</p>
-            <button type="submit" name="batal_verifikasi" onclick="return confirm('Batalkan verifikasi pembayaran ini?')">
-                Batalkan Verifikasi
-            </button>
-        <?php endif; ?>
-    </form>
+    <div class="layout-grid">
+        <div class="side-panel">
+            <div class="card">
+                <div class="tagihan-info">
+                    <small>Nominal Bayar:</small>
+                    <h1 style="font-size: 24px;">Rp <?php echo number_format($pay['nominal']); ?></h1>
+                </div>
+
+                <div class="info-item">
+                    <label>Nama Pemesan (Akun)</label>
+                    <p><?php echo $pay['username']; ?></p>
+                </div>
+                
+                <div class="info-item">
+                    <label>Tanggal Bayar</label>
+                    <p><?php echo date('d M Y, H:i', strtotime($pay['tgl_bayar'])); ?></p>
+                </div>
+
+                <div class="info-item">
+                    <label>ID Booking / Trip</label>
+                    <p>#<?php echo $pay['id_booking']; ?> - <?php echo $pay['tujuan']; ?></p>
+                </div>
+
+                <div class="info-item">
+                    <label>Total Tagihan Booking</label>
+                    <p>Rp <?php echo number_format($total_tagihan); ?> (<?php echo $pay['jumlah_peserta']; ?> Orang)</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Catatan dari User:</label>
+                    <div class="catatan-user">
+                        "<?php echo $pay['catatan'] ?: 'Tidak ada catatan dari user.'; ?>"
+                    </div>
+                </div>
+            </div>
+
+            <div class="card verif-box">
+                <div class="card-header"><h2>Verifikasi Admin</h2></div>
+                <form action="" method="post">
+                    <select name="status_pembayaran" required>
+                        <option value="Belum Diverifikasi" <?php if($pay['status'] == 'Belum Diverifikasi') echo 'selected'; ?>>Tunda Verifikasi</option>
+                        <option value="Diverifikasi" <?php if($pay['status'] == 'Diverifikasi') echo 'selected'; ?>>Terima / Sah</option>
+                        <option value="Ditolak" <?php if($pay['status'] == 'Ditolak') echo 'selected'; ?>>Tolak / Palsu</option>
+                    </select>
+                    <button type="submit" name="update_payment" class="btn-verif">SIMPAN PERUBAHAN</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header"><h2>Foto Bukti Transfer</h2></div>
+                <div class="bukti-container">
+                    <img src="../gambar/payment/<?php echo $pay['bukti_bayar']; ?>" class="bukti-img">
+                </div>
+            </div>
+
+            <div class="card" style="border-top: 5px solid #c70039;">
+                <div class="card-header"><h2>Daftar Peserta (<?php echo $pay['jumlah_peserta']; ?> Orang)</h2></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Lengkap</th>
+                            <th>No. HP</th>
+                            <th>Usia</th>
+                            <th>Alamat</th>
+                            <th>Riwayat Kesehatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $no=1; while($p = ambil($daftar_peserta)): ?>
+                        <tr>
+                            <td><?php echo $no++; ?></td>
+                            <td style="font-weight:bold;"><?php echo $p['nama']; ?></td>
+                            <td><?php echo $p['no_hp']; ?></td>
+                            <td><?php echo $p['usia']; ?> Thn</td>
+                            <td><?php echo $p['alamat']; ?></td>
+                            <td><?php echo $p['riwayat'] ?: '-'; ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

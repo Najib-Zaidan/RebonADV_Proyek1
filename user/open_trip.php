@@ -269,10 +269,6 @@ nav .active2 {
   color: #6b3df5;
 }
 
-a {
-  text-decoration:none;
-}
-
 /* ================= FOOTER (TETAP) ================= */
 
 footer {
