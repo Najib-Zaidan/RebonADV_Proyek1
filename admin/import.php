@@ -50,7 +50,7 @@ $fasilitas = "CREATE TABLE IF NOT EXISTS fasilitas (
     jenis ENUM('include', 'exclude') NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$booking = "CREATE TABLE IF NOT EXISTS booking_open (
+$booking = "CREATE TABLE IF NOT EXISTS booking (
     id_booking INT AUTO_INCREMENT PRIMARY KEY,
     id_trip INT,
     id_akun INT,
@@ -60,11 +60,11 @@ $booking = "CREATE TABLE IF NOT EXISTS booking_open (
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
-$detail = "CREATE TABLE IF NOT EXISTS detail_open (
+$detail = "CREATE TABLE IF NOT EXISTS detail (
     id_detail INT AUTO_INCREMENT PRIMARY KEY,
     id_booking INT,
     id_peserta INT,
-    FOREIGN KEY (id_booking) REFERENCES booking_open(id_booking) ON DELETE CASCADE,
+    FOREIGN KEY (id_booking) REFERENCES booking(id_booking) ON DELETE CASCADE,
     FOREIGN KEY (id_peserta) REFERENCES peserta_open(id_peserta) ON DELETE CASCADE
 )";
 $peserta_ot = "CREATE TABLE IF NOT EXISTS peserta_open (
@@ -85,7 +85,7 @@ $payment_ot = "CREATE TABLE IF NOT EXISTS payment_open (
     bukti_bayar VARCHAR(100) NOT NULL,
     status ENUM('Belum Diverifikasi', 'Diverifikasi', 'Ditolak') NOT NULL DEFAULT 'Belum Diverifikasi',
     catatan TEXT,
-    FOREIGN KEY (id_booking) REFERENCES booking_open(id_booking) ON DELETE CASCADE
+    FOREIGN KEY (id_booking) REFERENCES booking(id_booking) ON DELETE CASCADE
 )";
 $batal_ot = "CREATE TABLE IF NOT EXISTS batal_open (
     id_batal INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,7 +93,7 @@ $batal_ot = "CREATE TABLE IF NOT EXISTS batal_open (
     status BOOLEAN NOT NULL DEFAULT FALSE,
     tgl_pembatalan DATETIME NOT NULL DEFAULT NOW(),
     alasan TEXT NOT NULL,
-    FOREIGN KEY (id_booking) REFERENCES booking_open(id_booking) ON DELETE CASCADE
+    FOREIGN KEY (id_booking) REFERENCES booking(id_booking) ON DELETE CASCADE
 )";
 $akun = "CREATE TABLE IF NOT EXISTS akun (
     id_akun INT AUTO_INCREMENT PRIMARY KEY,
@@ -1052,7 +1052,7 @@ $insert_peserta_ot = "INSERT INTO peserta_open (id_akun, nama, no_hp, usia, alam
 (15, 'Udin Seduniawan', '081234567949', 29, 'Ds. Kedawung, Kec. Kedawung, Cirebon', ''),
 (15, 'Siska Amelia', '081234567950', 23, 'Ds. Tegalwangi, Kec. Weru, Cirebon', '')";
 
-$insert_booking = "INSERT INTO booking_open (id_trip, id_akun, jumlah_peserta, tgl_booking, status) VALUES
+$insert_booking = "INSERT INTO booking (id_trip, id_akun, jumlah_peserta, tgl_booking, status) VALUES
 -- Trip ID 1 (Gunung Semeru)
 (1, 7, 2, '2025-12-01 10:15:00', 'Lunas'),
 (1, 12, 1, '2025-12-03 14:20:00', 'DP'),
@@ -1154,7 +1154,7 @@ $insert_booking = "INSERT INTO booking_open (id_trip, id_akun, jumlah_peserta, t
 (20, 11, 2, '2026-06-12 11:00:00', 'Belum Bayar')
 ";
 
-$insert_detail = "INSERT INTO detail_open (id_booking, id_peserta) VALUES
+$insert_detail = "INSERT INTO detail (id_booking, id_peserta) VALUES
 (1, 11), (1, 12),
 (2, 61),
 (3, 31), (3, 32), (3, 33),
