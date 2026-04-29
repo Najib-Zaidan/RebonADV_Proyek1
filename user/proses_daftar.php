@@ -21,8 +21,8 @@ VALUES
 
 if (mysqli_query($konek, $query)) {
     echo "<script>
-            alert('Data berhasil disimpan!');
-            window.location='home1.php';
+            alert('Peserta berhasil disimpan!, Silahkan cek profile dan menu peserta');
+            window.location='open_trip.php';
           </script>";
 } else {
     echo "Error: " . mysqli_error($konek);

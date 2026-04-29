@@ -17,7 +17,7 @@ if (move_uploaded_file($tmp_file, $path)) {
               VALUES ('$id_booking', '$tgl_bayar', '$nominal', '$nama_file', '$status')";
     
     if (kueri($query)) {
-        header("Location: daftar_pesanan.php");
+        header("Location: profiluser.php");
     } else {
         echo "Error: " . mysqli_error($konek);
     }

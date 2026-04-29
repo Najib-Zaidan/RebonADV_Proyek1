@@ -60,12 +60,77 @@ nav .active2 {
 
 /* ================= ISI (DI BAGUSIN) ================= */
 
-/* sorting */
-.sort-container {
+/* FILTER BAR (SEARCH + SORT) */
+.filter-bar{
   padding: 0 80px;
   margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
+}
+
+.filter-form{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+/* SEARCH */
+.search-box{
+  display:flex;
+  align-items:center;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+.search-box input{
+  padding:12px 15px;
+  border:none;
+  outline:none;
+  width:250px;
+  font-size:14px;
+}
+
+.search-box button{
+  padding:12px 15px;
+  border:none;
+  background:#6b3df5;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.search-box button:hover{
+  background:#4b25c7;
+}
+
+/* SORT */
+.sort-box select{
+  padding:12px 16px;
+  border-radius:12px;
+  border:none;
+  background:white;
+  font-weight:500;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+
+.sort-box select:hover{
+  transform:translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .filter-form{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .search-box input{
+    width:100%;
+  }
 }
 
 .sort-container select {
@@ -390,7 +455,8 @@ footer {
 <?php
 require 'fungsi.php';
 
-$sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
+$sort = $_GET['sort'] ?? 'default';
+$keyword = $_GET['keyword'] ?? '';
 
 $order_by = "t.id_trip DESC";
 
@@ -399,25 +465,60 @@ elseif ($sort == 'harga_tertinggi') $order_by = "t.harga DESC";
 elseif ($sort == 'nama') $order_by = "t.tujuan ASC";
 elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 
+/* QUERY UTAMA */
 $sql = "SELECT t.*, 
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
-        (SELECT COUNT(id_booking) FROM booking b WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
+        (SELECT COUNT(id_booking) FROM booking b 
+         WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
         FROM trip t
-        ORDER BY $order_by";
+        WHERE 1";
 
+/* SEARCH */
+if($keyword != ''){
+    $keyword = mysqli_real_escape_string($konek, $keyword);
+
+    $sql .= " AND (
+        t.tujuan LIKE '%$keyword%' OR
+        t.catatan LIKE '%$keyword%' OR
+        EXISTS (
+            SELECT 1 FROM fasilitas f
+            WHERE f.id_trip = t.id_trip
+            AND f.fasilitas LIKE '%$keyword%'
+        )
+    )";
+}
+
+/* SORT (tetap) */
+$sql .= " ORDER BY $order_by";
+
+/* EKSEKUSI */
 $result = kueri($sql);
 ?>
 
-<!-- SORT -->
-<div class="sort-container">
-  <form method="GET">
-    <select name="sort" onchange="this.form.submit()">
-      <option value="default" <?= $sort=='default'?'selected':'' ?>>Urutkan</option>
-      <option value="harga_terendah" <?= $sort=='harga_terendah'?'selected':'' ?>>Harga Termurah</option>
-      <option value="harga_tertinggi" <?= $sort=='harga_tertinggi'?'selected':'' ?>>Harga Termahal</option>
-      <option value="nama" <?= $sort=='nama'?'selected':'' ?>>Nama A-Z</option>
-      <option value="keberangkatan" <?= $sort=='keberangkatan'?'selected':'' ?>>Keberangkatan Terdekat</option>
-    </select>
+<!-- SEARCH + SORT (DIGABUNG) -->
+<div class="filter-bar">
+  <form method="GET" class="filter-form">
+    
+    <div class="search-box">
+      <input 
+        type="text" 
+        name="keyword" 
+        placeholder="Cari tujuan / fasilitas..."
+        value="<?= $_GET['keyword'] ?? '' ?>"
+      >
+      <button type="submit">CARI</button>
+    </div>
+
+    <div class="sort-box">
+      <select name="sort" onchange="this.form.submit()">
+        <option value="default" <?= $sort=='default'?'selected':'' ?>>Urutkan</option>
+        <option value="harga_terendah" <?= $sort=='harga_terendah'?'selected':'' ?>>Harga Termurah</option>
+        <option value="harga_tertinggi" <?= $sort=='harga_tertinggi'?'selected':'' ?>>Harga Termahal</option>
+        <option value="nama" <?= $sort=='nama'?'selected':'' ?>>Nama A-Z</option>
+        <option value="keberangkatan" <?= $sort=='keberangkatan'?'selected':'' ?>>Keberangkatan Terdekat</option>
+      </select>
+    </div>
+
   </form>
 </div>
 
