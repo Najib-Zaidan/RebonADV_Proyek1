@@ -209,12 +209,18 @@ nav ul li a.active {
     flex-wrap: wrap; /* Penting: Agar card turun ke bawah jika layar HP terlalu sempit */
 }
 
+
 .card {
     background: #fdfae6;
     padding: 15px;
     border-radius: 15px; /* Lebih bulat sesuai gambar */
     width: 300px; /* Ukuran pas untuk 3 kolom di layar desktop */
     box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Efek bayangan halus */
+}
+.card:hover{
+    background-color: #5758bb;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
 
 .btn-cek {
@@ -248,31 +254,54 @@ nav ul li a.active {
     margin-top: 10px;
     border-radius: 5px;
 }
+.btn-detail:hover{
+    background-color: #5758bb;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.detail {
+    background: #5758bb;
+    color: white;
+    width: 300px;
+    border: none;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px
+}
+.detail:hover{
+    background-color: #5758bb;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
 
 /* Footer */
 footer {
-    background-color: #fdfae6;
-    padding: 40px 10% 20px 10%;
-    color: #333;
+  text-align: center; /* biar isi tengah */
 }
 
-/* Bar FAQ Ungu di tengah */
+/* Button FAQ */
 .faq-bar {
-    background-color: #6661b3;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 250px;
-    margin: 0 auto 50px auto;
-    font-weight: bold;
-    border-radius: 8px;
-    letter-spacing: 2px;
-    display: flex;
-}
-.faq-bar a {
-    text-align: center;
+  display: inline-block;
+  background-color: #6661b3;
+  color: white;
+  padding: 12px 30px;
+  width: 250px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 8px;
+  letter-spacing: 2px;
+  text-decoration: none; /* hilangkan garis link */
+  transition: 0.3s;
 }
 
+/* Hover biar lebih hidup */
+.faq-bar:hover {
+  background-color: #5752a3;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2)
+}
 .footer-content {
     display: flex;
     justify-content: space-between;
@@ -434,7 +463,7 @@ footer {
 
     <section class="gallery-container">
     <div class="card-wrapper">
-        
+        <a href="open_trip.php">
         <div class="card">
             <img src="../gambar/gunung.jpg" class="img-main" alt="Gunung">
             <div class="img-grid">
@@ -443,9 +472,11 @@ footer {
                 <img src="../gambar/thumb.jpg" alt="Sub 3">
             </div>
             <button class="btn-detail">Lihat selengkapnya ></button>
+            </a>
         </div>
 
         <div class="card">
+            <a href="open_trip.php">
             <img src="../gambar/gunung.jpg" class="img-main" alt="Gunung">
             <div class="img-grid">
                 <img src="../gambar/thumb.jpg" alt="Sub 1">
@@ -453,9 +484,11 @@ footer {
                 <img src="../gambar/thumb.jpg" alt="Sub 3">
             </div>
             <button class="btn-detail">Lihat selengkapnya ></button>
+            </a>
         </div>
 
         <div class="card">
+            <a href="open_trip.php">
             <img src="../gambar/gunung.jpg" class="img-main" alt="Gunung">
             <div class="img-grid">
                 <img src="../gambar/thumb.jpg" alt="Sub 1">
@@ -463,17 +496,29 @@ footer {
                 <img src="../gambar/thumb.jpg" alt="Sub 3">
             </div>
             <button class="btn-detail">Lihat selengkapnya ></button>
+            </a>
         </div>
 
     </div>
-    <button class="btn-cek">Cek Open Trip ></button>
+
+        <div>
+   <a href="open_trip.php">
+            <button class="detail">Lihat selengkapnya ></button>
+    </a>
+    </div>
 </section>
+<br>
+<br>
+<footer>
+  <a href="faq.php" class="faq-bar">FAQ</a>
+</footer>
+<br>
+<br>
+<br>
+<br>
     </section>
 
-    <footer>
-        <a href="faq.php">
-        <button class="faq-bar">FAQ</button>
-        </a>
+    
 
     <div class="footer-content">
         <div class="footer-column logo-col">

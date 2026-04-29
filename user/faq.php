@@ -17,7 +17,7 @@ session_start();
 }
 
 body {
-  background: linear-gradient(180deg, #4b00ff , #7a2cff) ;
+  background: linear-gradient(180deg, #1f1f1f , #6b1dfc) ;
    min-height: 100svh;
 }
 
@@ -74,10 +74,11 @@ h1 {
   background: #fff;
   border-radius: 10px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
   width: auto;
   margin: 15px;
   padding: 3px;
+  transition: all 0.3s ease;
 }
 
 .faq-question {
@@ -91,6 +92,12 @@ h1 {
   display: none;
   color: #555;
 }
+.faq:hover{
+    background-color: #fff;
+    transform: translateY(-20px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
 footer {
   background-color: #fdfae6;
   padding: 40px 10% 20px 10%;
@@ -122,6 +129,47 @@ footer {
   font-size: 14px;
   font-weight: 600;
 }
+h5 {
+  text-align: center;
+  color: #fff;
+}
+
+.container2 {
+    display: flex;
+    justify-content: center;   /* tengah horizontal */
+    align-items: center;       /* tengah vertikal */
+
+}
+
+.wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #25D366;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 500px;
+  }
+
+  .wa-btn img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .wa-btn:hover {
+    background-color: #1ebe5d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
 
 /* Styling Kontak dengan Ikon */
 .contact-item {
@@ -199,7 +247,10 @@ footer {
     </header>
         <div class="container">
           <br>
-      <h1>Pertanyaan sekilas</h1>
+          <br>
+      <h1>Pertanyaan Yang Sering Di Ajukan (F.A.Q)</h1>
+      <br>
+      <br>
 
       <div class="faq">
         <div class="faq-question">Apa itu website ini?</div>
@@ -231,13 +282,19 @@ footer {
         <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
       </div>
 
-      <div class="faq">
-        <div class="faq-question">Cara edit profil?</div>
-        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
-      </div>
-      
-    </div>
 
+    </div>
+    <h5>informasi lebih lanjut hubungi kami:</h5>
+    <br>
+    <div class="container2">
+    <a href="https://wa.me/6281234567890" target="_blank" class="wa-btn">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+          <span>Chat WhatsApp</span>
+        </a>
+        </div>
+          <br>
+          <br>
+          
     <script>
     const questions = document.querySelectorAll(".faq-question");
 

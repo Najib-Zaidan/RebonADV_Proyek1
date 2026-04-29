@@ -14,8 +14,8 @@ session_start();
   --purple-dark: #4b00ff;
   --purple-mid: #7a2cff;
   --purple-light: #4b00ff;
-  --cream: #fff9e6;
-  --lavender: #e9d9ff;
+  --cream: #ffff;
+  --lavender: #eee3ff;
   --input-border: rgba(0, 0, 0, 0.08);
   --text-dark: #111;
   --radius: 12px;
@@ -50,7 +50,7 @@ body {
 
 body {
   background: #e7e2c8;
-  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
+  background: linear-gradient(180deg, #cbbee9 0%, #c4a1ff 100%);
 }
 
 .navbar {
@@ -351,7 +351,7 @@ footer {
     <!-- KIRI (GAMBAR) -->
     <div class="card-image">
       <div class="image-wrap">
-        <img src="../gambar/123.jpg" alt="Destinasi" />
+        <img src="../gambar/123.jpg" alt="Destinasi"/>
         <h1 class="hero-title">Rencanakan<br>Trip Anda</h1>
       </div>
     </div>
