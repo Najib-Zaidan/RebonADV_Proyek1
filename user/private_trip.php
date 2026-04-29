@@ -50,6 +50,7 @@ body {
 
 body {
   background: #e7e2c8;
+  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
 }
 
 .navbar {
@@ -374,7 +375,6 @@ footer {
         <div class="cta-row">
           <a href="form_private.php">
           <button type="submit" name="submit" class="btn-whatsapp">
-            <i class="fab fa-whatsapp"></i>
             <span>Pesan Sekarang</span>
             </a>
           </button>

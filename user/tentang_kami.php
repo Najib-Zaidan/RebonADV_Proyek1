@@ -175,11 +175,11 @@ nav ul li a.active {
     background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('background-gunung.jpg');
     background-size: cover;
     height: 500px;
+    text-align: center;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    color: white;
 }
 
 .hero-content h3 {
@@ -258,7 +258,7 @@ footer {
 
 /* Bar FAQ Ungu di tengah */
 .faq-bar {
-    background-color: #a29bfe;
+    background-color: #6661b3;
     color: white;
     text-align: center;
     padding: 10px;
@@ -267,6 +267,10 @@ footer {
     font-weight: bold;
     border-radius: 8px;
     letter-spacing: 2px;
+    display: flex;
+}
+.faq-bar a {
+    text-align: center;
 }
 
 .footer-content {
@@ -467,7 +471,9 @@ footer {
     </section>
 
     <footer>
-    <div class="faq-bar">FAQ</div>
+        <a href="faq.php">
+        <button class="faq-bar">FAQ</button>
+        </a>
 
     <div class="footer-content">
         <div class="footer-column logo-col">

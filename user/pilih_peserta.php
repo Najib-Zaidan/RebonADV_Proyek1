@@ -199,7 +199,7 @@ footer{
 <div class="peserta-card">
 
   <label class="radio-box">
-    <input type="radio" name="id_peserta" value="<?= $row['id_peserta']; ?>" required>
+    <input type="checkbox" name="id_peserta[]" value="<?= $row['id_peserta']; ?>">
   </label>
 
   <input type="hidden" name="id_trip" value="<?= $id_trip ?>">
