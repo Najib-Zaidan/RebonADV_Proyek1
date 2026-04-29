@@ -17,7 +17,7 @@ session_start();
 }
 
 body {
-  background: #e7e2c8;
+  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
    min-height: 100svh;
 }
 
@@ -58,7 +58,7 @@ nav .active4 {
   cursor: pointer;
 }
 .container {
-  max-width: 700px;
+  max-width: 900px;
   min-height: 100vh;
   margin: auto;
 
@@ -67,7 +67,7 @@ nav .active4 {
 h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #6b3df5;
+  color: #ffffff;
 }
 
 .faq {
@@ -75,6 +75,7 @@ h1 {
   border-radius: 10px;
   margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: auto;
 }
 
 .faq-question {
