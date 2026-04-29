@@ -1,3 +1,15 @@
+<?php 
+session_start();
+
+if (!isset($_SESSION["login"])) {
+    header("Location: login.php");
+    exit;
+}
+
+require 'konek.php';
+require 'fungsi.php';
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
