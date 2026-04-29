@@ -1,3 +1,1 @@
-*.html linguist-language=C++
-*.css linguist-language=C++
-*.php linguist-language=C++
+* linguist-language=PHP
