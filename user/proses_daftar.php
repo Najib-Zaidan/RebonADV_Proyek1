@@ -6,14 +6,14 @@ $id = $_SESSION['id_akun'];
 $nama = $_POST['nama'];
 $alamat = $_POST['alamat'];
 $telepon = $_POST['telepon'];
-$tglLahir = $_POST['tglLahir'];
+$usia = $_POST['usia'];
 $detail = $_POST['detail'];
 
 
-$query = "INSERT INTO peserta 
-(id_akun, nama, no_hp, tgl_lahir, alamat, riwayat)
+$query = "INSERT INTO peserta_open 
+(id_akun, nama, no_hp, usia, alamat, riwayat)
 VALUES 
-($id, '$nama','$telepon','$tglLahir','$alamat','$detail')";
+($id, '$nama','$telepon','$usia','$alamat','$detail')";
 
 // var_dump($_POST);
 // die();

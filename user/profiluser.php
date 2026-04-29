@@ -10,18 +10,34 @@ if (!isset($_SESSION['username'])) {
 $id_akun = $_SESSION['id_akun'];
 
 $peserta = kueri("SELECT * FROM peserta_open WHERE id_akun = '$id_akun'");
-$pesanan = kueri("SELECT b.*, t.tujuan, t.tgl_berangkat, p.nama
-FROM booking b
-JOIN trip t ON b.id_trip = t.id_trip
-JOIN detail d ON b.id_booking = d.id_booking
-JOIN peserta_open p ON d.id_peserta = p.id_peserta
-WHERE b.id_akun = '$id_akun'");
-$pembayaran = kueri("SELECT py.*, ps.nama
-FROM payment_open py
-JOIN detail d ON py.id_booking = d.id_booking
-JOIN booking bk ON d.id_booking = bk.id_booking
-JOIN peserta_open ps ON d.id_peserta = ps.id_peserta
-WHERE ps.id_akun = '$id_akun'");
+$pesanan = kueri("
+    SELECT 
+        b.id_booking,
+        b.id_trip,
+        t.tujuan,
+        t.tgl_berangkat,
+        b.tgl_booking,
+        b.jumlah_peserta,
+        b.status
+    FROM booking b
+    JOIN trip t ON b.id_trip = t.id_trip
+    WHERE b.id_akun = '$id_akun'
+");
+$pembayaran = kueri("
+    SELECT 
+        py.id_payment,
+        py.id_booking,
+        py.tgl_bayar,
+        py.nominal,
+        py.bukti_bayar,
+        py.status,
+        b.jumlah_peserta,
+        t.tujuan
+    FROM payment_open py
+    JOIN booking b ON py.id_booking = b.id_booking
+    JOIN trip t ON b.id_trip = t.id_trip
+    WHERE b.id_akun = '$id_akun'
+");
 ?>
 
 <!DOCTYPE html>
@@ -140,6 +156,37 @@ nav a{text-decoration:none;color:black;}
 
 .action-group{display:flex;flex-direction:column;gap:10px;}
 
+.btn {
+  display: inline-block;
+  padding: 8px 14px;
+  margin-top: 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* tombol bayar */
+.btn.purple {
+  background: #6b3df5;
+  color: white;
+}
+
+.btn.purple:hover {
+  background: #5027d6;
+}
+
+/* tombol lihat peserta */
+.btn:not(.purple) {
+  background: #f1f1f1;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn:not(.purple):hover {
+  background: #e4e4e4;
+}
+
 /* TAB */
 .menu-tabs{
   width:80%;margin:auto;
@@ -250,21 +297,56 @@ nav a{text-decoration:none;color:black;}
 </div>
 
 <!-- PESANAN -->
+<!-- PESANAN -->
 <div id="pesanan" class="tab-content data-section">
 <?php while($b=ambil($pesanan)): ?>
+
+<?php
+$id_booking = $b['id_booking'];
+
+// cek apakah sudah ajukan batal
+$cek_batal_q = kueri("
+    SELECT * FROM batal_open 
+    WHERE id_booking = '$id_booking'
+");
+$cek_batal = mysqli_fetch_assoc($cek_batal_q);
+?>
+
 <div class="data-card">
   <div class="data-left">
     <p><b><?= $b['tujuan']; ?></b></p>
-    <p>👤 Peserta: <?= $b['nama']; ?></p>
+    <p>👥 Jumlah Peserta: <?= $b['jumlah_peserta']; ?></p>
     <p>📅 Booking: <?= $b['tgl_booking']; ?></p>
     <p>🚍 Berangkat: <?= $b['tgl_berangkat']; ?></p>
     <p>Status: <?= $b['status']; ?></p>
   </div>
 
   <div class="data-right">
-    <a href="form_pembayaran.php?id_booking=<?= $b['id_booking']; ?>" class="btn purple">Bayar</a>
+
+    <?php if (!$cek_batal): ?>
+        <a href="form_pembayaran.php?id_booking=<?= $b['id_booking']; ?>" class="btn purple">
+          Bayar
+        </a>
+    <?php endif; ?>
+
+    <a href="detail_peserta.php?id_booking=<?= $b['id_booking']; ?>" class="btn">
+      Detail
+    </a>
+
+    <?php if ($cek_batal): ?>
+        <span style="color:orange;font-weight:bold;">
+            ⏳ Menunggu Persetujuan Admin
+        </span>
+    <?php else: ?>
+        <a href="batal_pesanan.php?id_booking=<?= $b['id_booking']; ?>" class="btn">
+          Ajukan Pembatalan
+        </a>
+    <?php endif; ?>
+
   </div>
+
 </div>
+
 <?php endwhile; ?>
 </div>
 
@@ -273,7 +355,7 @@ nav a{text-decoration:none;color:black;}
 <?php while($py=ambil($pembayaran)): ?>
 <div class="data-card">
   <div class="data-left">
-    <p><b><?= $py['nama']; ?></b></p>
+    <p>👥 Jumlah Peserta: <?= $py['jumlah_peserta']; ?></p>
     <p>📅 <?= $py['tgl_bayar']; ?></p>
     <p>💰 Rp <?= number_format($py['nominal']); ?></p>
     <p>Status: <?= $py['status']; ?></p>

@@ -6,8 +6,8 @@ $id_trip = $_GET['id'];
 
 require 'fungsi.php';
 
-$query = "SELECT id_peserta, nama, no_hp, tgl_lahir, alamat, riwayat 
-          FROM peserta 
+$query = "SELECT id_peserta, id_akun, nama, no_hp, usia, alamat, riwayat 
+          FROM peserta_open
           WHERE id_akun = '$id'";
 
 $result = kueri($query);
@@ -207,7 +207,7 @@ footer{
   <div class="data">
     <h3><?= $row['nama']; ?></h3>
     <p>📞 <?= $row['no_hp']; ?></p>
-    <p>📅 <?= $row['tgl_lahir']; ?></p>
+    <p>📅 <?= $row['usia']; ?></p>
     <p>📍 <?= $row['alamat']; ?></p>
     <p>🩺 <?= $row['riwayat']; ?></p>
   </div>

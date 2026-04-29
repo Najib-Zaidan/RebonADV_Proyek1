@@ -247,6 +247,11 @@ footer {
     <label>Bukti Pembayaran:</label>
     <input type="file" name="bukti_bayar" accept="image/*" required>
     <hr>
+    <label>Catatan:</label>
+<textarea name="catatan" rows="4" placeholder="Tulis catatan pembayaran (opsional)..." 
+style="width:100%; padding:12px; border:none; border-radius:8px; background:#cfc6e8; resize:none;"></textarea>
+
+<hr>
     <button type="submit">Kirim Pembayaran</button>
 </form>
 </div>
