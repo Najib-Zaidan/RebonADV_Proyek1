@@ -9,16 +9,18 @@ if (!isset($_SESSION['username'])) {
 
 $id_akun = $_SESSION['id_akun'];
 
-$peserta = kueri("SELECT * FROM peserta WHERE id_akun = '$id_akun'");
+$peserta = kueri("SELECT * FROM peserta_open WHERE id_akun = '$id_akun'");
 $pesanan = kueri("SELECT b.*, t.tujuan, t.tgl_berangkat, p.nama
 FROM booking b
 JOIN trip t ON b.id_trip = t.id_trip
-JOIN peserta p ON b.id_peserta = p.id_peserta
-WHERE p.id_akun = '$id_akun'");
+JOIN detail d ON b.id_booking = d.id_booking
+JOIN peserta_open p ON d.id_peserta = p.id_peserta
+WHERE b.id_akun = '$id_akun'");
 $pembayaran = kueri("SELECT py.*, ps.nama
-FROM payment py
-JOIN booking bk ON py.id_booking = bk.id_booking
-JOIN peserta ps ON bk.id_peserta = ps.id_peserta
+FROM payment_open py
+JOIN detail d ON py.id_booking = d.id_booking
+JOIN booking bk ON d.id_booking = bk.id_booking
+JOIN peserta_open ps ON d.id_peserta = ps.id_peserta
 WHERE ps.id_akun = '$id_akun'");
 ?>
 
@@ -234,7 +236,7 @@ nav a{text-decoration:none;color:black;}
   <div class="data-left">
     <p><b><?= $p['nama']; ?></b></p>
     <p>📞 <?= $p['no_hp']; ?></p>
-    <p>📅 <?= $p['tgl_lahir']; ?></p>
+    <p>📅 <?= $p['usia']; ?></p>
     <p>📍 <?= $p['alamat']; ?></p>
     <p>💀 <?= $p['riwayat']; ?></p>
   </div>

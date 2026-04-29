@@ -466,11 +466,12 @@ elseif ($sort == 'nama') $order_by = "t.tujuan ASC";
 elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 
 /* QUERY UTAMA */
-$sql = "SELECT t.*, 
+$sql = "SELECT t.*, k.*,
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
         (SELECT COUNT(id_booking) FROM booking b 
          WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
         FROM trip t
+        JOIN katalog k ON t.id_trip = k.id_trip
         WHERE 1";
 
 /* SEARCH */
@@ -551,7 +552,7 @@ if (mysqli_num_rows($result) > 0) {
         <span class="seat"><?php echo $sisa_kuota; ?> / <?php echo $row['kuota']; ?> SEAT</span>
       </div>
 
-      <p class="via"><?php echo htmlspecialchars($row['catatan']); ?></p>
+      <p class="via"><?php echo htmlspecialchars($row['deskripsi']); ?></p>
       <p class="date">📅 <?php echo $tgl_tampil; ?></p>
       <p class="price">Rp. <?php echo number_format($row['harga'],0,',','.'); ?></p>
     </div>
