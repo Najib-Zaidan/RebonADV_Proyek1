@@ -222,11 +222,13 @@ $no = 1;
 while($row = ambil($hasil)){
 $id = $row['id_trip'];
 
-$data = kueri("SELECT (t.kuota - COUNT(b.id_trip)) sisa
-FROM trip t JOIN booking b ON t.id_trip = b.id_trip
-WHERE t.id_trip = $id AND status != 'Dibatalkan'");
-$sisa = ambil($data)['sisa'] ?? $row['kuota'];
+// Menghitung total peserta yang sudah booking untuk trip ini
+$data_terisi = kueri("SELECT SUM(jumlah_peserta) AS total_terisi 
+                      FROM booking 
+                      WHERE id_trip = $id AND status != 'Dibatalkan'");
+$terisi = ambil($data_terisi)['total_terisi'] ?? 0;
 
+$sisa = $row['kuota'] - $terisi;
 $data = kueri("SELECT (DATEDIFF(tgl_pulang, tgl_berangkat)+1) durasi FROM trip WHERE id_trip=$id");
 $durasi = ambil($data)['durasi'];
 
@@ -350,23 +352,25 @@ if ($status != '') $where[] = "b.status = '$status'";
 $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
 $order = ($sort != '') ? "ORDER BY total_bayar $sort" : "";
 
-$data_booking = kueri("SELECT b.*, t.tujuan, t.harga, t.tgl_berangkat, p.nama,
-(SELECT SUM(nominal) FROM payment WHERE id_booking=b.id_booking AND status='Diverifikasi') total_bayar
-FROM booking b
-JOIN trip t ON b.id_trip=t.id_trip
-JOIN peserta p ON b.id_peserta=p.id_peserta
-$kondisi
-$order");
+$data_booking = kueri("SELECT b.*, t.tujuan, t.harga, t.tgl_berangkat, a.username AS nama,
+                (SELECT SUM(nominal) FROM payment_open 
+                 WHERE id_booking = b.id_booking AND status = 'Diverifikasi') AS total_bayar
+                FROM booking b
+                JOIN trip t ON b.id_trip = t.id_trip
+                JOIN akun a ON b.id_akun = a.id_akun
+                $kondisi
+                $order");
 ?>
 
 <table>
 <tr>
   <th>No</th>
   <th>Trip</th>
-  <th>Peserta</th>
-  <th>Tanggal Booking</th>
-  <th>Berangkat</th>
-  <th>Pembayaran</th>
+  <th>Pemesan</th>
+  <th>Pax</th>
+  <th>Tgl Booking</th>
+  <th>Tgl Berangkat</th>
+  <th>Pembayaran (Lunas / Tagihan)</th>
   <th>Status</th>
   <th>Aksi</th>
 </tr>
@@ -375,13 +379,16 @@ $order");
 $no=1;
 while($row=ambil($data_booking)){
   $bayar = $row['total_bayar'] ?? 0;
+  $total_tagihan = $row['harga'] * $row['jumlah_peserta'];
+  
   echo "<tr>";
   echo "<td>$no</td>";
   echo "<td>{$row['tujuan']}</td>";
   echo "<td>{$row['nama']}</td>";
+  echo "<td>{$row['jumlah_peserta']}</td>";
   echo "<td>{$row['tgl_booking']}</td>";
   echo "<td>{$row['tgl_berangkat']}</td>";
-  echo "<td>Rp ".number_format($bayar)." / ".number_format($row['harga'])."</td>";
+  echo "<td>Rp ".number_format($bayar)." / ".number_format($total_tagihan)."</td>";
   echo "<td>{$row['status']}</td>";
   echo "<td><a href='detail_booking.php?id={$row['id_booking']}'>Detail</a></td>";
   echo "</tr>";
@@ -389,6 +396,7 @@ while($row=ambil($data_booking)){
 }
 ?>
 </table>
+
 
 
 
@@ -453,7 +461,7 @@ while($row=ambil($data_booking)){
     <select name="status" style="padding: 7px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; outline: none;">
       <option value="">Semua Status</option>
       <?php
-      $list_status = kueri("SELECT DISTINCT status FROM payment");
+      $list_status = kueri("SELECT DISTINCT status FROM payment_open");
       while($s_row = ambil($list_status)){
         $selected = ($status == $s_row['status']) ? "selected" : "";
         echo "<option value='{$s_row['status']}' $selected>{$s_row['status']}</option>";
@@ -485,13 +493,15 @@ if ($status != '') $where[] = "pay.status = '$status'";
 $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
 $order = ($sort != '') ? "ORDER BY pay.nominal $sort" : "";
 
-$data = kueri("SELECT pay.*, p.nama, t.tujuan, b.tgl_booking
-FROM payment pay
-JOIN booking b ON pay.id_booking=b.id_booking
-JOIN trip t ON b.id_trip=t.id_trip
-JOIN peserta p ON b.id_peserta=p.id_peserta
-$kondisi
-$order");
+/* Kueri untuk elseif($menu == "payment") */
+$data = kueri("SELECT pay.*, a.username AS nama, t.tujuan, b.tgl_booking
+                FROM payment_open pay
+                JOIN booking b ON pay.id_booking = b.id_booking
+                JOIN trip t ON b.id_trip = t.id_trip
+                JOIN akun a ON b.id_akun = a.id_akun
+                $kondisi
+                $order");
+
 ?>
 
 <table>
@@ -540,10 +550,16 @@ $tab = $_GET['tab'] ?? 'open';
 
 if($tab == "open"):
   $data_peserta = kueri("SELECT p.*, a.username, 
-  (SELECT t.tujuan FROM booking b JOIN trip t ON b.id_trip = t.id_trip WHERE b.id_peserta = p.id_peserta AND b.status = 'Lunas' ORDER BY t.tgl_berangkat DESC LIMIT 1) AS trip_terakhir,
-  (SELECT COUNT(*) FROM booking b WHERE b.id_peserta = p.id_peserta AND b.status = 'Lunas') AS total_trip
-  FROM peserta p 
-  JOIN akun a ON p.id_akun = a.id_akun");
+                (SELECT t.tujuan 
+                 FROM booking b 
+                 JOIN trip t ON b.id_trip = t.id_trip 
+                 WHERE b.id_akun = a.id_akun AND b.status = 'Lunas' 
+                 ORDER BY t.tgl_berangkat DESC LIMIT 1) AS trip_terakhir,
+                (SELECT COUNT(*) 
+                 FROM booking b 
+                 WHERE b.id_akun = a.id_akun AND b.status = 'Lunas') AS total_trip
+                FROM peserta_open p 
+                JOIN akun a ON p.id_akun = a.id_akun");
 ?>
 
 <table>
@@ -568,7 +584,7 @@ if($tab == "open"):
     echo "<td>{$row['username']}</td>";
     echo "<td>{$row['nama']}</td>";
     echo "<td>{$row['no_hp']}</td>";
-    echo "<td>{$row['tgl_lahir']}</td>";
+    echo "<td>{$row['usia']}</td>";
     echo "<td>{$row['alamat']}</td>";
     echo "<td>{$row['riwayat']}</td>";
     echo "<td>$trip</td>";
