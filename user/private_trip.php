@@ -11,9 +11,9 @@ session_start();
 
   <style>
     :root {
-  --purple-dark: #3d0f6a;
-  --purple-mid: #5b1fb2;
-  --purple-light: #a67bff;
+  --purple-dark: #4b00ff;
+  --purple-mid: #7a2cff;
+  --purple-light: #4b00ff;
   --cream: #fff9e6;
   --lavender: #e9d9ff;
   --input-border: rgba(0, 0, 0, 0.08);
@@ -183,7 +183,7 @@ nav .active3 {
 .cta-row {
   display: flex;
   justify-content: flex-end;
-  margin-top: 6px;
+  margin-top: 10px;
 
 }
 .cta-row a {
@@ -366,7 +366,7 @@ footer {
 
         <div class="row">
           <input type="date" name="tgl_mulai" class="half" required />
-          <input type="date" name="tgl_selesai" id="half" required />
+          <input type="date" name="tgl_selesai" class="half" required />
         </div>
 
         <textarea name="catatan" placeholder="Catatan Tambahan" rows="5"></textarea>
