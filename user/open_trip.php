@@ -120,7 +120,7 @@ nav .active2 {
   padding:12px 15px;
   border:none;
   outline:none;
-  width:250px;
+  width:350px;
   font-size:14px;
 }
 
@@ -515,6 +515,7 @@ if($keyword != ''){
 
     $sql .= " AND (
         t.tujuan LIKE '%$keyword%' OR
+        t.rute LIKE '%$keyword%' OR 
         t.catatan LIKE '%$keyword%' OR
         EXISTS (
             SELECT 1 FROM fasilitas f
@@ -539,8 +540,9 @@ $result = kueri($sql);
       <input 
         type="text" 
         name="keyword" 
-        placeholder="Cari tujuan / fasilitas..."
-        value="<?= $_GET['keyword'] ?? '' ?>"
+        placeholder="Cari tujuan / fasilitas / jalur pendakian..."
+        value=""
+        autofocus
       >
       <button type="submit">CARI</button>
     </div>
