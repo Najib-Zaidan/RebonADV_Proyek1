@@ -11,33 +11,24 @@ $id_akun = $_SESSION['id_akun'];
 
 $peserta = kueri("SELECT * FROM peserta_open WHERE id_akun = '$id_akun'");
 $pesanan = kueri("
-    SELECT 
-        b.id_booking,
-        b.id_trip,
-        t.tujuan,
-        t.tgl_berangkat,
-        b.tgl_booking,
-        b.jumlah_peserta,
-        b.status
+    SELECT
+        b.*,
+        t.*
     FROM booking b
     JOIN trip t ON b.id_trip = t.id_trip
     WHERE b.id_akun = '$id_akun'
+    ORDER BY b.tgl_booking DESC
 ");
 $pembayaran = kueri("
     SELECT 
-        py.id_payment,
-        py.id_booking,
-        py.tgl_bayar,
-        py.nominal,
-        py.bukti_bayar,
-        py.status,
-        py.catatan,
+        py.*,
         b.jumlah_peserta,
         t.tujuan
     FROM payment_open py
     JOIN booking b ON py.id_booking = b.id_booking
     JOIN trip t ON b.id_trip = t.id_trip
     WHERE b.id_akun = '$id_akun'
+    ORDER BY py.tgl_bayar DESC
 ");
 
 // Query untuk mengambil data pengajuan pembatalan Private Trip
@@ -54,6 +45,7 @@ $pembayaran_private = kueri("
     FROM payment_private py
     JOIN private_trip t ON py.id_private = t.id_private
     WHERE t.id_akun = '$id_akun'
+    ORDER BY py.tgl_bayar DESC
 ");
 ?>
 

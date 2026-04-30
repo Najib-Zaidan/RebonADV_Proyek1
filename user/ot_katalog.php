@@ -9,7 +9,39 @@ session_start();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ot katalog</title>
+<audio id="backsound" loop>
+  <source src="../gambar/upload/angel.mp3" type="audio/mpeg">
+</audio>
 
+<div id="overlay-transparan"></div>
+
+<style>#overlay-transparan {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999; /* Sangat tinggi agar tidak tertutup elemen lain */
+  background-color: transparent; /* Benar-benar bening */
+  cursor: default; /* Cursor tetap standar agar user tidak curiga ada tombol */
+}
+
+</style>
+<script>
+  const overlay = document.getElementById('overlay-transparan');
+const musik = document.getElementById('backsound');
+
+overlay.addEventListener('click', function() {
+    // Putar musik
+    musik.play().catch(e => console.log("Gagal putar:", e));
+
+    // Hapus total elemen pelapis agar user bisa klik menu/tombol asli di web
+    overlay.remove();
+    
+    console.log("Overlay dihapus, musik dimulai.");
+}, { once: true });
+
+</script>
   <style>
     * {
   margin: 0;
