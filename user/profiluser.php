@@ -310,6 +310,7 @@ $cek_batal_q = kueri("
     WHERE id_booking = '$id_booking'
 ");
 $cek_batal = mysqli_fetch_assoc($cek_batal_q);
+$status_batal = $cek_batal['status'] ?? null;
 ?>
 
 <div class="data-card">
@@ -323,25 +324,41 @@ $cek_batal = mysqli_fetch_assoc($cek_batal_q);
 
   <div class="data-right">
 
-    <?php if (!$cek_batal): ?>
-        <a href="form_pembayaran.php?id_booking=<?= $b['id_booking']; ?>" class="btn purple">
-          Bayar
-        </a>
-    <?php endif; ?>
-
-    <a href="detail_peserta.php?id_booking=<?= $b['id_booking']; ?>" class="btn">
-      Detail
+    <!-- TOMBOL BAYAR -->
+<?php if ($status_batal === null || $status_batal == 0): ?>
+    <a href="form_pembayaran.php?id_booking=<?= $b['id_booking']; ?>" class="btn purple">
+        Bayar
     </a>
+<?php endif; ?>
 
-    <?php if ($cek_batal): ?>
+<!-- DETAIL -->
+<a href="detail_peserta.php?id_booking=<?= $b['id_booking']; ?>" class="btn">
+    Detail
+</a>
+
+<!-- STATUS PEMBATALAN -->
+<?php if ($status_batal !== null): ?>
+
+    <?php if ($status_batal == 0): ?>
         <span style="color:orange;font-weight:bold;">
             ⏳ Menunggu Persetujuan Admin
         </span>
-    <?php else: ?>
-        <a href="batal_pesanan.php?id_booking=<?= $b['id_booking']; ?>" class="btn">
-          Ajukan Pembatalan
-        </a>
+
+    <?php elseif ($status_batal == 1): ?>
+        <span style="color:green;font-weight:bold;">
+            ✅ Pembatalan Disetujui
+        </span>
+
     <?php endif; ?>
+
+<?php else: ?>
+
+    <!-- BELUM PERNAH AJUKAN -->
+    <a href="batal_pesanan.php?id_booking=<?= $b['id_booking']; ?>" class="btn">
+        Ajukan Pembatalan
+    </a>
+
+<?php endif; ?>
 
   </div>
 
