@@ -151,13 +151,54 @@ nav a{text-decoration:none;color:black;}
 
 /* PROFILE */
 .profile-card{
-  width:80%;margin:-70px auto 20px;
-  background:#e5e1d0;padding:30px;
-  border-radius:15px;
-  display:flex;justify-content:space-between;align-items:center;
+  width: 80%;
+  margin: -70px auto 20px;
+  background: #e5e1d0;
+  padding: 30px;
+  border-radius: 15px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-.avatar{width:80px;height:80px;background:#5A1EE6;border-radius:50%;}
+/* bagian kiri */
+.profile-left{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* gambar profil */
+.ikon img{
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  margin-left:5px;
+}
+
+/* nama di tengah */
+.profile-name{
+  flex: 1;
+  text-align: center;
+}
+
+.profile-name h2{
+  font-size: 58px;
+  margin: 0;
+}
+
+/* tombol kanan */
+.action-group{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 
 /* BUTTON */
 .btn{
@@ -268,14 +309,22 @@ nav a{text-decoration:none;color:black;}
 
 <!-- PROFILE -->
 <div class="profile-card">
+
+<div class="profil-left">
+  <div class="ikon">
+    <img src="../gambar/person.png" alt="">
+  </div>
   <div>
     <div class="avatar"></div><br>
     <a href="edit_user.php" class="btn purple">Ubah Profil</a>
   </div>
+</div>
 
+<div class="profil-name">
   <div>
     <h2><?= $_SESSION['username']; ?></h2>
   </div>
+</div>
 
   <div class="action-group">
     <a href="logout_user.php" class="btn orange" onclick="return confirm('Yakin logout?')">Logout</a>
@@ -305,7 +354,7 @@ nav a{text-decoration:none;color:black;}
   </div>
 
   <div class="data-right">
-    <a href="edit_peserta.php?id=<?= $p['id_peserta']; ?>" class="btn purple">Ubah</a>
+    <a href="ubah_peserta.php?id=<?= $p['id_peserta']; ?>" class="btn purple">Ubah</a>
     <a href="hapus_peserta.php?id=<?= $p['id_peserta']; ?>" onclick="return confirm('Yakin hapus akun?')" class="btn red">Hapus</a>
   </div>
 </div>
