@@ -13,7 +13,7 @@ if($konek){
   }
 }
 else{
-  header("Location: ../home.html");
+  header("Location: ../user/home1.php");
 }
 /* if(!isset($_SESSION["verif"]) || $_SESSION != true){
   session_unset();
@@ -38,7 +38,7 @@ session_unset(); */
 }
 
 body {
-    background-image: url('gunung.jpg'); 
+    background-image: url('bg.jpeg'); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -78,7 +78,7 @@ h2 {
     margin-bottom: 30px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: crimson;
+    color: #A78BFA;
     font-weight: bold;
 }
 
@@ -123,7 +123,7 @@ input[type="password"] {
 }
 
 input:focus {
-    box-shadow: 0 0 8px crimson;
+    box-shadow: 0 0 8px #8B5CF6;
 }
 
 button[type="submit"] {
@@ -132,7 +132,7 @@ button[type="submit"] {
     margin-top: 10px;
     border: none;
     border-radius: 5px;
-    background-color: crimson;
+    background-color: #6b3df5;
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -140,7 +140,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #9e0d28; 
+    background-color: #d1d9ff; 
     transform: translateY(-2px);
 }
 
