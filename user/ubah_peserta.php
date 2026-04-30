@@ -240,7 +240,7 @@ footer {
             <h2>EDIT DATA PESERTA</h2>
 <div class="Kolom">
             <input type="text" name="nama" placeholder="Nama Lengkap" required>
-            <input type="text" name="telepon" placeholder="Nomor Telepon" required>
+            <input type="number" name="telepon" placeholder="Nomor Telepon" required>
             <input type="number" name="usia" placeholder="Usia" required>
             <input type="text" name="alamat" placeholder="Alamat" required>
             <input type="text" name="penyakit" placeholder="Riwayat Penyakit">
