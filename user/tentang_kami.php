@@ -183,7 +183,7 @@ nav ul li a.active {
 }
 
 .hero-content h3 {
-    color: #7d5fff;
+    color: #070708;
     font-size: 24px;
     margin-bottom: 20px;
 }
