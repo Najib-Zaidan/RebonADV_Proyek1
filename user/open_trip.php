@@ -503,7 +503,7 @@ elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 /* QUERY UTAMA */
 $sql = "SELECT t.*, k.*,
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
-        (SELECT COUNT(id_booking) FROM booking b 
+        (SELECT SUM(jumlah_peserta) FROM booking b 
          WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
         FROM trip t
         JOIN katalog k ON t.id_trip = k.id_trip
@@ -572,7 +572,7 @@ if (mysqli_num_rows($result) > 0) {
     $tgl_pulang = new DateTime($row['tgl_pulang']);
     $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1;
     $sisa_kuota = $row['kuota'] - $row['terisi'];
-
+    if ($sisa_kuota == 0) continue;
     $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
 ?>
 

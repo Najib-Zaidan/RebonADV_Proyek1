@@ -414,7 +414,7 @@ require 'fungsi.php';
 $id_trip = $_GET['id'];
 $sisa = mysqli_num_rows(kueri("SELECT id_booking FROM booking b JOIN trip t ON b.id_trip = $id_trip WHERE b.status != 'Dibatalkan'"));
 $sisa = ambil(kueri("SELECT
-            (t.kuota - COUNT(b.id_trip)) sisa
+            (t.kuota - SUM(b.jumlah_peserta)) sisa
             FROM trip t
             JOIN booking b
             ON t.id_trip = b.id_trip
