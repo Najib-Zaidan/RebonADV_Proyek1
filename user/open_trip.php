@@ -572,7 +572,7 @@ if (mysqli_num_rows($result) > 0) {
     $tgl_pulang = new DateTime($row['tgl_pulang']);
     $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1;
     $sisa_kuota = $row['kuota'] - $row['terisi'];
-    if ($sisa_kuota == 0) continue;
+    if ($sisa_kuota == 0 || $row['publik'] == 0) continue;
     $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
 ?>
 
