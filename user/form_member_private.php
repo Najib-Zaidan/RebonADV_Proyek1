@@ -77,7 +77,7 @@ nav .active3 {
   background: #e9e4c7;
   padding: 40px;
   border-radius: 15px;
-  width: 420px;
+  width: 700px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -87,6 +87,9 @@ nav .active3 {
   margin-bottom: 25px;
   font-size: 22px;
   font-weight: bold;
+}
+h4 {
+  text-align: center;
 }
 
 /* FORM */
@@ -139,7 +142,6 @@ nav .active3 {
 
 .date-group input {
   width: 100%;
-  text-align: center;
 }
 
 /* BUTTON */
@@ -157,7 +159,7 @@ nav .active3 {
 
 /* HOVER BUTTON */
 .form-container button:hover {
-  background: #6b3df5;
+  background: #4000ff;
 }
 
 footer {
@@ -280,12 +282,12 @@ footer {
     <section class="form-section">
     <?php
 // Tangkap jumlah peserta dari URL, default ke 1 jika tidak ada
-$jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
+$jumlah_peserta = isset($_POST['jumlah']) ? (int)$_POST['jumlah'] : 1;
 ?>
 
 <div class="form-container">
     <h2>TAMBAH PESERTA PRIVATE TRIP</h2>
-
+<br>
     <form id="formPendaftaran" action="proses_form_member.php" method="POST">
         <?php 
         $i = 1;
@@ -302,9 +304,8 @@ $jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
                 />
 
                 <div class="date-wrapper">
-                    <label>Tanggal Lahir Peserta <?php echo $i; ?> *</label>
                     <div class="date-group">
-                        <input type="date" name="tglLahir[]" required />
+                        <input type="text"  placeholder="Tanggal lahir peserta" onfocus="this.type='date'" onblur="if (!this.value) this.type='text' <?php echo $i; ?> *" required/>
                     </div>
                 </div>
 

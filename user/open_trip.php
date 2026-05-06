@@ -8,7 +8,7 @@ session_start();
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Open Trip</title>
-<audio id="backsound" loop>
+<!-- <audio id="backsound" loop>
   <source src="../gambar/upload/dan.mp3" type="audio/mpeg">
 </audio>
 
@@ -40,7 +40,7 @@ overlay.addEventListener('click', function() {
     console.log("Overlay dihapus, musik dimulai.");
 }, { once: true });
 
-</script>
+</script> -->
 <style>
     * {
   margin: 0;
