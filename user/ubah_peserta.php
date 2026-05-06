@@ -260,6 +260,7 @@ footer {
             <input type="text" name="penyakit" value="<?= $row['riwayat']; ?>">
     </div>
             <button type="submit" name="submit">Simpan</button>
+          
         </form>
     </div>
 
@@ -332,15 +333,15 @@ footer {
 
             $update = mysqli_query($konek, "UPDATE peserta_open SET
                 nama='$nama',
-                telepon='$telepon',
+                no_hp='$no_hp',
                 usia='$usia',
                 alamat='$alamat',
-                penyakit='$penyakit'
-                WHERE id='$id'
+                riwayat='$riwayat'
+                WHERE id_peserta='$id'
             ");
 
             if ($update) {
-                echo "<script>alert('Data berhasil diupdate!'); window.location='data_peserta.php';</script>";
+                echo "<script>alert('Data berhasil diupdate!'); window.location='profiluser.php';</script>";
             } else {
                 echo "Gagal update: " . mysqli_error($konek);
             }
