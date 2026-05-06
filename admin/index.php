@@ -363,6 +363,11 @@ $data_booking = kueri("SELECT b.*, t.tujuan, t.harga, t.tgl_berangkat, a.usernam
                 $order");
 ?>
 
+<a href="export_booking.php?filter=<?php echo $filter; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
+   style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
+   ⬇ Download Excel
+</a>
+
 <table>
 <tr>
   <th>No</th>
@@ -515,6 +520,11 @@ $data = kueri("SELECT
               $order");
 ?>
 
+<a href="export_pembayaran.php?filter=<?php echo $filter; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
+   style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
+   ⬇ Download Excel
+</a>
+
 <table>
   <thead>
     <tr>
@@ -573,6 +583,16 @@ $data = kueri("SELECT
   <a href="index.php?menu=peserta&tab=open" class="btn-tambah" style="background: <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'open') ? '#321180' : '#6b3df5'; ?>; text-decoration: none; padding: 10px 20px; border-radius: 8px; color: white; display: inline-block;">Open Trip</a>
   <a href="index.php?menu=peserta&tab=private" class="btn-tambah" style="background: <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'private') ? '#321180' : '#6b3df5'; ?>; text-decoration: none; padding: 10px 20px; border-radius: 8px; color: white; display: inline-block;">Private Trip</a>
 </div>
+
+<a href="export_peserta_open.php" 
+   style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
+   ⬇ Download Open Trip
+</a>
+
+<a href="export_peserta_private.php" 
+   style="padding: 8px 15px; background: orange; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
+   ⬇ Download Private Trip
+</a>
 
 <?php
 $tab = $_GET['tab'] ?? 'open';
