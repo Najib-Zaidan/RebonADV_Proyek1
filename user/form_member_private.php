@@ -282,7 +282,7 @@ footer {
     <section class="form-section">
     <?php
 // Tangkap jumlah peserta dari URL, default ke 1 jika tidak ada
-$jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
+$jumlah_peserta = isset($_POST['jumlah']) ? (int)$_POST['jumlah'] : 1;
 ?>
 
 <div class="form-container">
