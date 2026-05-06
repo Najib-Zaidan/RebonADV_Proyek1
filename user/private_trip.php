@@ -150,6 +150,11 @@ nav .active3 {
   flex: 0 0 46%;
   width: 300px;
 }
+.card_from input:focus,
+.card_from select:focus {
+  border: 2px solid #6b3df5;
+  background: #e6e0ff;
+}
 .trip-form {
   display: flex;
   flex-direction: column;
@@ -166,13 +171,13 @@ nav .active3 {
   padding: 12px 14px;
   font-size: 15px;
   outline: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 25px rgba(97, 88, 88, 0.1);
+  
 }
-.trip-from:focus {
-        border-color: #4a90e2;
-        outline: none;
-        box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-      }
+.card_from textarea input:focus {
+  border: 2px solid #6b3df5;
+    background: #e6e0ff;
+}
 .trip-form textarea {
   resize: vertical;
 }

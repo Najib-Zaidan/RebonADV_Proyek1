@@ -295,7 +295,7 @@ $jumlah_peserta = isset($_POST['jumlah']) ? (int)$_POST['jumlah'] : 1;
         ?>
             
                 <h4>Peserta Ke-<?php echo $i; ?></h4>
-                
+                <br>
                 <input
                     type="text"
                     name="nama[]"
