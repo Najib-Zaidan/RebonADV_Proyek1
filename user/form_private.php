@@ -84,8 +84,13 @@ h1 {
     max-width: 600px;
     display: flex;
     justify-content: center;
+     border: 2px solid #6b3df5;
 }
-
+.card_from input:focus,
+.card_from select:focus {
+  border: 2px solid #6b3df5;
+  background: #e6e0ff;
+}
 .trip-form {
     width: 100%;
     display: flex;
@@ -110,27 +115,7 @@ h1 {
     
 }
 
-.btn-whatsapp {
-    width: 80%;
-    padding: 15px;
-    background-color: #25d366;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    transition: 0.3s;
-}
-
-.btn-whatsapp:hover {
-    background-color: #1ebe57;
-    transform: translateY(-2px);
-}
-
+.
 /* Footer */
 footer {
   background-color: #fdfae6;
