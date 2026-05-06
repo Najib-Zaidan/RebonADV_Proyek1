@@ -1,3 +1,17 @@
+<?php
+session_start();
+include 'konek.php';
+
+if (!isset($_GET['id'])) {
+    die("ID tidak ditemukan");
+}
+
+$id = $_GET['id'];
+
+$data = mysqli_query($konek, "SELECT * FROM peserta_open WHERE id_peserta = '$id'");
+$row = mysqli_fetch_assoc($data);
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -238,14 +252,14 @@ footer {
     <div class="container">
         <form class="form-box" method="POST" action="">
             <h2>EDIT DATA PESERTA</h2>
-<div class="Kolom">
-            <input type="text" name="nama" placeholder="Nama Lengkap" required>
-            <input type="number" name="telepon" placeholder="Nomor Telepon" required>
-            <input type="number" name="usia" placeholder="Usia" required>
-            <input type="text" name="alamat" placeholder="Alamat" required>
-            <input type="text" name="penyakit" placeholder="Riwayat Penyakit">
-</div>
-            <button type="submit">Simpan</button>
+    <div class="Kolom">
+            <input type="text" name="nama" value="<?= $row['nama']; ?>" required>
+            <input type="number" name="telepon" value="<?= $row['no_hp']; ?>" required>
+            <input type="number" name="usia" value="<?= $row['usia']; ?>" required>
+            <input type="text" name="alamat" value="<?= $row['alamat']; ?>" required>
+            <input type="text" name="penyakit" value="<?= $row['riwayat']; ?>">
+    </div>
+            <button type="submit" name="submit">Simpan</button>
         </form>
     </div>
 
@@ -306,6 +320,32 @@ footer {
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
+
+    <?php
+      if (isset($_POST['submit'])) {
+
+            $nama = $_POST['nama'];
+            $no_hp = $_POST['telepon'];
+            $usia = $_POST['usia'];
+            $alamat = $_POST['alamat'];
+            $riwayat = $_POST['penyakit'];
+
+            $update = mysqli_query($konek, "UPDATE peserta_open SET
+                nama='$nama',
+                telepon='$telepon',
+                usia='$usia',
+                alamat='$alamat',
+                penyakit='$penyakit'
+                WHERE id='$id'
+            ");
+
+            if ($update) {
+                echo "<script>alert('Data berhasil diupdate!'); window.location='data_peserta.php';</script>";
+            } else {
+                echo "Gagal update: " . mysqli_error($konek);
+            }
+        }
+      ?>
 
 </body>
 </html>
