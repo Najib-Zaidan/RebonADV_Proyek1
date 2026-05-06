@@ -168,6 +168,11 @@ nav .active3 {
   outline: none;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
+.trip-from:focus {
+        border-color: #4a90e2;
+        outline: none;
+        box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+      }
 .trip-form textarea {
   resize: vertical;
 }
@@ -349,24 +354,22 @@ footer {
 
     <!-- KANAN (FORM) -->
     <aside class="card-form">
-      <form action="proses_form_private.php" method="post" class="trip-form">
+      <form action="form_member_private.php" method="post" class="trip-form">
 
-        <input type="text" name="nama" placeholder="Nama Lengkap" required />
-        <input type="text" name="nohp" placeholder="Nomor Telepon" required />
-        <input type="text" name="destinasi" placeholder="Lokasi Destinasi" required />
+        <input type="text" name="nama" placeholder="Nama Lengkap" autocomplete="off" required />
+        <input type="text" name="nohp" placeholder="Nomor Telepon" autocomplete="off" required />
+        <input type="text" name="destinasi" placeholder="Lokasi Destinasi" autocomplete="off" required />
 
         
-        <input type="text" placeholder="Pilih Tanggal Berangkat" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
+        <input type="text"  placeholder="Pilih Tanggal Berangkat" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
         <input type="text" placeholder="Pilih Tanggal Pulang" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
         
         <textarea name="catatan" placeholder="Catatan Tambahan" rows="5"></textarea>
         <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" required />
 
         <div class="cta-row">
-          <a href="form_private.php">
           <button type="submit" name="submit" class="btn-whatsapp">
             <span>Pesan Sekarang</span>
-            </a>
           </button>
         </div>
 
