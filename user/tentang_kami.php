@@ -172,8 +172,8 @@ nav ul li a.active {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('background-gunung.jpg');
     background-size: cover;
+    background: #e7e2c8;
     height: 500px;
     text-align: center;
     color: white;
