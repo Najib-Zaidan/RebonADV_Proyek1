@@ -253,33 +253,33 @@ h5 {
       <br>
 
       <div class="faq">
-        <div class="faq-question">Bagaimana mendaftar akun?</div>
-        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
+        <div class="faq-question">Apa itu open trip?</div>
+        <div class="faq-answer">Open trip adalah perjalanan yang dibuka untuk umum, sehingga siapa saja bisa ikut dan akan digabung dengan peserta lain dalam satu grup sesuai jadwal yang sudah ditentukan oleh Rebon Adventure.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">Bagaimana cara mendaftar trip?</div>
-        <div class="faq-answer">Klik tombol daftar lalu isi data yang diminta.</div>
+        <div class="faq-question">Apa itu private trip?</div>
+        <div class="faq-answer">Private trip adalah perjalanan khusus yang pesertanya hanya dari satu kelompok (teman, keluarga, atau komunitas sendiri). Jadwal, jumlah peserta, dan kebutuhan perjalanan bisa lebih fleksibel sesuai permintaan.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">Bagaimana cara menambahkan peserta trip?</div>
-        <div class="faq-answer">Ya, layanan ini bisa digunakan secara gratis.</div>
+        <div class="faq-question">Trip-nya ke mana saja?</div>
+        <div class="faq-answer">Rebon Adventure hanya menyediakan trip ke gunung (kegiatan pendakian), bukan ke destinasi lain seperti pantai atau kota wisata.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-question">Siapa saja yang bisa ikut open trip dan private trip?</div>
+        <div class="faq-answer">Open trip dan private trip terbuka untuk umum, baik pemula maupun yang sudah berpengalaman, selama dalam kondisi sehat dan siap mengikuti kegiatan pendakian.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-question">Bagaimana cara memesan open trip?</div>
+        <div class="faq-answer">pemesanan open trip di lalukan dengan memilih jadwal yang tersedia, Kemudian buat peserta jika belum ada atau pilih peserta jika sudah ada, selanjutnya melalukan transaksi pembayaran dan menunggu jadwal trip yang telah di tentukan. </div>
       </div>
 
       <div class="faq">
         <div class="faq-question">Bagaimana cara memesan private trip?</div>
-        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
-      </div>
-
-      <div class="faq">
-        <div class="faq-question">Bagaimana cara pembayarannya?</div>
-        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
-      </div>
-
-      <div class="faq">
-        <div class="faq-question">Apakah ada diskon paket trip?</div>
-        <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
+        <div class="faq-answer">Pemesanan private trip dilakukan dengan mengisi from yang tersedia dan pilih sesuai keinginan anda ,Kemudian daftarkan peserta yang ikut serta ,selanjutnya melalukan transaksi dan menunggu jadwal yang anda pilih.</div>
       </div>
 
 

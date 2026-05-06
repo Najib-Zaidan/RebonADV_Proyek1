@@ -295,7 +295,7 @@ $jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
         ?>
             
                 <h4>Peserta Ke-<?php echo $i; ?></h4>
-                <br>
+                
                 <input
                     type="text"
                     name="nama[]"
@@ -321,7 +321,7 @@ $jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
                     name="detail[]"
                     placeholder="Detail Penyakit Peserta <?php echo $i; ?> "
                 />
-            
+            <br>
         <?php 
             $i++;
         endwhile; 
