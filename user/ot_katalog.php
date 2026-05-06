@@ -9,7 +9,39 @@ session_start();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ot katalog</title>
+<audio id="backsound" loop>
+  <source src="../gambar/upload/angel.mp3" type="audio/mpeg">
+</audio>
 
+<div id="overlay-transparan"></div>
+
+<style>#overlay-transparan {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999; /* Sangat tinggi agar tidak tertutup elemen lain */
+  background-color: transparent; /* Benar-benar bening */
+  cursor: default; /* Cursor tetap standar agar user tidak curiga ada tombol */
+}
+
+</style>
+<script>
+  const overlay = document.getElementById('overlay-transparan');
+const musik = document.getElementById('backsound');
+
+overlay.addEventListener('click', function() {
+    // Putar musik
+    musik.play().catch(e => console.log("Gagal putar:", e));
+
+    // Hapus total elemen pelapis agar user bisa klik menu/tombol asli di web
+    overlay.remove();
+    
+    console.log("Overlay dihapus, musik dimulai.");
+}, { once: true });
+
+</script>
   <style>
     * {
   margin: 0;
@@ -382,7 +414,7 @@ require 'fungsi.php';
 $id_trip = $_GET['id'];
 $sisa = mysqli_num_rows(kueri("SELECT id_booking FROM booking b JOIN trip t ON b.id_trip = $id_trip WHERE b.status != 'Dibatalkan'"));
 $sisa = ambil(kueri("SELECT
-            (t.kuota - COUNT(b.id_trip)) sisa
+            (t.kuota - SUM(b.jumlah_peserta)) sisa
             FROM trip t
             JOIN booking b
             ON t.id_trip = b.id_trip

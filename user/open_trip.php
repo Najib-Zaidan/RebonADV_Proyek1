@@ -120,7 +120,7 @@ nav .active2 {
   padding:12px 15px;
   border:none;
   outline:none;
-  width:250px;
+  width:350px;
   font-size:14px;
 }
 
@@ -503,7 +503,7 @@ elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 /* QUERY UTAMA */
 $sql = "SELECT t.*, k.*,
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
-        (SELECT COUNT(id_booking) FROM booking b 
+        (SELECT SUM(jumlah_peserta) FROM booking b 
          WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
         FROM trip t
         JOIN katalog k ON t.id_trip = k.id_trip
@@ -515,6 +515,7 @@ if($keyword != ''){
 
     $sql .= " AND (
         t.tujuan LIKE '%$keyword%' OR
+        t.rute LIKE '%$keyword%' OR 
         t.catatan LIKE '%$keyword%' OR
         EXISTS (
             SELECT 1 FROM fasilitas f
@@ -539,8 +540,9 @@ $result = kueri($sql);
       <input 
         type="text" 
         name="keyword" 
-        placeholder="Cari tujuan / fasilitas..."
-        value="<?= $_GET['keyword'] ?? '' ?>"
+        placeholder="Cari tujuan / fasilitas / jalur pendakian..."
+        value=""
+        autofocus
       >
       <button type="submit">CARI</button>
     </div>
@@ -570,7 +572,7 @@ if (mysqli_num_rows($result) > 0) {
     $tgl_pulang = new DateTime($row['tgl_pulang']);
     $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1;
     $sisa_kuota = $row['kuota'] - $row['terisi'];
-
+    if ($sisa_kuota == 0 || $row['publik'] == 0) continue;
     $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
 ?>
 

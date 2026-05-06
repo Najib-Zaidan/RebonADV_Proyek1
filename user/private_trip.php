@@ -148,6 +148,7 @@ nav .active3 {
 /* right form */
 .card-form {
   flex: 0 0 46%;
+  width: 300px;
 }
 .trip-form {
   display: flex;
@@ -171,12 +172,8 @@ nav .active3 {
   resize: vertical;
 }
 
-.row {
-  display: flex;
-  gap: 12px;
-}
-.row .half {
-  flex: 1;
+.tgl_berangkat {
+  width: 900px;
 }
 
 /* CTA button */
@@ -358,11 +355,10 @@ footer {
         <input type="text" name="nohp" placeholder="Nomor Telepon" required />
         <input type="text" name="destinasi" placeholder="Lokasi Destinasi" required />
 
-        <div class="row">
-          <input type="date" name="tgl_mulai" class="half" required />
-          <input type="date" name="tgl_selesai" class="half" required />
-        </div>
-
+        
+        <input type="text" placeholder="Pilih Tanggal Berangkat" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
+        <input type="text" placeholder="Pilih Tanggal Pulang" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
+        
         <textarea name="catatan" placeholder="Catatan Tambahan" rows="5"></textarea>
         <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" required />
 

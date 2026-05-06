@@ -253,32 +253,32 @@ h5 {
       <br>
 
       <div class="faq">
-        <div class="faq-question">Apa itu website ini?</div>
+        <div class="faq-question">Bagaimana mendaftar akun?</div>
         <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">Bagaimana cara mendaftar?</div>
+        <div class="faq-question">Bagaimana cara mendaftar trip?</div>
         <div class="faq-answer">Klik tombol daftar lalu isi data yang diminta.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">Apakah gratis?</div>
+        <div class="faq-question">Bagaimana cara menambahkan peserta trip?</div>
         <div class="faq-answer">Ya, layanan ini bisa digunakan secara gratis.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">Cara boking private?</div>
+        <div class="faq-question">Bagaimana cara memesan private trip?</div>
         <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">Cara membuat user baru?</div>
+        <div class="faq-question">Bagaimana cara pembayarannya?</div>
         <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
       </div>
 
       <div class="faq">
-        <div class="faq-question">cara logout?</div>
+        <div class="faq-question">Apakah ada diskon paket trip?</div>
         <div class="faq-answer">Website ini digunakan untuk belajar membuat FAQ sederhana.</div>
       </div>
 

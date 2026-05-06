@@ -1,4 +1,5 @@
 <?php 
+session_start();
 $konek = mysqli_connect("127.0.0.1", "root", "");
 $buat_db = "CREATE DATABASE IF NOT EXISTS rebon_adventure";
 mysqli_query($konek, $buat_db);
@@ -115,7 +116,7 @@ $private = "CREATE TABLE IF NOT EXISTS private_trip (
     harga INT DEFAULT NULL,
     harga_dp INT DEFAULT NULL,
     status_trip ENUM('Belum Disetujui', 'Disetujui', 'Ditolak') NOT NULL DEFAULT 'Belum Disetujui',
-    status_bayar ENUM('Belum Bayar', 'DP', 'Lunas', 'Dibatalkan') NOT NULL DEFAULT 'Belum Bayar',
+    status_bayar ENUM('Belum Bayar', 'Bayar non-DP', 'DP', 'Lunas', 'Dibatalkan', 'Refund') NOT NULL DEFAULT 'Belum Bayar',
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";
 $peserta_pt = "CREATE TABLE IF NOT EXISTS peserta_private (
@@ -164,5 +165,6 @@ mysqli_query($konek, $peserta_pt);
 mysqli_query($konek, $payment_pt);
 mysqli_query($konek, $batal_pt);
 
-mysql_close($konek);
+mysqli_close($konek);
+header("Location: ../impor_sql/setup.php");
 ?>
