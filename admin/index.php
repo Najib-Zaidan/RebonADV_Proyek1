@@ -172,6 +172,7 @@ td img {
     <a href="index.php?menu=payment">Pembayaran</a>
     <a href="index.php?menu=peserta">Peserta</a>
     <a href="index.php?menu=pembatalan">Pembatalan</a>
+    <a href="index.php?menu=laporan">📊 Laporan</a>
   </div>
 
   <div class="logout">
@@ -828,6 +829,28 @@ if($tab == "open"):
 </table>
 
 <?php endif; ?>
+
+  <?php elseif($menu == "laporan"): ?>
+
+<h2 style="margin-bottom:15px;">📊 Laporan Keuangan</h2>
+
+<div style="display:flex; gap:15px; flex-wrap:wrap;">
+
+  <!-- LAPORAN KEUANGAN -->
+  <div style="flex:1; min-width:250px; background:white; padding:20px; border-radius:12px;">
+    <h3>Laporan Keuangan Trip</h3>
+    <p>Lihat total tagihan, pembayaran, dan sisa.</p>
+
+    <a href="cetak_laporan_trip.php"
+       style="display:inline-block; margin-top:10px; padding:10px 15px; background:#6b3df5; color:white; border-radius:8px; text-decoration:none;">
+       🖨️ Lihat & Cetak
+    </a>
+
+    <a href="export_laporan.php"
+       style="display:inline-block; margin-top:10px; padding:10px 15px; background:green; color:white; border-radius:8px; text-decoration:none;">
+       ⬇ Export Excel
+    </a>
+  </div>
 
 
 <?php endif; ?>
