@@ -1,5 +1,57 @@
 <?php
 session_start();
+require "fungsi.php";
+
+if (isset($_POST['submit'])) {
+    // 1. Pastikan user sudah login
+    if (!isset($_SESSION['username'])) {
+        echo "<script>
+                alert('Silakan login terlebih dahulu untuk memesan Private Trip!');
+                window.location.href = 'login_user.php';
+              </script>";
+        exit;
+    }
+
+    $username = $_SESSION['username'];
+
+    // 2. Cari id_akun dari tabel akun untuk username yang sedang login & role = 'user'
+    $query_akun = "SELECT id_akun FROM akun WHERE username = '$username' AND role = 'user' LIMIT 1";
+    $result_akun = kueri($query_akun);
+
+    if (mysqli_num_rows($result_akun) > 0) {
+        $row = mysqli_fetch_assoc($result_akun);
+        $id_akun = $row['id_akun'];
+
+        // 3. Tangkap data dari form dan sanitasi
+        $nama = mysqli_real_escape_string($konek, $_POST['nama']);
+        $no_hp = mysqli_real_escape_string($konek, $_POST['nohp']);
+        $tujuan = mysqli_real_escape_string($konek, $_POST['destinasi']);
+        $tgl_berangkat = mysqli_real_escape_string($konek, $_POST['tgl_berangkat']);
+        $tgl_pulang = mysqli_real_escape_string($konek, $_POST['tgl_pulang']);
+        $catatan = mysqli_real_escape_string($konek, $_POST['catatan']);
+        $jumlah_peserta = mysqli_real_escape_string($konek, $_POST['jumlah']);
+        
+        // Atur timezone dan set tanggal booking ke waktu saat ini
+        date_default_timezone_set('Asia/Jakarta');
+        $tgl_booking = date('Y-m-d H:i:s');
+
+        // 4. Insert data ke tabel private
+        // (Berdasarkan screenshot, nama tabelnya adalah 'private')
+        $query_insert = "INSERT INTO private_trip (id_akun, nama, no_hp, tujuan, tgl_berangkat, tgl_pulang, catatan, jumlah_peserta) 
+                         VALUES ('$id_akun', '$nama', '$no_hp', '$tujuan', '$tgl_berangkat', '$tgl_pulang', '$catatan', '$jumlah_peserta')";
+
+        if (kueri($query_insert)) {
+            echo "<script>
+                    alert('Berhasil! Private Trip Anda telah terpesan.');
+                    window.location.href = 'form_member_private.php?jumlah=$jumlah_peserta'; // Refresh halaman agar form kosong lagi
+                  </script>";
+        } else {
+            echo "<script>alert('Gagal menyimpan data: " . mysqli_error($conn) . "');</script>";
+        }
+    } else {
+        echo "<script>alert('Terjadi kesalahan: Akun tidak ditemukan atau bukan sebagai User.');</script>";
+    }
+}
 ?>
 
 <!doctype html>
@@ -174,10 +226,11 @@ nav .active3 {
   box-shadow: 0 10px 25px rgba(97, 88, 88, 0.1);
   
 }
-.card_from textarea input:focus {
-  border: 2px solid #6b3df5;
-    background: #e6e0ff;
-}
+.trip-from:focus {
+        border-color: #4a90e2;
+        outline: none;
+        box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+      }
 .trip-form textarea {
   resize: vertical;
 }
@@ -294,24 +347,12 @@ footer {
   font-weight: bold;
   color: #333;
 }
+  </style>
 
-
-
-</style>
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Private Trip</title>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-  <!-- CSS -->
   <link rel="stylesheet" href="private.css" />
 </head>
 
@@ -328,7 +369,6 @@ footer {
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
         <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
             </span>
@@ -338,7 +378,6 @@ footer {
             </a>
 
         <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
             <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
@@ -349,7 +388,6 @@ footer {
 <main class="hero-area">
   <div class="hero-inner">
 
-    <!-- KIRI (GAMBAR) -->
     <div class="card-image">
       <div class="image-wrap">
         <img src="../gambar/123.jpg" alt="Destinasi"/>
@@ -357,17 +395,15 @@ footer {
       </div>
     </div>
 
-    <!-- KANAN (FORM) -->
     <aside class="card-form">
-      <form action="form_member_private.php" method="post" class="trip-form">
+      <form action="" method="post" class="trip-form">
 
         <input type="text" name="nama" placeholder="Nama Lengkap" autocomplete="off" required />
         <input type="text" name="nohp" placeholder="Nomor Telepon" autocomplete="off" required />
         <input type="text" name="destinasi" placeholder="Lokasi Destinasi" autocomplete="off" required />
 
-        
-        <input type="text"  placeholder="Pilih Tanggal Berangkat" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
-        <input type="text" placeholder="Pilih Tanggal Pulang" onfocus="this.type='date'" onblur="if (!this.value) this.type='text'"/>
+        <input type="date" name="tgl_berangkat" placeholder="Pilih Tanggal Berangkat" required/>
+        <input type="date" name="tgl_pulang" placeholder="Pilih Tanggal Pulang" required />
         
         <textarea name="catatan" placeholder="Catatan Tambahan" rows="5"></textarea>
         <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" required />

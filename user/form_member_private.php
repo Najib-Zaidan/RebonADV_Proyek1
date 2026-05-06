@@ -282,7 +282,7 @@ footer {
     <section class="form-section">
     <?php
 // Tangkap jumlah peserta dari URL, default ke 1 jika tidak ada
-$jumlah_peserta = isset($_POST['jumlah']) ? (int)$_POST['jumlah'] : 1;
+$jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
 ?>
 
 <div class="form-container">
@@ -299,27 +299,27 @@ $jumlah_peserta = isset($_POST['jumlah']) ? (int)$_POST['jumlah'] : 1;
                 <input
                     type="text"
                     name="nama[]"
-                    placeholder="Nama Lengkap Peserta <?php echo $i; ?> *"
+                    placeholder="Nama Lengkap Peserta <?php echo $i; ?> "
                     required
                 />
 
                 <div class="date-wrapper">
                     <div class="date-group">
-                        <input type="text"  placeholder="Tanggal lahir peserta" onfocus="this.type='date'" onblur="if (!this.value) this.type='text' <?php echo $i; ?> *" required/>
+                        <input type="number" name="usia[]" placeholder="Usia peserta  <?php echo $i; ?> " required/>
                     </div>
                 </div>
 
                 <input
                     type="text"
                     name="alamat[]"
-                    placeholder="Alamat Lengkap Peserta <?php echo $i; ?> *"
+                    placeholder="Alamat Lengkap Peserta <?php echo $i; ?> "
                     required
                 />
                 
                 <input
                     type="text"
                     name="detail[]"
-                    placeholder="Detail Penyakit Peserta <?php echo $i; ?> (Opsional)"
+                    placeholder="Detail Penyakit Peserta <?php echo $i; ?> "
                 />
             
         <?php 
