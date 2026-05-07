@@ -35,15 +35,15 @@ if (isset($_POST['submit'])) {
         date_default_timezone_set('Asia/Jakarta');
         $tgl_booking = date('Y-m-d H:i:s');
 
-        // 4. Insert data ke tabel private
-        // (Berdasarkan screenshot, nama tabelnya adalah 'private')
+        
         $query_insert = "INSERT INTO private_trip (id_akun, nama, no_hp, tujuan, tgl_berangkat, tgl_pulang, catatan, jumlah_peserta) 
                          VALUES ('$id_akun', '$nama', '$no_hp', '$tujuan', '$tgl_berangkat', '$tgl_pulang', '$catatan', '$jumlah_peserta')";
 
         if (kueri($query_insert)) {
-            echo "<script>
+        $id_private_baru = mysqli_insert_id($konek);    
+        echo "<script>
                     alert('Berhasil! Private Trip Anda telah terpesan.');
-                    window.location.href = 'form_member_private.php?jumlah=$jumlah_peserta'; // Refresh halaman agar form kosong lagi
+                    window.location.href = 'form_member_private.php?jumlah=$jumlah_peserta&id_private=$id_private_baru'; // Refresh halaman agar form kosong lagi
                   </script>";
         } else {
             echo "<script>alert('Gagal menyimpan data: " . mysqli_error($conn) . "');</script>";
