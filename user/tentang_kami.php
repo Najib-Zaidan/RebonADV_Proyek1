@@ -276,18 +276,125 @@ nav ul li a.active {
 }
 
 
-/* Footer */
+/* ================= FOOTER (TETAP) ================= */
+
 footer {
-  text-align: center; /* biar isi tengah */
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
 }
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Styling Kontak dengan Ikon */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bagian Media Sosial */
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  height: auto;
+  display: block;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 20px 40px;
+  }
+
+  .hero {
+    padding-left: 40px;
+    height: 500px;
+  }
+
+  .trip {
+    padding: 40px;
+  }
+
+  .trip-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .private-trip {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .private-img img {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .galeri-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 
 /* Button FAQ */
 .faq-bar {
   display: inline-block;
   background-color: #6661b3;
   color: white;
+  margin-top: 80px;
+  margin-bottom: 80px;
   padding: 12px 30px;
-  width: 250px;
+  width: 300px;
   text-align: center;
   font-weight: bold;
   border-radius: 8px;
@@ -379,8 +486,6 @@ footer {
         width: 100%;
     }
 }
-
-
 
 
 </style>
@@ -506,72 +611,67 @@ footer {
             <button class="detail">Lihat selengkapnya ></button>
     </a>
     </div>
+    <div class="faq">
+        <a href="faq.php" class="faq-bar">FAQ</a>
+    </div>
 </section>
-<br>
-<br>
-<footer>
-  <a href="faq.php" class="faq-bar">FAQ</a>
-</footer>
-<br>
-<br>
-<br>
-<br>
-    </section>
+<!-- FOOTER -->
 
-    
-
-    <div class="footer-content">
+    <footer>
+      <div class="footer-content">
         <div class="footer-column logo-col">
-            <img src="../gambar/logo-rebon.png" alt="Rebon Adventure Logo" class="footer-logo-img">
+          <img
+            src="../gambar/logo-rebon.png"
+            alt="Rebon Adventure Logo"
+            class="footer-logo-img"
+          />
         </div>
 
         <div class="footer-column">
-            <h4>KONTAK KAMI</h4>
-            <div class="contact-item">
-                <span class="icon">✉</span> 
-                <p>rebonadventure@gmail.com</p>
-            </div>
-            <div class="contact-item">
-                <span class="icon">📞</span> 
-                <p>+62 812-3456-7890</p>
-            </div>
-            <div class="contact-item">
-                <span class="icon">📍</span> 
-                <p>Jl. sukawera No. 15,<br>Cirebon, Indonesia</p>
-            </div>
+          <h4>KONTAK KAMI</h4>
+          <div class="contact-item">
+            <span class="icon">✉</span>
+            <p>rebonadventure@gmail.com</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📞</span>
+            <p>+62 812-3456-7890</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📍</span>
+            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
+          </div>
         </div>
 
         <div class="footer-column">
-            <h4>LAYANAN KAMI</h4>
-            <ul>
-                <li>OPEN TRIP</li>
-                <li>PRIVATE TRIP</li>
-            </ul>
+          <h4>LAYANAN KAMI</h4>
+          <ul>
+            <li>OPEN TRIP</li>
+            <li>PRIVATE TRIP</li>
+          </ul>
         </div>
 
         <div class="footer-column">
-            <h4>INFORMASI</h4>
-            <ul>
-                <li>TENTANG KAMI</li>
-                <li>TRIP TERSEDIA</li>
-                <li>FAQ</li>
-            </ul>
-            
-            <div class="social-section">
-                <h4>FOLLOW US ON</h4>
-                <div class="social-icons">
-                    <img src="../gambar/fb-icon.png" alt="FB">
-                    <img src="../gambar/ig-icon.png" alt="IG">
-                    <img src="../gambar/tt-icon.png" alt="TK">
-                </div>
-            </div>
-        </div>
-    </div>
+          <h4>INFORMASI</h4>
+          <ul>
+            <li>TENTANG KAMI</li>
+            <li>TRIP TERSEDIA</li>
+            <li>FAQ</li>
+          </ul>
 
-    <div class="copyright">
-        © 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.
-    </div>
-</footer>
+          <div class="social-section">
+            <h4>FOLLOW US ON</h4>
+            <div class="social-icons">
+              <img src="../gambar/fb-icon.png" alt="FB" />
+              <img src="../gambar/ig-icon.png" alt="IG" />
+              <img src="../gambar/tt-icon.png" alt="TK" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
+    </footer>
 
   </body>
 </html>
