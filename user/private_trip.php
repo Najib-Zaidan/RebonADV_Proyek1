@@ -336,6 +336,7 @@ nav .active3 {
       font-weight: bold;
       color: #333;
     }
+    
 /* page background gradient (big purple area) */
 
   </style>
@@ -417,8 +418,7 @@ nav .active3 {
         <textarea 
           name="catatan" 
           placeholder="Catatan Tambahan" 
-          rows="5">
-        </textarea>
+          rows="5"></textarea>
 
         <input 
           type="number" 
