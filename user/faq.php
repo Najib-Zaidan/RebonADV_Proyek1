@@ -70,32 +70,82 @@ h1 {
   color: #ffffff;
 }
 
-.faq {
-  background: #fff;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-  width: auto;
-  margin: 15px;
-  padding: 3px;
-  transition: all 0.3s ease;
+.faq-filter{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+    margin-bottom: 35px;
+    
 }
 
-.faq-question {
-  padding: 15px;
-  cursor: pointer;
-  font-weight: bold;
+.filter-card{
+    cursor: pointer;
 }
 
-.faq-answer {
-  padding: 0 15px 15px;
-  display: none;
-  color: #555;
+.filter-card input{
+    display: none;
 }
+
+.filter-content{
+    background: rgba(255,255,255,0.08);
+    padding: 14px 22px;
+    border-radius: 30px;
+    transition: 0.3s ease;
+    border: 2px solid transparent;
+    backdrop-filter: blur(5px);
+}
+
+.filter-content h4{
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* ACTIVE */
+.filter-card input:checked + .filter-content{
+    background: white;
+    border-color: #6b3df5;
+}
+
+.filter-card input:checked + .filter-content h4{
+    color: #6b3df5;
+}
+
+/* HOVER */
+.filter-card:hover .filter-content{
+    transform: translateY(-3px);
+}
+
+/* ================= FAQ ================= */
+
+.faq{
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: 0.3s ease;
+}
+
 .faq:hover{
-    background-color: #fff;
-    transform: translateY(-20px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    transform: translateY(-4px);
+}
+
+.faq-question{
+     font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #222;
+}
+
+.faq-answer{
+    margin-top: 15px;
+    color: #555;
+    line-height: 1.6;
+    display: none;
+    font-size: 15px;
 }
 
 footer {
@@ -252,35 +302,180 @@ h5 {
       <br>
       <br>
 
-      <div class="faq">
-        <div class="faq-question">Apa itu open trip?</div>
-        <div class="faq-answer">Open trip adalah perjalanan yang dibuka untuk umum, sehingga siapa saja bisa ikut dan akan digabung dengan peserta lain dalam satu grup sesuai jadwal yang sudah ditentukan oleh Rebon Adventure.</div>
-      </div>
+      <div class="faq-filter">
 
-      <div class="faq">
-        <div class="faq-question">Apa itu private trip?</div>
-        <div class="faq-answer">Private trip adalah perjalanan khusus yang pesertanya hanya dari satu kelompok (teman, keluarga, atau komunitas sendiri). Jadwal, jumlah peserta, dan kebutuhan perjalanan bisa lebih fleksibel sesuai permintaan.</div>
-      </div>
+    <!-- SEMUA -->
+    <label class="filter-card">
 
-      <div class="faq">
-        <div class="faq-question">Trip-nya ke mana saja?</div>
-        <div class="faq-answer">Rebon Adventure hanya menyediakan trip ke gunung (kegiatan pendakian), bukan ke destinasi lain seperti pantai atau kota wisata.</div>
-      </div>
+        <input type="radio" name="faq-filter" id="all" checked>
 
-      <div class="faq">
-        <div class="faq-question">Siapa saja yang bisa ikut open trip dan private trip?</div>
-        <div class="faq-answer">Open trip dan private trip terbuka untuk umum, baik pemula maupun yang sudah berpengalaman, selama dalam kondisi sehat dan siap mengikuti kegiatan pendakian.</div>
-      </div>
+        <div class="filter-content">
+            <h4>Semua</h4>
+        </div>
 
-      <div class="faq">
-        <div class="faq-question">Bagaimana cara memesan open trip?</div>
-        <div class="faq-answer">pemesanan open trip di lalukan dengan memilih jadwal yang tersedia, Kemudian buat peserta jika belum ada atau pilih peserta jika sudah ada, selanjutnya melalukan transaksi pembayaran dan menunggu jadwal trip yang telah di tentukan. </div>
-      </div>
+    </label>
 
-      <div class="faq">
-        <div class="faq-question">Bagaimana cara memesan private trip?</div>
-        <div class="faq-answer">Pemesanan private trip dilakukan dengan mengisi from yang tersedia dan pilih sesuai keinginan anda ,Kemudian daftarkan peserta yang ikut serta ,selanjutnya melalukan transaksi dan menunggu jadwal yang anda pilih.</div>
-      </div>
+
+    <!-- UMUM -->
+    <label class="filter-card">
+
+        <input type="radio" name="faq-filter" id="umum">
+
+        <div class="filter-content">
+            <h4>Pertanyaan Umum</h4>
+        </div>
+
+    </label>
+
+
+    <!-- PERLENGKAPAN -->
+    <label class="filter-card">
+
+        <input type="radio" name="faq-filter" id="perlengkapan">
+
+        <div class="filter-content">
+            <h4>Perlengkapan</h4>
+        </div>
+
+    </label>
+
+
+    <!-- PEMBAYARAN -->
+    <label class="filter-card">
+
+        <input type="radio" name="faq-filter" id="pembayaran">
+
+        <div class="filter-content">
+            <h4>Pembayaran</h4>
+        </div>
+
+    </label>
+
+
+    <!-- KEBERANGKATAN -->
+    <label class="filter-card">
+
+        <input type="radio" name="faq-filter" id="keberangkatan">
+
+        <div class="filter-content">
+            <h4>Keberangkatan</h4>
+        </div>
+
+    </label>
+
+</div>
+
+
+
+<!-- ================= PERTANYAAN UMUM ================= -->
+
+<div class="faq umum">
+
+    <div class="faq-question">
+        Apa itu open trip?
+    </div>
+
+    <div class="faq-answer">
+        Open trip adalah perjalanan yang dibuka untuk umum, sehingga siapa saja bisa ikut dan akan digabung dengan peserta lain dalam satu grup sesuai jadwal yang sudah ditentukan oleh Rebon Adventure.
+    </div>
+
+</div>
+
+<div class="faq umum">
+
+    <div class="faq-question">
+        Apa itu private trip?
+    </div>
+
+    <div class="faq-answer">
+        Private trip adalah perjalanan khusus yang pesertanya hanya dari satu kelompok atau komunitas sendiri.
+    </div>
+
+</div>
+
+
+
+<!-- ================= PERLENGKAPAN ================= -->
+
+<div class="faq perlengkapan">
+
+    <div class="faq-question">
+        Barang apa saja yang harus dibawa?
+    </div>
+
+    <div class="faq-answer">
+        Peserta wajib membawa perlengkapan pribadi seperti jaket, sleeping bag, pakaian ganti, dan obat pribadi.
+    </div>
+
+</div>
+
+<div class="faq perlengkapan">
+
+    <div class="faq-question">
+        Apakah carrier disediakan?
+    </div>
+
+    <div class="faq-answer">
+        Carrier dapat disewa sesuai ketersediaan dari pihak Rebon Adventure.
+    </div>
+
+</div>
+
+
+
+<!-- ================= PEMBAYARAN ================= -->
+
+<div class="faq pembayaran">
+
+    <div class="faq-question">
+        Bagaimana cara pembayaran?
+    </div>
+
+    <div class="faq-answer">
+        Pembayaran dapat dilakukan melalui transfer bank ataupun e-wallet yang tersedia.
+    </div>
+
+</div>
+
+<div class="faq pembayaran">
+
+    <div class="faq-question">
+        Apakah bisa DP terlebih dahulu?
+    </div>
+
+    <div class="faq-answer">
+        Ya, peserta dapat melakukan pembayaran DP terlebih dahulu sesuai ketentuan yang berlaku.
+    </div>
+
+</div>
+
+
+
+<!-- ================= KEBERANGKATAN ================= -->
+
+<div class="faq keberangkatan">
+
+    <div class="faq-question">
+        Jam keberangkatan kapan?
+    </div>
+
+    <div class="faq-answer">
+        Jadwal keberangkatan akan diinformasikan oleh admin sebelum hari pelaksanaan trip.
+    </div>
+
+</div>
+
+<div class="faq keberangkatan">
+
+    <div class="faq-question">
+        Titik kumpul berada di mana?
+    </div>
+
+    <div class="faq-answer">
+        Titik kumpul akan diinformasikan sesuai destinasi dan jadwal trip yang dipilih.
+    </div>
+
+</div>
 
 
     </div>
@@ -295,18 +490,64 @@ h5 {
           <br>
           <br>
           
-    <script>
-    const questions = document.querySelectorAll(".faq-question");
+    
+<script>
 
-    questions.forEach(q => {
-      q.addEventListener("click", () => {
+/* ================= FILTER FAQ ================= */
+
+const filters = document.querySelectorAll('.faq-filter input');
+const faqs = document.querySelectorAll('.faq');
+
+filters.forEach(filter => {
+
+    filter.addEventListener('change', () => {
+
+        const id = filter.id;
+
+        faqs.forEach(faq => {
+
+            if(id === 'all'){
+                faq.style.display = 'block';
+            }
+
+            else if(faq.classList.contains(id)){
+                faq.style.display = 'block';
+            }
+
+            else{
+                faq.style.display = 'none';
+            }
+
+        });
+
+    });
+
+});
+
+
+/* ================= FAQ OPEN CLOSE ================= */
+
+const questions = document.querySelectorAll(".faq-question");
+
+questions.forEach(q => {
+
+    q.addEventListener("click", () => {
+
         const answer = q.nextElementSibling;
 
-        answer.style.display =
-          answer.style.display === "block" ? "none" : "block";
-      });
+        if(answer.style.display === "block"){
+            answer.style.display = "none";
+        }
+
+        else{
+            answer.style.display = "block";
+        }
+
     });
-    </script>
+
+});
+
+</script>
     <br>
     <br>
     <footer>
