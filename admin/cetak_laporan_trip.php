@@ -26,27 +26,23 @@ if ($bulan > 0 && $tahun > 0) {
 // QUERY
 $query = mysqli_query($konek, "
     SELECT 
-        b.id_booking,
-        t.tujuan,
-        a.username,
-        t.harga,
-        b.tgl_booking,
-
-        COUNT(DISTINCT d.id_peserta) AS jumlah_peserta,
-        GROUP_CONCAT(DISTINCT ps.nama SEPARATOR ', ') AS nama_peserta,
-        IFNULL(SUM(DISTINCT p.nominal),0) AS total_nominal
-
-    FROM booking b
-    JOIN trip t ON b.id_trip = t.id_trip
-    JOIN akun a ON b.id_akun = a.id_akun
-
-    LEFT JOIN detail d ON b.id_booking = d.id_booking
-    LEFT JOIN peserta_open ps ON d.id_peserta = ps.id_peserta
-    LEFT JOIN payment_open p ON b.id_booking = p.id_booking
-
-    $where
-    GROUP BY b.id_booking
-    ORDER BY a.username ASC, b.tgl_booking ASC
+    b.id_booking,
+    t.tujuan,
+    a.username,
+    t.harga,
+    b.tgl_booking,
+    COUNT(DISTINCT d.id_peserta) AS jumlah_peserta,
+    GROUP_CONCAT(DISTINCT ps.nama SEPARATOR ', ') AS nama_peserta,
+    IFNULL(SUM(DISTINCT CASE WHEN p.status = 'Diverifikasi' THEN p.nominal END), 0) AS total_nominal
+FROM booking b
+JOIN trip t ON b.id_trip = t.id_trip
+JOIN akun a ON b.id_akun = a.id_akun
+LEFT JOIN detail d ON b.id_booking = d.id_booking
+LEFT JOIN peserta_open ps ON d.id_peserta = ps.id_peserta
+LEFT JOIN payment_open p ON b.id_booking = p.id_booking
+$where
+GROUP BY b.id_booking
+ORDER BY a.username ASC, b.tgl_booking ASC
 ");
 
 $total_biaya_all = 0;
@@ -137,7 +133,10 @@ tr:nth-child(even){ background:#f9f9f9; }
     body { background:white; padding:0; }
 
     .filter-box,
-    .btn-print {
+    .btn-print,
+    .btn-export,
+    .aksi-print,
+    .btn-kembali {
         display:none;
     }
 
@@ -189,18 +188,18 @@ tr:nth-child(even){ background:#f9f9f9; }
 </form>
 
 <!-- PRINT -->
-<div style="text-align:center; margin-bottom:15px;">
+<div class="aksi-print" style="text-align:center; margin-bottom:15px;">
     <button onclick="window.print()" class="btn-print">
-        🖨️ Cetak Laporan
+        Cetak Laporan
     </button>
 
-    <a href="export_laporan.php"
+    <a class="btn-export" href="export_laporan.php"
        style="display:inline-block; margin-top:10px; padding:10px 15px; background:green; color:white; border-radius:8px; text-decoration:none;">
-       ⬇ Export Excel
+       Export Excel
     </a>
 </div>
 
-<a href="index.php?menu=laporan">Kembali</a>
+<a class="btn-kembali" href="index.php?menu=laporan">Kembali</a>
 
 <table>
 <tr>

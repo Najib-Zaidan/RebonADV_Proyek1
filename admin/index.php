@@ -172,7 +172,7 @@ td img {
     <a href="index.php?menu=payment">Pembayaran</a>
     <a href="index.php?menu=peserta">Peserta</a>
     <a href="index.php?menu=pembatalan">Pembatalan</a>
-    <a href="index.php?menu=laporan">📊 Laporan</a>
+    <a href="index.php?menu=laporan">Laporan</a>
   </div>
 
   <div class="logout">
@@ -366,7 +366,7 @@ $data_booking = kueri("SELECT b.*, t.tujuan, t.harga, t.tgl_berangkat, a.usernam
 
 <a href="export_booking.php?filter=<?php echo $filter; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
    style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
-   ⬇ Download Excel
+   Download Excel
 </a>
 
 <table>
@@ -523,7 +523,7 @@ $data = kueri("SELECT
 
 <a href="export_pembayaran.php?filter=<?php echo $filter; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
    style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
-   ⬇ Download Excel
+   Download Excel
 </a>
 
 <table>
@@ -587,12 +587,12 @@ $data = kueri("SELECT
 
 <a href="export_peserta_open.php" 
    style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
-   ⬇ Download Open Trip
+   Download Open Trip
 </a>
 
 <a href="export_peserta_private.php" 
    style="padding: 8px 15px; background: orange; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
-   ⬇ Download Private Trip
+   Download Private Trip
 </a>
 
 <?php
@@ -832,7 +832,7 @@ if($tab == "open"):
 
   <?php elseif($menu == "laporan"): ?>
 
-<h2 style="margin-bottom:15px;">📊 Laporan Keuangan</h2>
+<h2 style="margin-bottom:15px;">Laporan Keuangan</h2>
 
 <div style="display:flex; gap:15px; flex-wrap:wrap;">
 
@@ -843,12 +843,12 @@ if($tab == "open"):
 
     <a href="cetak_laporan_trip.php"
        style="display:inline-block; margin-top:10px; padding:10px 15px; background:#6b3df5; color:white; border-radius:8px; text-decoration:none;">
-       🖨️ Lihat & Cetak
+       Lihat & Cetak
     </a>
 
     <a href="export_laporan.php"
        style="display:inline-block; margin-top:10px; padding:10px 15px; background:green; color:white; border-radius:8px; text-decoration:none;">
-       ⬇ Export Excel
+       Export Excel
     </a>
   </div>
 
