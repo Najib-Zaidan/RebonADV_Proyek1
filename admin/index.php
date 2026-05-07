@@ -428,6 +428,7 @@ $data_private = kueri("SELECT pt.*, a.username
             <th>Tujuan</th>
             <th>Peserta</th>
             <th>Tgl Berangkat</th>
+            <th>Tgl Booking</th> 
             <th>Status Trip</th>
             <th>Status Bayar</th>
             <th>Aksi</th>
@@ -439,7 +440,7 @@ $data_private = kueri("SELECT pt.*, a.username
         if(mysqli_num_rows($data_private) > 0){
             while($row = ambil($data_private)){
                 // Styling Warna Status Trip
-                $st_trip_color = "#orange";
+                $st_trip_color = "orange";
                 if($row['status_trip'] == 'Disetujui') $st_trip_color = "green";
                 if($row['status_trip'] == 'Ditolak') $st_trip_color = "red";
 
@@ -457,6 +458,12 @@ $data_private = kueri("SELECT pt.*, a.username
                 <td><?php echo $row['tujuan']; ?></td>
                 <td><?php echo $row['jumlah_peserta']; ?> Orang</td>
                 <td><?php echo date('d/m/Y', strtotime($row['tgl_berangkat'])); ?></td>
+                
+                <!-- Kolom Tgl Booking (Hanya Tanggal) -->
+                <td>
+                    <?php echo date('d/m/Y', strtotime($row['tgl_booking'])); ?>
+                </td>
+
                 <td style="color: <?php echo $st_trip_color; ?>; font-weight: bold;">
                     <?php echo $row['status_trip']; ?>
                 </td>
@@ -466,7 +473,6 @@ $data_private = kueri("SELECT pt.*, a.username
                     </span>
                 </td>
                 <td>
-                    <!-- Link Aksi Detail -->
                     <a href="detail_private.php?id=<?php echo $row['id_private']; ?>" 
                        style="background: #321180; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px;">
                        Detail
@@ -477,7 +483,7 @@ $data_private = kueri("SELECT pt.*, a.username
                 $no++;
             }
         } else {
-            echo "<tr><td colspan='8' align='center' style='padding: 20px;'>Belum ada pengajuan Private Trip.</td></tr>";
+            echo "<tr><td colspan='9' align='center' style='padding: 20px;'>Belum ada pengajuan Private Trip.</td></tr>";
         }
         ?>
     </tbody>
@@ -488,18 +494,32 @@ $data_private = kueri("SELECT pt.*, a.username
 <?php elseif($menu == "payment"): ?>
 
 <?php
-  // Ambil parameter filter dan sorting dari URL
+  // Ambil parameter tipe (default: open), filter, dan sorting dari URL
+  $type = $_GET['type'] ?? 'open'; 
   $filter = $_GET['filter'] ?? 'hari_ini';
   $sort = $_GET['sort'] ?? '';
   $destinasi = $_GET['destinasi'] ?? '';
   $status = $_GET['status'] ?? '';
+
+  $btn_base = "padding: 8px 12px; border-radius: 8px; text-decoration: none; color: white; font-size: 13px; transition: 0.3s; white-space: nowrap;";
 ?>
+
+<!-- SWITCH ANTARA OPEN TRIP DAN PRIVATE TRIP -->
+<div style="margin-bottom: 15px; display: flex; gap: 10px;">
+    <a href="index.php?menu=payment&type=open&filter=<?php echo $filter; ?>" 
+       style="<?php echo $btn_base; ?> background: <?php echo ($type == 'open') ? '#321180' : '#ccc'; ?>; font-weight: bold;">
+       OPEN TRIP
+    </a>
+    <a href="index.php?menu=payment&type=private&filter=<?php echo $filter; ?>" 
+       style="<?php echo $btn_base; ?> background: <?php echo ($type == 'private') ? '#321180' : '#ccc'; ?>; font-weight: bold;">
+       PRIVATE TRIP
+    </a>
+</div>
 
 <div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
   
   <div style="display: flex; gap: 5px;">
     <?php
-    $btn_base = "padding: 8px 12px; border-radius: 8px; text-decoration: none; color: white; font-size: 13px; transition: 0.3s; white-space: nowrap;";
     $periods = [
       'hari_ini' => 'Hari Ini',
       'minggu_ini' => 'Minggu Ini',
@@ -511,7 +531,7 @@ $data_private = kueri("SELECT pt.*, a.username
     foreach($periods as $key => $label):
       $bg = ($filter == $key) ? '#321180' : '#6b3df5';
     ?>
-      <a href="index.php?menu=payment&filter=<?php echo $key; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
+      <a href="index.php?menu=payment&type=<?php echo $type; ?>&filter=<?php echo $key; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
          style="<?php echo $btn_base; ?> background: <?php echo $bg; ?>;">
         <?php echo $label; ?>
       </a>
@@ -522,9 +542,9 @@ $data_private = kueri("SELECT pt.*, a.username
 
   <form action="index.php" method="get" style="display: flex; gap: 10px; align-items: center; flex: 1;">
     <input type="hidden" name="menu" value="payment">
+    <input type="hidden" name="type" value="<?php echo $type; ?>">
     <input type="hidden" name="filter" value="<?php echo $filter; ?>">
 
-    <!-- Dropdown Sorting yang Diperbarui -->
     <select name="sort" style="padding: 7px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; outline: none;">
       <option value="">Urutkan Berdasarkan</option>
       <option value="NOM_ASC" <?php if($sort == 'NOM_ASC') echo 'selected'; ?>>Nominal Terkecil</option>
@@ -536,7 +556,9 @@ $data_private = kueri("SELECT pt.*, a.username
     <select name="destinasi" style="padding: 7px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; outline: none;">
       <option value="">Semua Destinasi</option>
       <?php
-      $list_trip = kueri("SELECT DISTINCT tujuan FROM trip");
+      // Mengambil destinasi berdasarkan tipe trip
+      $query_dest = ($type == 'open') ? "SELECT DISTINCT tujuan FROM trip" : "SELECT DISTINCT tujuan FROM private_trip";
+      $list_trip = kueri($query_dest);
       while($t = ambil($list_trip)){
         $selected = ($destinasi == $t['tujuan']) ? "selected" : "";
         echo "<option value='{$t['tujuan']}' $selected>{$t['tujuan']}</option>";
@@ -569,45 +591,60 @@ if ($filter == 'hari_ini') {
     $where[] = "YEAR(pay.tgl_bayar) = YEAR(CURDATE())";
 }
 
-if ($destinasi != '') $where[] = "t.tujuan = '$destinasi'";
 if ($status != '') $where[] = "pay.status = '$status'";
 
-$kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
+// Query bersyarat berdasarkan tipe (Open atau Private)
+if ($type == 'open') {
+    if ($destinasi != '') $where[] = "t.tujuan = '$destinasi'";
+    $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
+    
+    switch($sort) {
+        case 'NOM_ASC': $order = "ORDER BY pay.nominal ASC"; break;
+        case 'NOM_DESC': $order = "ORDER BY pay.nominal DESC"; break;
+        case 'PES_ASC': $order = "ORDER BY b.jumlah_peserta ASC"; break;
+        case 'PES_DESC': $order = "ORDER BY b.jumlah_peserta DESC"; break;
+        default: $order = "ORDER BY pay.id_payment DESC"; break;
+    }
 
-// Logika Sorting Baru
-switch($sort) {
-    case 'NOM_ASC': $order = "ORDER BY pay.nominal ASC"; break;
-    case 'NOM_DESC': $order = "ORDER BY pay.nominal DESC"; break;
-    case 'PES_ASC': $order = "ORDER BY b.jumlah_peserta ASC"; break;
-    case 'PES_DESC': $order = "ORDER BY b.jumlah_peserta DESC"; break;
-    default: $order = "ORDER BY pay.id_payment DESC"; break;
+    $sql = "SELECT pay.*, a.username AS nama_pemesan, t.tujuan, b.tgl_booking, b.jumlah_peserta 
+            FROM payment_open pay
+            JOIN booking b ON pay.id_booking = b.id_booking
+            JOIN trip t ON b.id_trip = t.id_trip
+            JOIN akun a ON b.id_akun = a.id_akun
+            $kondisi $order";
+} else {
+    // Logika untuk Private Trip
+    if ($destinasi != '') $where[] = "pt.tujuan = '$destinasi'";
+    $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
+
+    switch($sort) {
+        case 'NOM_ASC': $order = "ORDER BY pay.nominal ASC"; break;
+        case 'NOM_DESC': $order = "ORDER BY pay.nominal DESC"; break;
+        case 'PES_ASC': $order = "ORDER BY pt.jumlah_peserta ASC"; break;
+        case 'PES_DESC': $order = "ORDER BY pt.jumlah_peserta DESC"; break;
+        default: $order = "ORDER BY pay.id_payment DESC"; break;
+    }
+
+    $sql = "SELECT pay.*, a.username AS nama_pemesan, pt.tujuan, pt.tgl_booking, pt.jumlah_peserta 
+            FROM payment_private pay
+            JOIN private_trip pt ON pay.id_private = pt.id_private
+            JOIN akun a ON pt.id_akun = a.id_akun
+            $kondisi $order";
 }
 
-/* Kueri SQL Full */
-$data = kueri("SELECT 
-                pay.*, 
-                a.username AS nama_pemesan, 
-                t.tujuan, 
-                b.tgl_booking, 
-                b.jumlah_peserta 
-              FROM payment_open pay
-              JOIN booking b ON pay.id_booking = b.id_booking
-              JOIN trip t ON b.id_trip = t.id_trip
-              JOIN akun a ON b.id_akun = a.id_akun
-              $kondisi
-              $order");
+$data = kueri($sql);
 ?>
 
-<a href="export_pembayaran.php?filter=<?php echo $filter; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
+<a href="export_pembayaran.php?type=<?php echo $type; ?>&filter=<?php echo $filter; ?>&sort=<?php echo $sort; ?>&destinasi=<?php echo $destinasi; ?>&status=<?php echo $status; ?>" 
    style="padding: 8px 15px; background: green; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
-   Download Excel
+   Download Excel (<?php echo strtoupper($type); ?>)
 </a>
 
 <table>
   <thead>
     <tr>
       <th>No</th>
-      <th>Trip</th>
+      <th>Trip (<?php echo ucfirst($type); ?>)</th>
       <th>Nama Pemesan</th>
       <th>Jumlah Peserta</th>
       <th>Tanggal Bayar</th>
@@ -621,37 +658,44 @@ $data = kueri("SELECT
   <tbody>
     <?php
     $no = 1;
-    while($row = ambil($data)){
-      // Styling status
-      $status_style = "";
-      if($row['status'] == 'Diverifikasi') $status_style = "color: green; font-weight: bold;";
-      elseif($row['status'] == 'Ditolak') $status_style = "color: red; font-weight: bold;";
-      else $status_style = "color: orange; font-weight: bold;";
+    if(mysqli_num_rows($data) > 0){
+        while($row = ambil($data)){
+          $status_style = "";
+          if($row['status'] == 'Diverifikasi') $status_style = "color: green; font-weight: bold;";
+          elseif($row['status'] == 'Ditolak') $status_style = "color: red; font-weight: bold;";
+          else $status_style = "color: orange; font-weight: bold;";
+
+          // Tentukan link detail berdasarkan tipe
+          $link_detail = ($type == 'open') ? "detail_payment.php" : "detail_payment_private.php";
     ?>
-      <tr>
-        <td><?php echo $no; ?></td>
-        <td><?php echo $row['tujuan']; ?></td>
-        <td><?php echo $row['nama_pemesan']; ?></td>
-        <td><?php echo $row['jumlah_peserta']; ?> Orang</td>
-        <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_bayar'])); ?></td>
-        <td><?php echo date('d/m/Y', strtotime($row['tgl_booking'])); ?></td>
-        <td>Rp <?php echo number_format($row['nominal']); ?></td>
-        <td>
-          <a href="../gambar/payment/<?php echo $row['bukti_bayar']; ?>" target="_blank">
-            <img src="../gambar/payment/<?php echo $row['bukti_bayar']; ?>" width="80" style="border-radius: 4px;">
-          </a>
-        </td>
-        <td style="<?php echo $status_style; ?>"><?php echo $row['status']; ?></td>
-        <td>
-          <a href="detail_payment.php?id=<?php echo $row['id_payment']; ?>" style="text-decoration: underline; color: #321180;">Detail</a>
-        </td>
-      </tr>
+          <tr>
+            <td><?php echo $no; ?></td>
+            <td><?php echo $row['tujuan']; ?></td>
+            <td><?php echo $row['nama_pemesan']; ?></td>
+            <td><?php echo $row['jumlah_peserta']; ?> Orang</td>
+            <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_bayar'])); ?></td>
+            <td><?php echo date('d/m/Y', strtotime($row['tgl_booking'])); ?></td>
+            <td>Rp <?php echo number_format($row['nominal']); ?></td>
+            <td>
+              <a href="../gambar/payment/<?php echo $row['bukti_bayar']; ?>" target="_blank">
+                <img src="../gambar/payment/<?php echo $row['bukti_bayar']; ?>" width="80" style="border-radius: 4px;">
+              </a>
+            </td>
+            <td style="<?php echo $status_style; ?>"><?php echo $row['status']; ?></td>
+            <td>
+              <a href="<?php echo $link_detail; ?>?id=<?php echo $row['id_payment']; ?>" style="text-decoration: underline; color: #321180;">Detail</a>
+            </td>
+          </tr>
     <?php
-      $no++;
+          $no++;
+        }
+    } else {
+        echo "<tr><td colspan='10' align='center' style='padding: 20px;'>Data pembayaran tidak ditemukan.</td></tr>";
     }
     ?>
   </tbody>
 </table>
+
 
 
 

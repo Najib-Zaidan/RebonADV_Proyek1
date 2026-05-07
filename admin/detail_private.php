@@ -186,6 +186,10 @@ if (!$trip) {
                         <p><?php echo $trip['tujuan']; ?></p>
                     </div>
                     <div class="info-item">
+                        <label>Tanggal Booking (Waktu Pengajuan)</label>
+                        <p><?php echo date('d M Y - H:i', strtotime($trip['tgl_booking'])); ?> WIB</p>
+                    </div>
+                    <div class="info-item">
                         <label>Status Trip</label>
                         <span class="badge <?php echo ($trip['status_trip'] == 'Belum Disetujui') ? 'bg-orange' : (($trip['status_trip'] == 'Disetujui') ? 'bg-green' : 'bg-red'); ?>">
                             <?php echo $trip['status_trip']; ?>
