@@ -550,7 +550,7 @@ nav a{text-decoration:none;color:black;}
 
             <?php if ($status_batal_pr === null): ?>
                 <?php if($pr['status_trip'] == 'Disetujui' && $pr['status_bayar'] != 'Lunas' && $pr['status_bayar'] != 'Dibatalkan'): ?>
-                    <a href="form_bayar_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">💳 Bayar</a>
+                    <a href="form_pembayaran_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">💳 Bayar</a>
                 <?php endif; ?>
                 
                 <?php if($pr['status_bayar'] != 'Dibatalkan'): ?>
