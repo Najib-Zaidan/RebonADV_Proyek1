@@ -839,7 +839,7 @@ if($tab == "open"):
   <!-- LAPORAN KEUANGAN -->
   <div style="flex:1; min-width:250px; background:white; padding:20px; border-radius:12px;">
     <h3>Laporan Keuangan Trip</h3>
-    <p>Lihat total tagihan, pembayaran, dan sisa.</p>
+
 
     <a href="cetak_laporan_trip.php"
        style="display:inline-block; margin-top:10px; padding:10px 15px; background:#6b3df5; color:white; border-radius:8px; text-decoration:none;">
