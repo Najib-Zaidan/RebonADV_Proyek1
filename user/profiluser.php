@@ -463,23 +463,59 @@ nav a{text-decoration:none;color:black;}
         </div>
         
         <div style="display: flex; gap: 8px; align-items: center;">
-            <a href="detail_peserta.php?id_booking=<?= $id_booking; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">👥 Detail Peserta</a>
+    <a href="detail_peserta.php?id_booking=<?= $id_booking; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">
+        👥 Detail Peserta
+    </a>
 
-            <?php if ($status_batal === null): ?>
-                <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">💳 Bayar</a>
-                
-                <a href="batal_pesanan.php?id_booking=<?= $id_booking; ?>" class="btn" style="color:#e53e3e; border:1px solid #e53e3e; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; background: transparent; text-decoration:none;">✖ Batal</a>
+    <?php if ($status_batal === null): ?>
 
-            <?php elseif ($status_batal == 0): ?>
-                <div style="background: #fffaf0; padding: 6px 12px; border-radius: 8px; border: 1px solid #fbd38d;">
-                    <span style="color:#dd6b20; font-weight:800; font-size:12px;">⏳ Menunggu Batal</span>
-                </div>
-            <?php else: ?>
-                <div style="background: #f0fff4; padding: 6px 12px; border-radius: 8px; border: 1px solid #9ae6b4;">
-                    <span style="color:#38a169; font-weight:800; font-size:12px;">✅ Dibatalkan</span>
-                </div>
-            <?php endif; ?>
+        <?php if ($b['status'] == 'Lunas'): ?>
+
+            <!-- LUNAS: tidak bisa diklik -->
+            <span class="btn purple"
+                  style="margin:0; font-weight:900; font-size:12px; border-radius:8px; background:#999; color:white; padding:8px 12px; opacity:0.7; cursor:not-allowed;">
+                ✔ Lunas
+            </span>
+
+        <?php elseif ($b['status'] == 'DP'): ?>
+
+            <!-- DP: jadi lunaskan -->
+            <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>&mode=pelunasan"
+               class="btn purple"
+               style="margin:0; font-weight:900; font-size:12px; border-radius:8px; background:#ff9800; color:white; text-decoration:none;">
+                💰 Lunaskan
+            </a>
+
+        <?php else: ?>
+
+            <!-- Belum Bayar / Bayar non-DP -->
+            <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>"
+               class="btn purple"
+               style="margin:0; font-weight:900; font-size:12px; border-radius:8px; background:#6b3df5; color:white; text-decoration:none;">
+                💳 Bayar
+            </a>
+
+        <?php endif; ?>
+
+        <a href="batal_pesanan.php?id_booking=<?= $id_booking; ?>" class="btn"
+           style="color:#e53e3e; border:1px solid #e53e3e; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; background: transparent; text-decoration:none;">
+            ✖ Batal
+        </a>
+
+    <?php elseif ($status_batal == 0): ?>
+
+        <div style="background: #fffaf0; padding: 6px 12px; border-radius: 8px; border: 1px solid #fbd38d;">
+            <span style="color:#dd6b20; font-weight:800; font-size:12px;">⏳ Menunggu Batal</span>
         </div>
+
+    <?php else: ?>
+
+        <div style="background: #f0fff4; padding: 6px 12px; border-radius: 8px; border: 1px solid #9ae6b4;">
+            <span style="color:#38a169; font-weight:800; font-size:12px;">✔ Dibatalkan</span>
+        </div>
+
+    <?php endif; ?>
+</div>
     </div>
 </div>
 
