@@ -141,212 +141,203 @@ nav .active3 {
   border-radius: 8px;
   cursor: pointer;
 }
-
-/* page background gradient (big purple area) */
 .hero-area {
-  background: linear-gradient(
-    180deg,
-    var(--purple-dark) 0%,
-    var(--purple-mid) 35%,
-    var(--purple-light) 100%
-  );
-  padding: 48px 20px;
-}
-.hero-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  background: var(--cream);
-  border-radius: 12px;
-  padding: 28px;
-  display: flex;
-  gap: 28px;
-  box-shadow: var(--shadow);
-  align-items: flex-start;
-}
+      padding: 48px 20px;
+    }
 
-/* left image card */
-.card-image {
-  flex: 0 0 48%;
-}
-.image-wrap {
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #eee;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-.image-wrap img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  aspect-ratio: 1/1;
-  min-height: 420px;
-}
-.hero-title {
-  position: absolute;
-  left: 20px;
-  bottom: 28px;
-  margin: 0;
-  font-size: 56px;
-  line-height: 0.95;
-  color: white;
-  font-weight: 800;
-  text-transform: none;
-  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-  font-family: "Montserrat", "Poppins", sans-serif;
-}
+    .hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      gap: 28px;
+      box-shadow: var(--shadow);
+      align-items: flex-start;
+    }
 
-/* right form */
-.card-form {
-  flex: 0 0 46%;
-  width: 300px;
-}
-.card_from input:focus,
-.card_from select:focus {
-  border: 2px solid #6b3df5;
-  background: #e6e0ff;
-}
-.trip-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.trip-form input[type="text"],
-.trip-form input[type="tel"],
-.trip-form input[type="date"],
-.trip-form input[type="number"],
-.trip-form textarea {
-  background: var(--lavender);
-  border-radius: 10px;
-  border: 1px solid var(--input-border);
-  padding: 12px 14px;
-  font-size: 15px;
-  outline: none;
-  box-shadow: 0 10px 25px rgba(97, 88, 88, 0.1);
-  
-}
-.trip-from:focus {
-        border-color: #4a90e2;
-        outline: none;
-        box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-      }
-.trip-form textarea {
-  resize: vertical;
-}
+    /* Image */
+    .card-image {
+      flex: 0 0 48%;
+    }
 
-.tgl_berangkat {
-  width: 900px;
-}
+    .image-wrap {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+    }
 
-/* CTA button */
-.cta-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
+    .image-wrap img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 1/1;
+      min-height: 420px;
+    }
 
-}
-.cta-row a {
-  text-decoration: none;
-  color: #e9d9ff;
-}
-.btn-whatsapp {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
-  color: white;
-  border: none;
-  padding: 14px 22px;
-  border-radius: 10px;
-  font-weight: 700;
-  box-shadow: 0 6px 20px rgba(64, 0, 160, 0.25);
-  cursor: pointer;
-  font-size: 16px;
-  text-decoration: none;
-  
-}
-.btn-whatsapp:hover{
-    background-color: #4b00ff;
-    transform: translateY(-7px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  }
+    .hero-title {
+      position: absolute;
+      left: 20px;
+      bottom: 28px;
+      margin: 0;
+      font-size: 56px;
+      line-height: 0.95;
+      color: white;
+      font-weight: 800;
+      text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
 
+    /* Form */
+    .card-form {
+      flex: 0 0 46%;
+    }
 
+    .trip-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-/* Footer */
-footer {
-  background-color: #fdfae6;
-  padding: 40px 10% 20px 10%;
-  color: #333;
-}
+    .trip-form input[type="text"],
+    .trip-form input[type="tel"],
+    .trip-form input[type="date"],
+    .trip-form input[type="number"],
+    .trip-form textarea {
+      background: var(--lavender);
+      border-radius: 10px;
+      border: 1px solid var(--input-border);
+      padding: 12px 14px;
+      font-size: 15px;
+      outline: none;
+      box-shadow: 0 10px 25px rgba(97, 88, 88, 0.1);
+      width: 100%;
+    }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 30px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 30px;
-}
+    .trip-form input:focus,
+    .trip-form textarea:focus {
+      border: 2px solid #6b3df5;
+      background: #e6e0ff;
+    }
 
-.footer-column h4 {
-  font-size: 16px;
-  margin-bottom: 15px;
-  font-weight: 800;
-}
+    .trip-form textarea {
+      resize: vertical;
+    }
 
-.footer-column ul {
-  list-style: none;
-}
+    /* Tanggal */
+    .date-group {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
 
-.footer-column ul li {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
-}
+    .date-group input[type="date"] {
+      flex: 1;
+    }
 
-/* Styling Kontak dengan Ikon */
-.contact-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 10px;
+    /* Placeholder palsu */
+    .date-group input[type="date"]:invalid::before {
+      content: attr(data-placeholder);
+      color: #888;
+    }
 
-  font-size: 14px;
-  font-weight: 600;
-}
+    .date-group input[type="date"]:focus::before,
+    .date-group input[type="date"]:valid::before {
+      content: "";
+    }
 
-/* Bagian Media Sosial */
-.social-section {
-  margin-top: 25px;
-}
+    /* Hilangkan text default */
+    .date-group input[type="date"]:invalid::-webkit-datetime-edit {
+      color: transparent;
+    }
 
-.social-icons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
+    .date-group input[type="date"]::-webkit-datetime-edit {
+      color: black;
+    }
 
-.social-icons img {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
+    /* Button */
+    .cta-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
 
-.footer-logo-img {
-  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
-  height: auto;
-  display: block;
-}
-.copyright {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
-}
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #fdfae6;
+      padding: 40px 10% 20px 10%;
+      color: #333;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 30px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 30px;
+    }
+
+    .footer-column h4 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      font-weight: 800;
+    }
+
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-column ul li {
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .contact-item {
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .footer-logo-img {
+      width: 220px;
+      height: auto;
+      display: block;
+    }
+
+    .copyright {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+/* page background gradient (big purple area) */
+
   </style>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
@@ -399,18 +390,47 @@ footer {
       <form action="" method="post" class="trip-form">
 
         <input type="text" name="nama" placeholder="Nama Lengkap" autocomplete="off" required />
+
         <input type="text" name="nohp" placeholder="Nomor Telepon" autocomplete="off" required />
+
         <input type="text" name="destinasi" placeholder="Lokasi Destinasi" autocomplete="off" required />
 
-        <input type="date" name="tgl_berangkat" placeholder="Pilih Tanggal Berangkat" required/>
-        <input type="date" name="tgl_pulang" placeholder="Pilih Tanggal Pulang" required />
-        
-        <textarea name="catatan" placeholder="Catatan Tambahan" rows="5"></textarea>
-        <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" required />
+        <!-- INPUT TANGGAL RAPI -->
+        <div class="date-group">
+
+          <input 
+            type="date"
+            name="tgl_berangkat"
+            data-placeholder="Tanggal Berangkat"
+            required
+          >
+
+          <input 
+            type="date"
+            name="tgl_pulang"
+            data-placeholder="Tanggal Pulang"
+            required
+          >
+
+        </div>
+
+        <textarea 
+          name="catatan" 
+          placeholder="Catatan Tambahan" 
+          rows="5">
+        </textarea>
+
+        <input 
+          type="number" 
+          name="jumlah" 
+          placeholder="Jumlah Peserta" 
+          min="1" 
+          required 
+        />
 
         <div class="cta-row">
           <button type="submit" name="submit" class="btn-whatsapp">
-            <span>Pesan Sekarang</span>
+            Pesan Sekarang
           </button>
         </div>
 
@@ -421,6 +441,7 @@ footer {
 </main>
 
 <footer>
+
   <div class="footer-content">
 
     <div class="footer-column logo-col">
@@ -429,13 +450,23 @@ footer {
 
     <div class="footer-column">
       <h4>KONTAK KAMI</h4>
-      <div class="contact-item">✉ rebonadventure@gmail.com</div>
-      <div class="contact-item">📞 +62 812-3456-7890</div>
-      <div class="contact-item">📍 Cirebon, Indonesia</div>
+
+      <div class="contact-item">
+        ✉ rebonadventure@gmail.com
+      </div>
+
+      <div class="contact-item">
+        📞 +62 812-3456-7890
+      </div>
+
+      <div class="contact-item">
+        📍 Cirebon, Indonesia
+      </div>
     </div>
 
     <div class="footer-column">
       <h4>LAYANAN KAMI</h4>
+
       <ul>
         <li>OPEN TRIP</li>
         <li>PRIVATE TRIP</li>
@@ -444,6 +475,7 @@ footer {
 
     <div class="footer-column">
       <h4>INFORMASI</h4>
+
       <ul>
         <li>TENTANG KAMI</li>
         <li>TRIP TERSEDIA</li>
@@ -456,6 +488,7 @@ footer {
   <div class="copyright">
     © 2026 REBON ADVENTURE
   </div>
+
 </footer>
 
 </body>
