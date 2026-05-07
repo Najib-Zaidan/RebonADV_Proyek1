@@ -168,6 +168,7 @@ td img {
 
   <div class="menu">
     <a href="index.php?menu=trip">Open Trip</a>
+    <a href="index.php?menu=private">Private Trip</a>
     <a href="index.php?menu=booking">Pesanan</a>
     <a href="index.php?menu=payment">Pembayaran</a>
     <a href="index.php?menu=peserta">Peserta</a>
@@ -404,7 +405,83 @@ while($row=ambil($data_booking)){
 ?>
 </table>
 
+<?php elseif($menu == "private"): ?>
 
+<div style="margin-bottom: 20px;">
+    <h2 style="color: #321180;">Daftar Pengajuan Private Trip</h2>
+    <p style="font-size: 14px; color: #666;">Kelola permintaan private trip dari pengguna di sini.</p>
+</div>
+
+<?php
+// Query untuk mengambil data private trip dan nama akun pemesan
+$data_private = kueri("SELECT pt.*, a.username 
+                       FROM private_trip pt 
+                       JOIN akun a ON pt.id_akun = a.id_akun 
+                       ORDER BY pt.tgl_booking DESC");
+?>
+
+<table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Pemesan</th>
+            <th>Tujuan</th>
+            <th>Peserta</th>
+            <th>Tgl Berangkat</th>
+            <th>Status Trip</th>
+            <th>Status Bayar</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $no = 1;
+        if(mysqli_num_rows($data_private) > 0){
+            while($row = ambil($data_private)){
+                // Styling Warna Status Trip
+                $st_trip_color = "#orange";
+                if($row['status_trip'] == 'Disetujui') $st_trip_color = "green";
+                if($row['status_trip'] == 'Ditolak') $st_trip_color = "red";
+
+                // Styling Warna Status Bayar
+                $st_bayar_color = "#666";
+                if($row['status_bayar'] == 'Lunas') $st_bayar_color = "green";
+                if($row['status_bayar'] == 'Belum Bayar') $st_bayar_color = "red";
+        ?>
+            <tr>
+                <td><?php echo $no; ?></td>
+                <td>
+                    <strong><?php echo $row['nama']; ?></strong><br>
+                    <small style="color: #6b3df5;">@<?php echo $row['username']; ?></small>
+                </td>
+                <td><?php echo $row['tujuan']; ?></td>
+                <td><?php echo $row['jumlah_peserta']; ?> Orang</td>
+                <td><?php echo date('d/m/Y', strtotime($row['tgl_berangkat'])); ?></td>
+                <td style="color: <?php echo $st_trip_color; ?>; font-weight: bold;">
+                    <?php echo $row['status_trip']; ?>
+                </td>
+                <td>
+                    <span style="padding: 4px 8px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: <?php echo $st_bayar_color; ?>;">
+                        <?php echo $row['status_bayar']; ?>
+                    </span>
+                </td>
+                <td>
+                    <!-- Link Aksi Detail -->
+                    <a href="detail_private.php?id=<?php echo $row['id_private']; ?>" 
+                       style="background: #321180; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px;">
+                       Detail
+                    </a>
+                </td>
+            </tr>
+        <?php
+                $no++;
+            }
+        } else {
+            echo "<tr><td colspan='8' align='center' style='padding: 20px;'>Belum ada pengajuan Private Trip.</td></tr>";
+        }
+        ?>
+    </tbody>
+</table>
 
 
 
@@ -839,7 +916,7 @@ if($tab == "open"):
   <!-- LAPORAN KEUANGAN -->
   <div style="flex:1; min-width:250px; background:white; padding:20px; border-radius:12px;">
     <h3>Laporan Keuangan Trip</h3>
-
+    <p>Lihat total tagihan, pembayaran, dan sisa.</p>
 
     <a href="cetak_laporan_trip.php"
        style="display:inline-block; margin-top:10px; padding:10px 15px; background:#6b3df5; color:white; border-radius:8px; text-decoration:none;">

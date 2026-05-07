@@ -1,11 +1,69 @@
 <?php
 session_start();
+// Menggunakan file koneksi sesuai permintaanmu
+require 'fungsi.php'; 
 
-// CEK LOGIN
+// Cek apakah user sudah login
 if (!isset($_SESSION['username'])) {
-    header("Location: login_user.php?redirect=form");
+    header("Location: login_user.php");
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Ambil id_private dari URL (GET)
+    if (!isset($_GET['id_private'])) {
+        die("ID Private Trip tidak ditemukan.");
+    }
+    
+    $id_private = $_GET['id_private'];
+    
+    // Ambil data array dari form
+    $daftar_nama   = $_POST['nama'];
+    $daftar_usia   = $_POST['usia'];
+    $daftar_alamat = $_POST['alamat'];
+    $daftar_detail = $_POST['detail']; 
+
+    $sukses = true;
+
+    // Mulai transaksi menggunakan variabel $konek dari konek.php
+    mysqli_begin_transaction($konek);
+
+    try {
+        foreach ($daftar_nama as $index => $nama) {
+            // Sanitasi menggunakan variabel $konek
+            $nama_clean   = mysqli_real_escape_string($konek, $nama);
+            $usia_clean   = mysqli_real_escape_string($konek, $daftar_usia[$index]);
+            $alamat_clean = mysqli_real_escape_string($konek, $daftar_alamat[$index]);
+            $riwayat_clean = mysqli_real_escape_string($konek, $daftar_detail[$index]);
+
+            // Menyiapkan string query
+            $sql = "INSERT INTO peserta_private (id_private, nama, usia, alamat, riwayat) 
+                    VALUES ('$id_private', '$nama_clean', '$usia_clean', '$alamat_clean', '$riwayat_clean')";
+            
+            // Menjalankan perintah melalui fungsi kueri() yang kamu buat
+            if (!kueri($sql)) {
+                $sukses = false;
+                break;
+            }
+        }
+
+        if ($sukses) {
+            mysqli_commit($konek);
+            echo "<script>
+                    alert('Berhasil mendaftarkan semua peserta!');
+                    window.location.href = 'profiluser.php'; 
+                  </script>";
+        } else {
+            mysqli_rollback($konek);
+            echo "Terjadi kesalahan saat menyimpan data.";
+        }
+
+    } catch (Exception $e) {
+        mysqli_rollback($konek);
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>
 ?>
 
 <!doctype html>
@@ -288,7 +346,7 @@ $jumlah_peserta = isset($_GET['jumlah']) ? (int)$_GET['jumlah'] : 1;
 <div class="form-container">
     <h2>TAMBAH PESERTA PRIVATE TRIP</h2>
 <br>
-    <form id="formPendaftaran" action="proses_form_member.php" method="POST">
+    <form id="formPendaftaran" action="" method="POST">
         <?php 
         $i = 1;
         while ($i <= $jumlah_peserta) : 
