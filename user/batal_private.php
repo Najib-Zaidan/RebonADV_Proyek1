@@ -9,7 +9,7 @@ if (!isset($_SESSION['id_akun'])) {
 }
 
 $id_akun = $_SESSION['id_akun'];
-$id_private = $_GET['id_private'] ?? '';
+$id_private = $_GET['id'] ?? '';
 
 if (empty($id_private)) {
     echo "<script>

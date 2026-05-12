@@ -586,7 +586,7 @@ if (mysqli_num_rows($result) > 0) {
     <div class="card-body">
       <div class="title-row">
         <h3><?php echo htmlspecialchars($row['tujuan']); ?></h3>
-        <span class="seat"><?php echo $sisa_kuota; ?> / <?php echo $row['kuota']; ?> SEAT</span>
+        <span class="seat">SISA <?php echo $sisa_kuota; ?>  SEAT</span>
       </div>
 
       <p class="via"><?php echo htmlspecialchars($row['deskripsi']); ?></p>

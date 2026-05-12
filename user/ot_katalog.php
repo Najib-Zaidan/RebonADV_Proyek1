@@ -449,9 +449,12 @@ function tgl_indo($tanggal) {
         </div>
 
         <div class="pax-box">
-          <strong><?= $sisa['sisa'] ?> / <?= $trip['kuota']; ?> Pax</strong>
+          <strong>Total Seat <?= $trip['kuota']; ?> Pax</strong>
+          <br>
+          
           <span>Sisa <?= $sisa['sisa'] ?> pax lagi!</span>
         </div>
+        
       </div>
     <div class="grid">
         <div class="left">

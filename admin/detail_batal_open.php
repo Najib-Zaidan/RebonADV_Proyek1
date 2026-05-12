@@ -8,12 +8,27 @@ if (empty($id)) { echo "<script>window.location='index.php?menu=pembatalan';</sc
 if (isset($_POST['update_pembatalan'])) {
     $status_pilihan = $_POST['status_manual'];
     
-    // Update status di tabel pembatalan
-    kueri("UPDATE batal_open SET status = 1 WHERE id_batal = '$id'");
-    
-    // Update status di tabel booking utama
+    // Ambil ID Booking terlebih dahulu sebelum ada kemungkinan baris dihapus
     $cari_booking = ambil(kueri("SELECT id_booking FROM batal_open WHERE id_batal = '$id'"));
     $id_book = $cari_booking['id_booking'];
+
+    // LOGIKA TAMBAHAN: Jika admin memilih status "DP" (Tolak Batal)
+    if ($status_pilihan == 'DP') {
+        // Hapus baris pengajuan di tabel batal_open karena ditolak
+        kueri("DELETE FROM batal_open WHERE id_batal = '$id'");
+        
+        // Kembalikan status di tabel booking utama menjadi DP
+        kueri("UPDATE booking SET status = 'DP' WHERE id_booking = '$id_book'");
+        
+        echo "<script>alert('Pembatalan Ditolak! Data pengajuan dihapus.'); window.location='index.php?menu=pembatalan&tab=open';</script>";
+        exit;
+    }
+
+    // --- LOGIKA ASLI (JIKA DISETUJUI/REFUND/LAINNYA) ---
+    // Update status di tabel pembatalan menjadi selesai (status = 1)
+    kueri("UPDATE batal_open SET status = 1 WHERE id_batal = '$id'");
+    
+    // Update status di tabel booking utama sesuai pilihan (Dibatalkan/Refund/Belum Bayar)
     kueri("UPDATE booking SET status = '$status_pilihan' WHERE id_booking = '$id_book'");
 
     echo "<script>alert('Status Berhasil Diperbarui!'); window.location='index.php?menu=pembatalan&tab=open';</script>";
@@ -82,21 +97,24 @@ $rekomendasi = ($data['status_order'] == 'Lunas' || $total_masuk > $data['harga_
 
                 <!-- Form Aksi Admin -->
                 <div>
-                    <h4 style="color: #6b3df5; border-bottom: 2px solid #f0f0ff; padding-bottom: 10px;">Aksi Pembatalan</h4>
+                    <h4 style="color: #6b3df5; border-bottom: 2px solid #f0f0ff; padding-bottom: 10px;">Verifikasi Pembatalan</h4>
                     <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Alasan: <i>"<?php echo $data['alasan']; ?>"</i></p>
                     
                     <form method="POST">
-                        <label style="font-size: 13px; font-weight: bold; color: #321180;">Pilih Status Akhir:</label>
+                        <label style="font-size: 13px; font-weight: bold; color: #321180;">Tindakan Admin:</label>
                         <select name="status_manual" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e0dbff; margin: 10px 0 20px 0; outline: none; font-family: inherit;">
-                            <option value="Dibatalkan" <?php echo ($rekomendasi == 'Dibatalkan') ? 'selected' : ''; ?>>Dibatalkan (Tanpa Refund)</option>
-                            <option value="Refund" <?php echo ($rekomendasi == 'Refund') ? 'selected' : ''; ?>>Refund (Kembalikan Uang)</option>
-                            <option value="DP" <?php echo ($data['status_order'] == 'DP') ? 'selected' : ''; ?>>Tetap DP (Tolak Batal)</option>
-                            <option value="Belum Bayar">Belum Bayar</option>
+                            <option value="<?php echo $rekomendasi; ?>">
+                                Terima Verifikasi (Status: <?php echo $rekomendasi; ?>)
+                            </option>
+                            
+                            <option value="DP">
+                                Tolak Verifikasi (Hapus Pengajuan)
+                            </option>
                         </select>
 
                         <?php if ($data['status'] == 0): ?>
                             <button type="submit" name="update_pembatalan" style="width: 100%; background: #321180; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(50, 17, 128, 0.2);">
-                                Update & Selesaikan
+                                Proses Verifikasi
                             </button>
                         <?php else: ?>
                             <div style="background: #eafff2; color: #27ae60; text-align: center; padding: 15px; border-radius: 10px; font-weight: bold; border: 1px solid #27ae60;">

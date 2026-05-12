@@ -418,70 +418,61 @@ nav a{text-decoration:none;color:black;}
             $cek_batal = mysqli_fetch_assoc($cek_batal_q);
             $status_batal = $cek_batal['status'] ?? null;
         ?>
-<div class="data-card" style="display: block; border-left: 6px solid #6b3df5; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 20px; background: rgba(107, 61, 245, 0.02); border-bottom: 1px solid #f0f0f0;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                <h3 style="color: #321180; font-size: 19px; margin: 0; font-weight: 800;"><?= $b['tujuan']; ?></h3>
-                <span style="background:#6b3df5; color:white; font-size:10px; padding:3px 8px; border-radius:5px; font-weight: 900; letter-spacing: 0.5px;">OPEN TRIP</span>
+        <div class="data-card" style="display: block; border-left: 6px solid #6b3df5; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 20px; background: rgba(107, 61, 245, 0.02); border-bottom: 1px solid #f0f0f0;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                        <h3 style="color: #321180; font-size: 19px; margin: 0; font-weight: 800;"><?= $b['tujuan']; ?></h3>
+                        <span style="background:#6b3df5; color:white; font-size:10px; padding:3px 8px; border-radius:5px; font-weight: 900; letter-spacing: 0.5px;">OPEN TRIP</span>
+                    </div>
+                    <p style="font-size: 12px; color: #888; margin: 0;">ID Booking: #BK-O<?= $id_booking; ?> | Pesan: <?= date('d M Y', strtotime($b['tgl_booking'])); ?></p>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 10px; color: #aaa; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;">Status Booking</div>
+                    <span style="padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; 
+                        <?= $b['status'] == 'Lunas' ? 'background:#e6fffa; color:#2c7a7b; border: 1px solid #b2f5ea;' : ($b['status'] == 'Dibatalkan' ? 'background:#fff5f5; color:#c53030; border: 1px solid #feb2b2;' : 'background:#fffaf0; color:#b7791f; border: 1px solid #fbe3a1;'); ?>">
+                        <?= strtoupper($b['status']); ?>
+                    </span>
+                </div>
             </div>
-            <p style="font-size: 12px; color: #888; margin: 0;">ID Booking: #BK-O<?= $id_booking; ?> | Pesan: <?= date('d M Y', strtotime($b['tgl_booking'])); ?></p>
-        </div>
-        <div style="text-align: right;">
-            <div style="font-size: 10px; color: #aaa; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;">Status Booking</div>
-            <span style="padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; 
-                <?= $b['status'] == 'Lunas' ? 'background:#e6fffa; color:#2c7a7b; border: 1px solid #b2f5ea;' : ($b['status'] == 'Dibatalkan' ? 'background:#fff5f5; color:#c53030; border: 1px solid #feb2b2;' : 'background:#fffaf0; color:#b7791f; border: 1px solid #fbe3a1;'); ?>">
-                <?= strtoupper($b['status']); ?>
-            </span>
-        </div>
-    </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin: 15px 20px;">
-        <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">PESERTA</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $b['jumlah_peserta']; ?> Orang</p>
-        </div>
-        <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TRIP</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;">Rp <?= number_format($t_info['harga']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
-        </div>
-        <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">MINIMAL DP</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;">Rp <?= number_format($t_info['harga_dp']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
-        </div>
-        <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">TOTAL TAGIHAN</p>
-            <p style="font-size: 16px; font-weight: 800; color: #6b3df5; margin: 0;">Rp <?= number_format($total_harga); ?></p>
-        </div>
-    </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin: 15px 20px;">
+                <div>
+                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">PESERTA</p>
+                    <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $b['jumlah_peserta']; ?> Orang</p>
+                </div>
+                <div>
+                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TRIP</p>
+                    <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;">Rp <?= number_format($t_info['harga']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
+                </div>
+                <div>
+                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">MINIMAL DP</p>
+                    <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;">Rp <?= number_format($t_info['harga_dp']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
+                </div>
+                <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
+                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">TOTAL TAGIHAN</p>
+                    <p style="font-size: 16px; font-weight: 800; color: #6b3df5; margin: 0;">Rp <?= number_format($total_harga); ?></p>
+                </div>
+            </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px;">
-        <div style="display: flex; flex-direction: column;">
-            <p style="font-size: 11px; color: #a0aec0; margin: 0; font-weight: bold;">JADWAL BERANGKAT:</p>
-            <p style="font-size: 13px; color: #4a5568; margin: 0;">📅 <b><?= date('d M Y', strtotime($b['tgl_berangkat'])); ?></b></p>
-        </div>
-        
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <a href="detail_peserta.php?id_booking=<?= $id_booking; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">👥 Detail Peserta</a>
-
-            <?php if ($status_batal === null): ?>
-                <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">💳 Bayar</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px;">
+                <div style="display: flex; flex-direction: column;">
+                    <p style="font-size: 11px; color: #a0aec0; margin: 0; font-weight: bold;">JADWAL BERANGKAT:</p>
+                    <p style="font-size: 13px; color: #4a5568; margin: 0;">📅 <b><?= date('d M Y', strtotime($b['tgl_berangkat'])); ?></b></p>
+                </div>
                 
-                <a href="batal_pesanan.php?id_booking=<?= $id_booking; ?>" class="btn" style="color:#e53e3e; border:1px solid #e53e3e; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; background: transparent; text-decoration:none;">✖ Batal</a>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <a href="detail_pesanan.php?id_booking=<?= $id_booking; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">Detail Pesanan</a>
 
-            <?php elseif ($status_batal == 0): ?>
-                <div style="background: #fffaf0; padding: 6px 12px; border-radius: 8px; border: 1px solid #fbd38d;">
-                    <span style="color:#dd6b20; font-weight:800; font-size:12px;">⏳ Menunggu Batal</span>
+                    <?php if ($status_batal === null && $b['status'] != 'Lunas'): ?>
+                        <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
+                        
+                    
+                    <?php endif; ?>
                 </div>
-            <?php else: ?>
-                <div style="background: #f0fff4; padding: 6px 12px; border-radius: 8px; border: 1px solid #9ae6b4;">
-                    <span style="color:#38a169; font-weight:800; font-size:12px;">✅ Dibatalkan</span>
-                </div>
-            <?php endif; ?>
+            </div>
         </div>
-    </div>
-</div>
 
         <?php endwhile; ?>
     </div>
@@ -546,15 +537,15 @@ nav a{text-decoration:none;color:black;}
         </div>
         
         <div style="display: flex; gap: 8px; align-items: center;">
-            <a href="detail_private.php?id=<?= $id_pr; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">👥 Detail Trip</a>
+            <a href="detail_private.php?id=<?= $id_pr; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">Detail Trip</a>
 
             <?php if ($status_batal_pr === null): ?>
                 <?php if($pr['status_trip'] == 'Disetujui' && $pr['status_bayar'] != 'Lunas' && $pr['status_bayar'] != 'Dibatalkan'): ?>
-                    <a href="form_pembayaran_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">💳 Bayar</a>
+                    <a href="form_pembayaran_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
                 <?php endif; ?>
                 
-                <?php if($pr['status_bayar'] != 'Dibatalkan'): ?>
-                    <a href="batal_private.php?id=<?= $id_pr; ?>" class="btn" style="color:#e53e3e; border:1px solid #e53e3e; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; background: transparent; text-decoration:none;">✖ Batal</a>
+                <?php if($pr['status_bayar'] != 'Dibatalkan' && $pr['status_trip'] == 'Disetujui'): ?>
+                    <a href="batal_private.php?id=<?= $id_pr; ?>" class="btn" style="color:#e53e3e; border:1px solid #e53e3e; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; background: transparent; text-decoration:none;">Batal</a>
                 <?php endif; ?>
 
             <?php elseif ($status_batal_pr == 0): ?>

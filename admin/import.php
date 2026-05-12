@@ -146,6 +146,15 @@ $batal_pt = "CREATE TABLE IF NOT EXISTS batal_private (
     alasan TEXT NOT NULL,
     FOREIGN KEY (id_private) REFERENCES private_trip(id_private) ON DELETE CASCADE
 )";
+$batal_peserta = "CREATE TABLE IF NOT EXISTS batal_peserta (
+    id_pembatalan INT AUTO_INCREMENT PRIMARY KEY,
+    id_detail INT NOT NULL,
+    alasan_batal TEXT NOT NULL,
+    tgl_pengajuan DATETIME NOT NULL DEFAULT NOW(),
+    status_verifikasi ENUM('Menunggu', 'Disetujui', 'Ditolak') NOT NULL DEFAULT 'Menunggu',
+    tgl_verifikasi DATETIME NULL,
+    FOREIGN KEY (id_detail) REFERENCES detail(id_detail) ON DELETE CASCADE
+)";
 
 
 mysqli_query($konek, $trip);
@@ -164,6 +173,7 @@ mysqli_query($konek, $private);
 mysqli_query($konek, $peserta_pt);
 mysqli_query($konek, $payment_pt);
 mysqli_query($konek, $batal_pt);
+mysqli_query($konek, $batal_peserta);
 
 
 

@@ -830,124 +830,143 @@ if($tab == "open"):
 
 <div style="margin-bottom: 20px;">
   <a href="index.php?menu=pembatalan&tab=open" class="btn-tambah" style="background: <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'open') ? '#321180' : '#6b3df5'; ?>; text-decoration: none; padding: 10px 20px; border-radius: 8px; color: white; display: inline-block;">Pembatalan Open</a>
+  
+  <a href="index.php?menu=pembatalan&tab=peserta" class="btn-tambah" style="background: <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'peserta') ? '#321180' : '#6b3df5'; ?>; text-decoration: none; padding: 10px 20px; border-radius: 8px; color: white; display: inline-block;">Pembatalan Peserta</a>
+  
   <a href="index.php?menu=pembatalan&tab=private" class="btn-tambah" style="background: <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'private') ? '#321180' : '#6b3df5'; ?>; text-decoration: none; padding: 10px 20px; border-radius: 8px; color: white; display: inline-block;">Pembatalan Private</a>
 </div>
 
 <?php
 $tab = $_GET['tab'] ?? 'open';
 
+
 if($tab == "open"):
-  // Query Pembatalan Open Trip
-  // Menampilkan data pembatalan, tujuan trip, dan nama akun pemesan
-  $data_batal = kueri("SELECT 
-                        bo.*, 
-                        t.tujuan, 
-                        a.username, 
-                        b.status AS status_booking
-                      FROM batal_open bo
-                      JOIN booking b ON bo.id_booking = b.id_booking
-                      JOIN trip t ON b.id_trip = t.id_trip
-                      JOIN akun a ON b.id_akun = a.id_akun
-                      ORDER BY bo.tgl_pembatalan DESC");
+  $data_batal = kueri("SELECT bo.*, t.tujuan, a.username, b.status AS status_booking
+                       FROM batal_open bo
+                       JOIN booking b ON bo.id_booking = b.id_booking
+                       JOIN trip t ON b.id_trip = t.id_trip
+                       JOIN akun a ON b.id_akun = a.id_akun
+                       ORDER BY bo.tgl_pembatalan DESC");
 ?>
-
-<table>
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Username</th>
-      <th>Tujuan Trip</th>
-      <th>Tanggal Batal</th>
-      <th>Alasan Pembatalan</th>
-      <th>Status Verifikasi</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-      $no = 1;
-      if(mysqli_num_rows($data_batal) > 0){
-        while($row = ambil($data_batal)){
-          // Status pembatalan (BOOLEAN di database)
-          $status_teks = $row['status'] ? "Disetujui" : "Menunggu Persetujuan";
-          $status_color = $row['status'] ? "green" : "orange";
-    ?>
+  <table>
+    <thead>
       <tr>
-        <td><?php echo $no; ?></td>
-        <td><strong><?php echo $row['username']; ?></strong></td>
-        <td><?php echo $row['tujuan']; ?></td>
-        <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_pembatalan'])); ?></td>
-        <td><i style="font-size: 13px;"><?php echo $row['alasan']; ?></i></td>
-        <td style="color: <?php echo $status_color; ?>; font-weight: bold;"><?php echo $status_teks; ?></td>
-        <td>
-          <a href="detail_batal_open.php?id=<?php echo $row['id_batal']; ?>" style="color: #321180;">Kelola</a>
-        </td>
+        <th>No</th>
+        <th>Username</th>
+        <th>Tujuan Trip</th>
+        <th>Tanggal Batal</th>
+        <th>Alasan Pembatalan</th>
+        <th>Status Verifikasi</th>
+        <th>Aksi</th>
       </tr>
-    <?php
-          $no++;
-        }
-      } else {
-        echo "<tr><td colspan='7' align='center' style='padding: 20px;'>Tidak ada pengajuan pembatalan open trip.</td></tr>";
-      }
-    ?>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <?php
+        $no = 1;
+        if(mysqli_num_rows($data_batal) > 0){
+          while($row = ambil($data_batal)){
+            $status_teks = $row['status'] ? "Disetujui" : "Menunggu Persetujuan";
+            $status_color = $row['status'] ? "green" : "orange";
+      ?>
+        <tr>
+          <td><?php echo $no; ?></td>
+          <td><strong><?php echo $row['username']; ?></strong></td>
+          <td><?php echo $row['tujuan']; ?></td>
+          <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_pembatalan'])); ?></td>
+          <td><i style="font-size: 13px;"><?php echo $row['alasan']; ?></i></td>
+          <td style="color: <?php echo $status_color; ?>; font-weight: bold;"><?php echo $status_teks; ?></td>
+          <td><a href="detail_batal_open.php?id=<?php echo $row['id_batal']; ?>" style="color: #321180;">Kelola</a></td>
+        </tr>
+      <?php $no++; } } else { echo "<tr><td colspan='7' align='center' style='padding: 20px;'>Tidak ada pengajuan pembatalan open trip.</td></tr>"; } ?>
+    </tbody>
+  </table>
 
-<?php else: ?>
 
-<?php
-  // Query Pembatalan Private Trip
-  $data_batal_p = kueri("SELECT 
-                          bp.*, 
-                          pt.tujuan, 
-                          pt.nama AS penanggung_jawab, 
-                          a.username AS akun_pemesan
-                        FROM batal_private bp
-                        JOIN private_trip pt ON bp.id_private = pt.id_private
-                        JOIN akun a ON pt.id_akun = a.id_akun
-                        ORDER BY bp.tgl_pembatalan DESC");
+<?php elseif($tab == "peserta"): 
+  $data_batal_p = kueri("SELECT bp.*, p.nama AS nama_peserta, t.tujuan, a.username
+                         FROM batal_peserta bp
+                         JOIN detail d ON bp.id_detail = d.id_detail
+                         JOIN peserta_open p ON d.id_peserta = p.id_peserta
+                         JOIN booking b ON d.id_booking = b.id_booking
+                         JOIN trip t ON b.id_trip = t.id_trip
+                         JOIN akun a ON b.id_akun = a.id_akun
+                         ORDER BY bp.tgl_pengajuan DESC");
 ?>
-
-<table>
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Pemesan (Akun)</th>
-      <th>Tujuan Trip</th>
-      <th>Tanggal Batal</th>
-      <th>Alasan Pembatalan</th>
-      <th>Status</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-      $no = 1;
-      if(mysqli_num_rows($data_batal_p) > 0){
-        while($row = ambil($data_batal_p)){
-          $status_teks = $row['status'] ? "Disetujui" : "Menunggu Persetujuan";
-          $status_color = $row['status'] ? "green" : "orange";
-    ?>
+  <table>
+    <thead>
       <tr>
-        <td><?php echo $no; ?></td>
-        <td><?php echo $row['penanggung_jawab']; ?> (<?php echo $row['akun_pemesan']; ?>)</td>
-        <td><?php echo $row['tujuan']; ?></td>
-        <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_pembatalan'])); ?></td>
-        <td><i style="font-size: 13px;"><?php echo $row['alasan']; ?></i></td>
-        <td style="color: <?php echo $status_color; ?>; font-weight: bold;"><?php echo $status_teks; ?></td>
-        <td>
-          <a href="detail_batal_private.php?id=<?php echo $row['id_batal']; ?>" style="color: #321180;">Kelola</a>
-        </td>
+        <th>No</th>
+        <th>Username Pemesan</th>
+        <th>Nama Peserta</th>
+        <th>Tujuan Trip</th>
+        <th>Tanggal Pengajuan</th>
+        <th>Alasan</th>
+        <th>Status</th>
+        <th>Aksi</th>
       </tr>
-    <?php
-          $no++;
-        }
-      } else {
-        echo "<tr><td colspan='7' align='center' style='padding: 20px;'>Tidak ada pengajuan pembatalan private trip.</td></tr>";
-      }
-    ?>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <?php
+        $no = 1;
+        if(mysqli_num_rows($data_batal_p) > 0){
+          while($row = ambil($data_batal_p)){
+            $st = $row['status_verifikasi'];
+            $color = ($st == 'Disetujui') ? "green" : (($st == 'Menunggu') ? "orange" : "red");
+      ?>
+        <tr>
+          <td><?php echo $no; ?></td>
+          <td><strong><?php echo $row['username']; ?></strong></td>
+          <td><?php echo $row['nama_peserta']; ?></td>
+          <td><?php echo $row['tujuan']; ?></td>
+          <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_pengajuan'])); ?></td>
+          <td><i style="font-size: 13px;"><?php echo $row['alasan_batal']; ?></i></td>
+          <td style="color: <?php echo $color; ?>; font-weight: bold;"><?php echo $st; ?></td>
+          <td><a href="detail_batal_peserta.php?id=<?php echo $row['id_pembatalan']; ?>" style="color: #321180;">Kelola</a></td>
+        </tr>
+      <?php $no++; } } else { echo "<tr><td colspan='8' align='center' style='padding: 20px;'>Tidak ada pengajuan pembatalan peserta.</td></tr>"; } ?>
+    </tbody>
+  </table>
+
+
+<?php elseif($tab == "private"): 
+  $data_batal_pr = kueri("SELECT bp.*, pt.tujuan, pt.nama AS penanggung_jawab, a.username AS akun_pemesan
+                          FROM batal_private bp
+                          JOIN private_trip pt ON bp.id_private = pt.id_private
+                          JOIN akun a ON pt.id_akun = a.id_akun
+                          ORDER BY bp.tgl_pembatalan DESC");
+?>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Pemesan (Akun)</th>
+        <th>Tujuan Trip</th>
+        <th>Tanggal Batal</th>
+        <th>Alasan Pembatalan</th>
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+        $no = 1;
+        if(mysqli_num_rows($data_batal_pr) > 0){
+          while($row = ambil($data_batal_pr)){
+            $status_teks = $row['status'] ? "Disetujui" : "Menunggu Persetujuan";
+            $status_color = $row['status'] ? "green" : "orange";
+      ?>
+        <tr>
+          <td><?php echo $no; ?></td>
+          <td><?php echo $row['penanggung_jawab']; ?> (<?php echo $row['akun_pemesan']; ?>)</td>
+          <td><?php echo $row['tujuan']; ?></td>
+          <td><?php echo date('d/m/Y H:i', strtotime($row['tgl_pembatalan'])); ?></td>
+          <td><i style="font-size: 13px;"><?php echo $row['alasan']; ?></i></td>
+          <td style="color: <?php echo $status_color; ?>; font-weight: bold;"><?php echo $status_teks; ?></td>
+          <td><a href="detail_batal_private.php?id=<?php echo $row['id_batal']; ?>" style="color: #321180;">Kelola</a></td>
+        </tr>
+      <?php $no++; } } else { echo "<tr><td colspan='7' align='center' style='padding: 20px;'>Tidak ada pengajuan pembatalan private trip.</td></tr>"; } ?>
+    </tbody>
+  </table>
 
 <?php endif; ?>
 
