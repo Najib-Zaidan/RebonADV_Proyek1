@@ -18,10 +18,11 @@ if (isset($_POST['update_status'])) {
     echo "<script>alert('Status booking berhasil diperbarui!'); window.location.href='detail_booking.php?id=$id_booking';</script>";
 }
 
-// 2. Ambil Data Utama Booking & Trip
-$data_booking = ambil(kueri("SELECT b.*, t.tujuan, t.tgl_berangkat, t.harga, a.username 
+// 2. Ambil Data Utama Booking & Trip dengan JOIN ke tabel TUJUAN
+$data_booking = ambil(kueri("SELECT b.*, tj.tujuan, t.tgl_berangkat, t.harga, a.username 
                              FROM booking b 
                              JOIN trip t ON b.id_trip = t.id_trip 
+                             JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                              JOIN akun a ON b.id_akun = a.id_akun 
                              WHERE b.id_booking = $id_booking"));
 

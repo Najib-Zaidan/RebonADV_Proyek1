@@ -11,7 +11,7 @@ if(empty($id_payment)){
     exit;
 }
 
-// Ambil data pembayaran Open Trip
+// Ambil data pembayaran Open Trip dengan JOIN ke tabel TUJUAN
 $payment = kueri("
     SELECT 
         p.id_payment,
@@ -21,11 +21,12 @@ $payment = kueri("
         p.status AS status_bayar,
         p.catatan AS catatan_user,
         b.jumlah_peserta,
-        t.tujuan,
+        tj.tujuan,
         t.tgl_berangkat
     FROM payment_open p
     JOIN booking b ON p.id_booking = b.id_booking
     JOIN trip t ON b.id_trip = t.id_trip
+    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
     WHERE p.id_payment = '$id_payment'
     AND b.id_akun = '$id_akun'
 ");

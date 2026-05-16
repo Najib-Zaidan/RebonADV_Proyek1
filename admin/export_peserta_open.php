@@ -6,9 +6,10 @@ header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=Data_Peserta_OpenTrip.xls");
 
 $data = kueri("SELECT p.*, a.username, 
-        (SELECT t.tujuan 
+        (SELECT tj.tujuan 
          FROM booking b 
          JOIN trip t ON b.id_trip = t.id_trip 
+         JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
          WHERE b.id_akun = a.id_akun AND b.status = 'Lunas' 
          ORDER BY t.tgl_berangkat DESC LIMIT 1) AS trip_terakhir,
         (SELECT COUNT(*) 

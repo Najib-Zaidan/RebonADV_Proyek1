@@ -10,17 +10,27 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
+$tujuan = "CREATE TABLE IF NOT EXISTS tujuan (
+    id_tujuan INT AUTO_INCREMENT PRIMARY KEY,
+    tujuan VARCHAR(50) NOT NULL,
+    kota VARCHAR(50) NOT NULL,
+    provinsi VARCHAR(50) NOT NULL,
+    harga_def INT DEFAULT NULL,
+    harga_dp_def INT DEFAULT NULL,
+    rute_def VARCHAR(150) DEFAULT NULL
+)";
 $trip = "CREATE TABLE IF NOT EXISTS trip (
     id_trip INT AUTO_INCREMENT PRIMARY KEY,
-    tujuan VARCHAR(50) NOT NULL,
+    id_tujuan INT,
     tgl_berangkat DATE NOT NULL,
     tgl_pulang DATE NOT NULL,
     harga INT NOT NULL,
     harga_dp INT NOT NULL,
     kuota INT NOT NULL,
-    rute VARCHAR(100) NOT NULL,
+    rute VARCHAR(150) NOT NULL,
     publik BOOLEAN NOT NULL DEFAULT FALSE,
-    catatan TEXT
+    catatan TEXT,
+    FOREIGN KEY (id_tujuan) REFERENCES tujuan(id_tujuan) ON DELETE CASCADE
 )";
 $gambar = "CREATE TABLE IF NOT EXISTS gambar (
     id_gambar INT AUTO_INCREMENT PRIMARY KEY,
@@ -157,6 +167,7 @@ $batal_peserta = "CREATE TABLE IF NOT EXISTS batal_peserta (
 )";
 
 
+mysqli_query($konek, $tujuan);
 mysqli_query($konek, $trip);
 mysqli_query($konek, $katalog);
 mysqli_query($konek, $gambar);

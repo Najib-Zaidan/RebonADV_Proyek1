@@ -415,15 +415,9 @@ footer {
     align-items: center;
   }
 }
-    </style>
-    
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="home.css" />
-    <title>Home</title>
-  </head>
-  <body>
+  </style>
+</head>
+<body>
     <header class="navbar">
       <div class="logo">
         <img
@@ -483,37 +477,40 @@ footer {
 
       <div class="trip-container">
         <?php
-// Pastikan file functions.php sudah di-require di bagian atas file
-require 'fungsi.php';
+        // Memuat file fungsi database pendukung
+        require 'fungsi.php';
 
-// Query mengambil data trip dan satu gambar terkait
-$data_trip = kueri("SELECT t.*, 
-                   (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) AS foto 
-                   FROM trip t LIMIT 5");
+        // Query mengambil data dengan JOIN ke tabel tujuan sesuai pemisahan struktur baru
+        $data_trip = kueri("SELECT t.*, tj.tujuan,
+                           (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) AS foto 
+                           FROM trip t 
+                           JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan 
+                           LIMIT 5");
 
-// Melakukan looping untuk setiap baris data
-while ($row = ambil($data_trip)) :
-    // Mengolah format tanggal (Berangkat - Pulang Bulan Tahun)
-    $tgl_berangkat = date('d', strtotime($row['tgl_berangkat']));
-    $tgl_pulang = date('d F Y', strtotime($row['tgl_pulang']));
-    $display_tgl = "Tanggal $tgl_berangkat - $tgl_pulang";
-?>
+        // Melakukan looping untuk setiap baris data trip
+        while ($row = ambil($data_trip)) :
+            // Mengolah format tanggal (Berangkat - Pulang Bulan Tahun)
+            $tgl_berangkat = date('d', strtotime($row['tgl_berangkat']));
+            $tgl_pulang = date('d F Y', strtotime($row['tgl_pulang']));
+            $display_tgl = "Tanggal $tgl_berangkat - $tgl_pulang";
+        ?>
 
-    <a href="ot_katalog.php?id=<?= $row['id_trip']; ?>">
-        <div class="trip-card">
-            <img src="../gambar/upload/<?= $row['foto'] ? $row['foto'] : 'default.jpg'; ?>" />
-            
-            <h3><?= htmlspecialchars($row['tujuan']); ?></h3>
-            
-            <p><?= htmlspecialchars($row['catatan']); ?></p>
-            
-            <p class="date"><?= $display_tgl; ?></p>
-            
-            <span class="price">Rp. <?= number_format($row['harga'], 0, ',', '.'); ?> / Pax</span>
-        </div>
-    </a>
+            <a href="ot_katalog.php?id=<?= $row['id_trip']; ?>">
+                <div class="trip-card">
+                    <img src="../gambar/upload/<?= $row['foto'] ? $row['foto'] : 'default.jpg'; ?>" />
+                    
+                    <h3><?= htmlspecialchars($row['tujuan']); ?></h3>
+                    
+                    <p><?= htmlspecialchars($row['catatan']); ?></p>
+                    
+                    <p class="date"><?= $display_tgl; ?></p>
+                    
+                    <span class="price">Rp. <?= number_format($row['harga'], 0, ',', '.'); ?> / Pax</span>
+                </div>
+            </a>
 
-<?php endwhile; ?>
+        <?php endwhile; ?>
+      </div>
     </section>
 
     <!-- TRIP SESUKA HATI -->
@@ -553,7 +550,6 @@ while ($row = ambil($data_trip)) :
     </section>
 
     <!-- FOOTER -->
-
     <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">
@@ -609,3 +605,5 @@ while ($row = ambil($data_trip)) :
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
+</body>
+</html>

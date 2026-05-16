@@ -10,9 +10,18 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
+$tujuan = "CREATE TABLE IF NOT EXISTS tujuan (
+    id_tujuan INT AUTO_INCREMENT PRIMARY KEY,
+    tujuan VARCHAR(50) NOT NULL,
+    kota VARCHAR(50) NOT NULL,
+    provinsi VARCHAR(50) NOT NULL,
+    harga_def INT DEFAULT NULL,
+    harga_dp_def INT DEFAULT NULL,
+    rute_def VARCHAR(150) DEFAULT NULL
+)";
 $trip = "CREATE TABLE IF NOT EXISTS trip (
     id_trip INT AUTO_INCREMENT PRIMARY KEY,
-    tujuan VARCHAR(50) NOT NULL,
+    id_tujuan INT,
     tgl_berangkat DATE NOT NULL,
     tgl_pulang DATE NOT NULL,
     harga INT NOT NULL,
@@ -20,7 +29,8 @@ $trip = "CREATE TABLE IF NOT EXISTS trip (
     kuota INT NOT NULL,
     rute VARCHAR(150) NOT NULL,
     publik BOOLEAN NOT NULL DEFAULT FALSE,
-    catatan TEXT
+    catatan TEXT,
+    FOREIGN KEY (id_tujuan) REFERENCES tujuan(id_tujuan) ON DELETE CASCADE
 )";
 $gambar = "CREATE TABLE IF NOT EXISTS gambar (
     id_gambar INT AUTO_INCREMENT PRIMARY KEY,
@@ -156,7 +166,7 @@ $batal_peserta = "CREATE TABLE IF NOT EXISTS batal_peserta (
     FOREIGN KEY (id_detail) REFERENCES detail(id_detail) ON DELETE CASCADE
 )";
 
-
+mysqli_query($konek, $tujuan);
 mysqli_query($konek, $trip);
 mysqli_query($konek, $katalog);
 mysqli_query($konek, $gambar);
@@ -178,27 +188,65 @@ mysqli_query($konek, $batal_peserta);
 
 
 
-$insert_trip = "INSERT INTO trip (tujuan, tgl_berangkat, tgl_pulang, harga, harga_dp, kuota, rute, publik, catatan) VALUES
-('Gunung Semeru', '2026-01-15', '2026-01-17', 850000, 300000, 15, 'Ranupane - Landengan Dowo - Watu Rejoso - Ranukumbolo - Kalimati - Puncak Mahameru', TRUE, 'Peserta wajib menyerahkan surat keterangan sehat dari dokter maksimal H-3. Perlengkapan camp seperti tenda dan alat masak sudah disediakan oleh panitia. Meeting point di Stasiun Malang Kota Baru.'),
-('Gunung Prau', '2026-02-07', '2026-02-08', 450000, 150000, 20, 'Jalur Patakbanteng - Bukit Teletubbies - Puncak Prau', TRUE, ''),
-('Gunung Gede', '2026-02-20', '2026-02-22', 600000, 200000, 12, 'Jalur Cibodas - Kandang Batu - Kandang Badak - Puncak Gede - Alun-Alun Suryakencana - Jalur Gunung Putri', TRUE, 'Pendakian dilakukan melalui jalur Cibodas dan turun via jalur Gunung Putri. Pastikan membawa jaket tebal karena suhu di puncak bisa mencapai 5 derajat celcius. Simaksi sudah termasuk dalam biaya pendaftaran.'),
-('Gunung Merbabu', '2026-03-10', '2026-03-12', 750000, 250000, 10, 'Jalur Selo - Pos 1 Dok Malang - Pos 2 Pandean - Pos 3 Batu Tulis - Sabana 1 - Sabana 2 - Puncak Kenteng Songo', FALSE, 'Jalur pendakian yang digunakan adalah via Selo yang terkenal dengan pemandangan sabananya. Disarankan membawa powerbank cadangan karena tidak ada akses listrik di pos bayangan. Pendaftaran akan ditutup segera setelah kuota terpenuhi.'),
-('Gunung Lawu', '2026-03-25', '2026-03-25', 350000, 100000, 25, 'Jalur Candi Cetho - Pos Bulak Peper - Geger Senggoro - Sendang Drajat - Hargo Dalem - Puncak Hargo Dumilah', TRUE, ''),
-('Gunung Papandayan', '2026-04-05', '2026-04-06', 550000, 200000, 18, 'Camp David - Kawah Papandayan - Pondok Saladah - Hutan Mati - Tegal Alun', TRUE, 'Sangat direkomendasikan bagi pendaki pemula atau keluarga yang ingin mencoba camping. Fasilitas sudah termasuk tiket masuk cagar alam dan pemandu lokal yang berpengalaman. Jangan lupa membawa kamera untuk mengabadikan momen di hutan mati.'),
-('Gunung Slamet', '2026-04-18', '2026-04-20', 900000, 350000, 8, 'Jalur Bambangan - Pos Samarantu - Pos 7 (Plawangan) - Batas Vegetasi - Puncak Surono', TRUE, 'Medan pendakian cukup berat dan menantang sehingga fisik harus benar-benar dalam kondisi prima. Kuota sengaja dibatasi agar koordinasi tim selama di jalur lebih terjaga. Harap membawa jas hujan karena cuaca di lokasi sering berubah mendadak.'),
-('Gunung Sindoro', '2026-05-12', '2026-05-12', 400000, 150000, 15, 'Jalur Kledung - Pos 3 (Tebing) - Pos 4 (Watu Tatah) - Kawah Sindoro', TRUE, ''),
-('Gunung Sumbing', '2026-05-28', '2026-05-30', 500000, 200000, 12, 'Jalur Garung - Pos Pestan - Watu Kotak - Tanah Putih - Puncak Sejati', FALSE, 'Trip ini menggunakan sistem portir untuk membawa perlengkapan kelompok sehingga beban tas peserta lebih ringan. Kita akan mengejar momen sunrise di puncak sejati. Dokumentasi foto dan video cinematic sudah termasuk dalam paket ini.'),
-('Gunung Cikuray', '2026-06-14', '2026-06-15', 450000, 100000, 20, 'Jalur Pemancar - Pos 3 - Pos 6 - Pos 7 - Puncak Cikuray', TRUE, ''),
-('Gunung Arjuno', '2026-01-22', '2026-01-24', 700000, 250000, 10, 'Jalur Tretes - Pet Bocor - Kop-Kopan - Pondokan - Lembah Kidang - Puncak Ogal Agil', TRUE, 'Pendakian akan melewati jalur Tretes yang dikenal dengan tanjakan aspalnya yang ikonik. Peserta disarankan membawa trekking pole untuk membantu menjaga keseimbangan selama perjalanan. Biaya sudah termasuk makan selama di gunung sebanyak 5 kali.'),
-('Gunung Andong', '2026-02-12', '2026-02-12', 250000, 50000, 30, 'Jalur Sawit - Pos 1 Watu Congol - Pos 2 - Puncak Jiwa - Puncak Andong', TRUE, ''),
-('Gunung Welirang', '2026-02-26', '2026-02-28', 750000, 300000, 12, 'Jalur Tretes - Kop-Kopan - Pondokan - Lembah Kembar - Kawah Belerang Welirang', TRUE, 'Kita akan mengeksplorasi kawah belerang yang masih aktif dan melihat aktivitas para penambang lokal. Harap membawa masker cadangan yang tebal untuk mengantisipasi aroma belerang yang menyengat. Trip ini digabung dengan pendakian puncak Arjuno jika waktu memungkinkan.'),
-('Gunung Ungaran', '2026-03-05', '2026-03-06', 300000, 100000, 20, 'Basecamp Mawar - Pos Promasan - Kebun Teh - Puncak Banteng - Puncak Botak', TRUE, 'Meeting point berada di Basecamp Mawar pada pagi hari sebelum pendakian dimulai. Jalur pendakian cukup santai dan melewati perkebunan kopi milik warga sekitar. Sangat cocok bagi yang ingin menghabiskan akhir pekan singkat dengan pemandangan kota Semarang.'),
-('Gunung Muria', '2026-03-18', '2026-03-18', 200000, 50000, 25, 'Jalur Colo - Air Terjun Monthel - Makam Sunan Muria - Puncak Natas Angin', TRUE, ''),
-('Gunung Buthak', '2026-04-10', '2026-04-12', 500000, 150000, 15, 'Jalur Sirah Kencong - Pos Perkebunan - Pos Hutan - Sabana Buthak - Puncak Buthak', FALSE, 'Area camp berada di sabana luas yang memiliki sumber mata air alami yang sangat jernih. Peserta wajib menjaga kebersihan dan membawa kembali sampah masing-masing ke bawah. Pemandangan City Light kota Malang dari sini adalah salah satu yang terbaik di Jawa Timur.'),
-('Gunung Penanggungan', '2026-05-02', '2026-05-03', 350000, 100000, 22, 'Jalur Tamiajeng - Pos 1 - Pos 2 - Pos 3 - Pos 4 - Puncak Pawitra', TRUE, ''),
-('Gunung Lemongan', '2026-05-18', '2026-05-19', 450000, 150000, 10, 'Jalur Klakah - Ranu Pakis - Watu Gede - Guha Macan - Puncak Lemongan', TRUE, 'Gunung ini merupakan gunung api yang unik karena dikelilingi oleh banyak ranu atau danau kecil di kaki gunungnya. Kita akan berkemah di dekat area puncak untuk menikmati fenomena samudra awan saat fajar. Pastikan fisik siap menghadapi jalur setapak yang cukup rimbun.'),
-('Gunung Raung', '2026-06-05', '2026-06-08', 1500000, 500000, 6, 'Jalur Kalibaru - Pos 4 (Lali Jiwo) - Pos 7 - Camp 9 (Plawangan) - Jembatan Sirotol Mustaqim - Puncak Sejati Raung', FALSE, 'Khusus untuk pendaki berpengalaman karena akan melewati jalur ekstrem Jembatan Sirotol Mustaqim. Semua peralatan teknis seperti tali, harness, dan helm sudah disiapkan oleh tim porter profesional. Peserta wajib mengikuti simulasi penggunaan alat sebelum mulai mendaki.'),
-('Gunung Galunggung', '2026-06-25', '2026-06-25', 150000, 50000, 40, 'Jalur 620 Anak Tangga - Bibir Kawah Galunggung - Area Camp Kawah', TRUE, '')
+
+
+$insert_tujuan = "INSERT INTO tujuan (tujuan, kota, provinsi) VALUES
+('Gunung Semeru', 'Lumajang', 'Jawa Timur'),
+('Gunung Prau', 'Wonosobo', 'Jawa Tengah'),
+('Gunung Gede', 'Cianjur', 'Jawa Barat'),
+('Gunung Merbabu', 'Boyolali', 'Jawa Tengah'),
+('Gunung Lawu', 'Karanganyar', 'Jawa Tengah'),
+('Gunung Papandayan', 'Garut', 'Jawa Barat'),
+('Gunung Slamet', 'Purbalingga', 'Jawa Tengah'),
+('Gunung Sindoro', 'Temanggung', 'Jawa Tengah'),
+('Gunung Sumbing', 'Temanggung', 'Jawa Tengah'),
+('Gunung Cikuray', 'Garut', 'Jawa Barat'),
+('Gunung Arjuno', 'Pasuruan', 'Jawa Timur'),
+('Gunung Andong', 'Magelang', 'Jawa Tengah'),
+('Gunung Welirang', 'Mojokerto', 'Jawa Timur'),
+('Gunung Ungaran', 'Semarang', 'Jawa Tengah'),
+('Gunung Muria', 'Kudus', 'Jawa Tengah'),
+('Gunung Buthak', 'Blitar', 'Jawa Timur'),
+('Gunung Penanggungan', 'Mojokerto', 'Jawa Timur'),
+('Gunung Lemongan', 'Lumajang', 'Jawa Timur'),
+('Gunung Raung', 'Banyuwangi', 'Jawa Timur'),
+('Gunung Galunggung', 'Tasikmalaya', 'Jawa Barat')
+";
+
+$tujuan_extra = "INSERT INTO tujuan (tujuan, kota, provinsi, harga_def, harga_dp_def, rute_def) VALUES
+('Gunung Ciremai', 'Kuningan', 'Jawa Barat', 600000, 200000, 'Jalur Palutungan - Pos Cigowong - Pos Pasanggrahan - Puncak Ciremai'),
+('Gunung Bromo', 'Probolinggo', 'Jawa Timur', 450000, 150000, 'Jalur Cemoro Lawang - Lautan Pasir - Tangga Kawah Bromo'),
+('Gunung Salak', 'Bogor', 'Jawa Barat', 500000, 150000, 'Jalur Pasir Reungit - Pos 1 - Pos 2 - Puncak Salak 1'),
+('Gunung Sagara', 'Garut', 'Jawa Barat', 350000, 100000, 'Jalur Tajur - Pos 1 - Pos 2 - Puncak Sagara'),
+('Gunung Guntur', 'Garut', 'Jawa Barat', 400000, 100000, 'Jalur Citiis - Pos 1 - Pos 2 - Puncak Guntur'),
+('Gunung Kelud', 'Kediri', 'Jawa Timur', 300000, 100000, 'Jalur Tulungrejo - Pos 1 - Pos 2 - Puncak Kelud'),
+('Gunung Panderman', 'Batu', 'Jawa Timur', 250000, 50000, 'Jalur Toyomerto - Pos Latar Ombo - Puncak Panderman'),
+('Gunung Ijen', 'Banyuwangi', 'Jawa Timur', 400000, 150000, 'Pos Paltuding - Pondok Bunder - Bibir Kawah Ijen'),
+('Gunung Bisma', 'Wonosobo', 'Jawa Tengah', 350000, 100000, 'Jalur Silandak - Pos 1 - Pos 2 - Puncak Bisma'),
+('Gunung Pulosari', 'Pandeglang', 'Banten', 250000, 50000, 'Jalur Cihunjuran - Kawah Pulosari - Puncak Pulosari')
+";
+
+$insert_trip = "INSERT INTO trip (id_tujuan, tgl_berangkat, tgl_pulang, harga, harga_dp, kuota, rute, publik, catatan) VALUES
+(1, '2026-01-15', '2026-01-17', 850000, 300000, 15, 'Ranupane - Landengan Dowo - Watu Rejoso - Ranukumbolo - Kalimati - Puncak Mahameru', TRUE, 'Peserta wajib menyerahkan surat keterangan sehat dari dokter maksimal H-3. Perlengkapan camp seperti tenda dan alat masak sudah disediakan oleh panitia. Meeting point di Stasiun Malang Kota Baru.'),
+(2, '2026-02-07', '2026-02-08', 450000, 150000, 20, 'Jalur Patakbanteng - Bukit Teletubbies - Puncak Prau', TRUE, ''),
+(3, '2026-02-20', '2026-02-22', 600000, 200000, 12, 'Jalur Cibodas - Kandang Batu - Kandang Badak - Puncak Gede - Alun-Alun Suryakencana - Jalur Gunung Putri', TRUE, 'Pendakian dilakukan melalui jalur Cibodas dan turun via jalur Gunung Putri. Pastikan membawa jaket tebal karena suhu di puncak bisa mencapai 5 derajat celcius. Simaksi sudah termasuk dalam biaya pendaftaran.'),
+(4, '2026-03-10', '2026-03-12', 750000, 250000, 10, 'Jalur Selo - Pos 1 Dok Malang - Pos 2 Pandean - Pos 3 Batu Tulis - Sabana 1 - Sabana 2 - Puncak Kenteng Songo', FALSE, 'Jalur pendakian yang digunakan adalah via Selo yang terkenal dengan pemandangan sabananya. Disarankan membawa powerbank cadangan karena tidak ada akses listrik di pos bayangan. Pendaftaran akan ditutup segera setelah kuota terpenuhi.'),
+(5, '2026-03-25', '2026-03-25', 350000, 100000, 25, 'Jalur Candi Cetho - Pos Bulak Peper - Geger Senggoro - Sendang Drajat - Hargo Dalem - Puncak Hargo Dumilah', TRUE, ''),
+(6, '2026-04-05', '2026-04-06', 550000, 200000, 18, 'Camp David - Kawah Papandayan - Pondok Saladah - Hutan Mati - Tegal Alun', TRUE, 'Sangat direkomendasikan bagi pendaki pemula atau keluarga yang ingin mencoba camping. Fasilitas sudah termasuk tiket masuk cagar alam dan pemandu lokal yang berpengalaman. Jangan lupa membawa kamera untuk mengabadikan momen di hutan mati.'),
+(7, '2026-04-18', '2026-04-20', 900000, 350000, 8, 'Jalur Bambangan - Pos Samarantu - Pos 7 (Plawangan) - Batas Vegetasi - Puncak Surono', TRUE, 'Medan pendakian cukup berat dan menantang sehingga fisik harus benar-benar dalam kondisi prima. Kuota sengaja dibatasi agar koordinasi tim selama di jalur lebih terjaga. Harap membawa jas hujan karena cuaca di lokasi sering berubah mendadak.'),
+(8, '2026-05-12', '2026-05-12', 400000, 150000, 15, 'Jalur Kledung - Pos 3 (Tebing) - Pos 4 (Watu Tatah) - Kawah Sindoro', TRUE, ''),
+(9, '2026-05-28', '2026-05-30', 500000, 200000, 12, 'Jalur Garung - Pos Pestan - Watu Kotak - Tanah Putih - Puncak Sejati', FALSE, 'Trip ini menggunakan sistem portir untuk membawa perlengkapan kelompok sehingga beban tas peserta lebih ringan. Kita akan mengejar momen sunrise di puncak sejati. Dokumentasi foto dan video cinematic sudah termasuk dalam paket ini.'),
+(10, '2026-06-14', '2026-06-15', 450000, 100000, 20, 'Jalur Pemancar - Pos 3 - Pos 6 - Pos 7 - Puncak Cikuray', TRUE, ''),
+(11, '2026-01-22', '2026-01-24', 700000, 250000, 10, 'Jalur Tretes - Pet Bocor - Kop-Kopan - Pondokan - Lembah Kidang - Puncak Ogal Agil', TRUE, 'Pendakian akan melewati jalur Tretes yang dikenal dengan tanjakan aspalnya yang ikonik. Peserta disarankan membawa trekking pole untuk membantu menjaga keseimbangan selama perjalanan. Biaya sudah termasuk makan selama di gunung sebanyak 5 kali.'),
+(12, '2026-02-12', '2026-02-12', 250000, 50000, 30, 'Jalur Sawit - Pos 1 Watu Congol - Pos 2 - Puncak Jiwa - Puncak Andong', TRUE, ''),
+(13, '2026-02-26', '2026-02-28', 750000, 300000, 12, 'Jalur Tretes - Kop-Kopan - Pondokan - Lembah Kembar - Kawah Belerang Welirang', TRUE, 'Kita akan mengeksplorasi kawah belerang yang masih aktif dan melihat aktivitas para penambang lokal. Harap membawa masker cadangan yang tebal untuk mengantisipasi aroma belerang yang menyengat. Trip ini digabung dengan pendakian puncak Arjuno jika waktu memungkinkan.'),
+(14, '2026-03-05', '2026-03-06', 300000, 100000, 20, 'Basecamp Mawar - Pos Promasan - Kebun Teh - Puncak Banteng - Puncak Botak', TRUE, 'Meeting point berada di Basecamp Mawar pada pagi hari sebelum pendakian dimulai. Jalur pendakian cukup santai dan melewati perkebunan kopi milik warga sekitar. Sangat cocok bagi yang ingin menghabiskan akhir pekan singkat dengan pemandangan kota Semarang.'),
+(15, '2026-03-18', '2026-03-18', 200000, 50000, 25, 'Jalur Colo - Air Terjun Monthel - Makam Sunan Muria - Puncak Natas Angin', TRUE, ''),
+(16, '2026-04-10', '2026-04-12', 500000, 150000, 15, 'Jalur Sirah Kencong - Pos Perkebunan - Pos Hutan - Sabana Buthak - Puncak Buthak', FALSE, 'Area camp berada di sabana luas yang memiliki sumber mata air alami yang sangat jernih. Peserta wajib menjaga kebersihan dan membawa kembali sampah masing-masing ke bawah. Pemandangan City Light kota Malang dari sini adalah salah satu yang terbaik di Jawa Timur.'),
+(17, '2026-05-02', '2026-05-03', 350000, 100000, 22, 'Jalur Tamiajeng - Pos 1 - Pos 2 - Pos 3 - Pos 4 - Puncak Pawitra', TRUE, ''),
+(18, '2026-05-18', '2026-05-19', 450000, 150000, 10, 'Jalur Klakah - Ranu Pakis - Watu Gede - Guha Macan - Puncak Lemongan', TRUE, 'Gunung ini merupakan gunung api yang unik karena dikelilingi oleh banyak ranu atau danau kecil di kaki gunungnya. Kita akan berkemah di dekat area puncak untuk menikmati fenomena samudra awan saat fajar. Pastikan fisik siap menghadapi jalur setapak yang cukup rimbun.'),
+(19, '2026-06-05', '2026-06-08', 1500000, 500000, 6, 'Jalur Kalibaru - Pos 4 (Lali Jiwo) - Pos 7 - Camp 9 (Plawangan) - Jembatan Sirotol Mustaqim - Puncak Sejati Raung', FALSE, 'Khusus untuk pendaki berpengalaman karena akan melewati jalur ekstrem Jembatan Sirotol Mustaqim. Semua peralatan teknis seperti tali, harness, dan helm sudah disiapkan oleh tim porter profesional. Peserta wajib mengikuti simulasi penggunaan alat sebelum mulai mendaki.'),
+(20, '2026-06-25', '2026-06-25', 150000, 50000, 40, 'Jalur 620 Anak Tangga - Bibir Kawah Galunggung - Area Camp Kawah', TRUE, '')
 ";
 
 $insert_katalog = "INSERT INTO katalog (id_trip, deskripsi) VALUES
@@ -1880,7 +1928,8 @@ VALUES
 */
 
 
-
+mysqli_query($konek, $insert_tujuan);
+mysqli_query($konek, $tujuan_extra);
 mysqli_query($konek, $insert_trip);
 mysqli_query($konek, $insert_katalog);
 mysqli_query($konek, $insert_gambar);

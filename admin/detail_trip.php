@@ -3,8 +3,8 @@ require 'fungsi.php';
 // 1. Tangkap ID Trip dari URL
 $id_trip = $_GET['id'];
 
-// 2. Ambil data utama dari tabel TRIP
-$query_trip = kueri("SELECT * FROM trip WHERE id_trip = $id_trip");
+// 2. Ambil data utama dari tabel TRIP dengan JOIN ke tabel TUJUAN
+$query_trip = kueri("SELECT t.*, tj.tujuan FROM trip t JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan WHERE t.id_trip = $id_trip");
 $trip = ambil($query_trip);
 
 // 3. Ambil data dari tabel-tabel relasi (Foreign Key)
@@ -15,7 +15,7 @@ $meetpoint = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip");
 $fasilitas = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip");
 $peserta = kueri("SELECT p.*, b.tgl_booking
            FROM booking b
-           JOIN peserta p 
+           JOIN peserta_open p 
            ON b.id_peserta = p.id_peserta
            WHERE b.id_trip = $id_trip");
 $jumlah = mysqli_num_rows($gambar);

@@ -22,17 +22,18 @@ if ($filter == 'hari_ini') {
     $where[] = "YEAR(b.tgl_booking) = YEAR(CURDATE())";
 }
 
-if ($destinasi != '') $where[] = "t.tujuan = '$destinasi'";
+if ($destinasi != '') $where[] = "tj.tujuan = '$destinasi'";
 if ($status != '') $where[] = "b.status = '$status'";
 
 $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
 $order = ($sort != '') ? "ORDER BY total_bayar $sort" : "";
 
-$data = kueri("SELECT b.*, t.tujuan, t.harga, t.tgl_berangkat, a.username AS nama,
+$data = kueri("SELECT b.*, tj.tujuan, t.harga, t.tgl_berangkat, a.username AS nama,
                 (SELECT SUM(nominal) FROM payment_open 
                  WHERE id_booking = b.id_booking AND status = 'Diverifikasi') AS total_bayar
                 FROM booking b
                 JOIN trip t ON b.id_trip = t.id_trip
+                JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                 JOIN akun a ON b.id_akun = a.id_akun
                 $kondisi
                 $order");

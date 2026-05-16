@@ -31,7 +31,7 @@ if ($bulan > 0 && $tahun > 0) {
 $query = mysqli_query($konek, "
     SELECT 
         b.id_booking,
-        t.tujuan,
+        tj.tujuan,
         a.username,
         t.harga,
         b.tgl_booking,
@@ -42,6 +42,7 @@ $query = mysqli_query($konek, "
 
     FROM booking b
     JOIN trip t ON b.id_trip = t.id_trip
+    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
     JOIN akun a ON b.id_akun = a.id_akun
 
     LEFT JOIN detail d ON b.id_booking = d.id_booking

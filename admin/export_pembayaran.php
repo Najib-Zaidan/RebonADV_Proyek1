@@ -29,8 +29,8 @@ if ($filter == 'hari_ini') {
     $where[] = "YEAR(pay.tgl_bayar) = YEAR(CURDATE())";
 }
 
-// FILTER TAMBAHAN
-if ($destinasi != '') $where[] = "t.tujuan = '$destinasi'";
+// FILTER TAMBAHAN (Mengarahkan ke tabel TUJUAN)
+if ($destinasi != '') $where[] = "tj.tujuan = '$destinasi'";
 if ($status != '') $where[] = "pay.status = '$status'";
 
 $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
@@ -44,16 +44,17 @@ switch($sort) {
     default: $order = "ORDER BY pay.id_payment DESC"; break;
 }
 
-// QUERY
+// QUERY (JOIN ke tabel TUJUAN)
 $data = kueri("SELECT 
                 pay.*, 
                 a.username AS nama_pemesan, 
-                t.tujuan, 
+                tj.tujuan, 
                 b.tgl_booking, 
                 b.jumlah_peserta 
               FROM payment_open pay
               JOIN booking b ON pay.id_booking = b.id_booking
               JOIN trip t ON b.id_trip = t.id_trip
+              JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
               JOIN akun a ON b.id_akun = a.id_akun
               $kondisi
               $order");

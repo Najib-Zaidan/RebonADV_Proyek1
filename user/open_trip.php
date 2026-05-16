@@ -8,39 +8,6 @@ session_start();
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Open Trip</title>
-<!-- <audio id="backsound" loop>
-  <source src="../gambar/upload/dan.mp3" type="audio/mpeg">
-</audio>
-
-<div id="overlay-transparan"></div>
-
-<style>#overlay-transparan {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 99999; /* Sangat tinggi agar tidak tertutup elemen lain */
-  background-color: transparent; /* Benar-benar bening */
-  cursor: default; /* Cursor tetap standar agar user tidak curiga ada tombol */
-}
-
-</style>
-<script>
-  const overlay = document.getElementById('overlay-transparan');
-const musik = document.getElementById('backsound');
-
-overlay.addEventListener('click', function() {
-    // Putar musik
-    musik.play().catch(e => console.log("Gagal putar:", e));
-
-    // Hapus total elemen pelapis agar user bisa klik menu/tombol asli di web
-    overlay.remove();
-    
-    console.log("Overlay dihapus, musik dimulai.");
-}, { once: true });
-
-</script> -->
 <style>
     * {
   margin: 0;
@@ -90,7 +57,7 @@ nav .active2 {
   cursor: pointer;
 }
 
-/* ================= ISI (DI BAGUSIN) ================= */
+/* ================= ISI ================= */
 
 /* FILTER BAR (SEARCH + SORT) */
 .filter-bar{
@@ -269,7 +236,7 @@ nav .active2 {
   color: #6b3df5;
 }
 
-/* ================= FOOTER (TETAP) ================= */
+/* ================= FOOTER ================= */
 
 footer {
   background-color: #fdfae6;
@@ -303,7 +270,6 @@ footer {
   font-weight: 600;
 }
 
-/* Styling Kontak dengan Ikon */
 .contact-item {
   display: flex;
   align-items: flex-start;
@@ -313,7 +279,6 @@ footer {
   font-weight: 600;
 }
 
-/* Bagian Media Sosial */
 .social-section {
   margin-top: 25px;
 }
@@ -331,7 +296,7 @@ footer {
 }
 
 .footer-logo-img {
-  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  width: 220px; 
   height: auto;
   display: block;
 }
@@ -349,38 +314,14 @@ footer {
     padding: 20px 40px;
   }
 
-  .hero {
-    padding-left: 40px;
-    height: 500px;
-  }
-
-  .trip {
-    padding: 40px;
-  }
-
   .trip-container {
     flex-wrap: wrap;
     justify-content: center;
-  }
-
-  .private-trip {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .private-img img {
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .galeri-container {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* MOBILE */
 @media (max-width: 768px) {
-  /* NAVBAR */
   .navbar {
     flex-direction: column;
     padding: 20px;
@@ -393,53 +334,11 @@ footer {
     gap: 15px;
   }
 
-  /* HERO */
-  .hero {
-    height: auto;
-    padding: 40px 20px;
-    text-align: center;
-    justify-content: center;
-  }
-
-  .hero h1 {
-    font-size: 28px;
-  }
-
-  .hero-logo {
-    width: 150px;
-  }
-
-  /* TRIP */
-  .trip {
-    padding: 30px 20px;
-  }
-
   .trip-container {
     flex-direction: column;
     align-items: center;
   }
 
-  .trip-card {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  /* PRIVATE */
-  .private-trip {
-    margin: 30px 20px;
-    padding: 20px;
-  }
-
-  /* GALERI */
-  .galeri {
-    padding: 30px 20px;
-  }
-
-  .galeri-container {
-    grid-template-columns: 1fr;
-  }
-
-  /* FOOTER */
   .footer-content {
     flex-direction: column;
     text-align: center;
@@ -449,7 +348,7 @@ footer {
 a {
   text-decoration: none;
 }
-    </style>
+</style>
 </head>
 
 <body>
@@ -493,28 +392,30 @@ require 'fungsi.php';
 $sort = $_GET['sort'] ?? 'default';
 $keyword = $_GET['keyword'] ?? '';
 
+// Penentuan aturan order by berdasarkan parameter sort
 $order_by = "t.id_trip DESC";
 
 if ($sort == 'harga_terendah') $order_by = "t.harga ASC";
 elseif ($sort == 'harga_tertinggi') $order_by = "t.harga DESC";
-elseif ($sort == 'nama') $order_by = "t.tujuan ASC";
+elseif ($sort == 'nama') $order_by = "tj.tujuan ASC"; // KODE DIPERBARUI: diarahkan ke tabel tujuan
 elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 
-/* QUERY UTAMA */
-$sql = "SELECT t.*, k.*,
+/* QUERY UTAMA DIUPGRADE: Menambahkan JOIN ke tabel tujuan */
+$sql = "SELECT t.*, k.*, tj.tujuan,
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
         (SELECT SUM(jumlah_peserta) FROM booking b 
          WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
         FROM trip t
-        JOIN katalog k ON t.id_trip = k.id_trip
+        INNER JOIN katalog k ON t.id_trip = k.id_trip
+        INNER JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
         WHERE 1";
 
-/* SEARCH */
+/* PENANGANAN KEYWORD PENCARIAN */
 if($keyword != ''){
     $keyword = mysqli_real_escape_string($konek, $keyword);
 
     $sql .= " AND (
-        t.tujuan LIKE '%$keyword%' OR
+        tj.tujuan LIKE '%$keyword%' OR
         t.rute LIKE '%$keyword%' OR 
         t.catatan LIKE '%$keyword%' OR
         EXISTS (
@@ -525,14 +426,14 @@ if($keyword != ''){
     )";
 }
 
-/* SORT (tetap) */
+/* MENERAPKAN SORTING */
 $sql .= " ORDER BY $order_by";
 
 /* EKSEKUSI */
 $result = kueri($sql);
 ?>
 
-<!-- SEARCH + SORT (DIGABUNG) -->
+<!-- SEARCH + SORT -->
 <div class="filter-bar">
   <form method="GET" class="filter-form">
     
@@ -541,7 +442,7 @@ $result = kueri($sql);
         type="text" 
         name="keyword" 
         placeholder="Cari tujuan / fasilitas / jalur pendakian..."
-        value=""
+        value="<?php echo htmlspecialchars($keyword); ?>"
         autofocus
       >
       <button type="submit">CARI</button>
@@ -560,7 +461,7 @@ $result = kueri($sql);
   </form>
 </div>
 
-<!-- KATALOG -->
+<!-- KATALOG CARD LOOPING -->
 <section class="trip-container">
 <div class="trip-grid">
 
@@ -572,7 +473,9 @@ if (mysqli_num_rows($result) > 0) {
     $tgl_pulang = new DateTime($row['tgl_pulang']);
     $durasi = $tgl_berangkat->diff($tgl_pulang)->days + 1;
     $sisa_kuota = $row['kuota'] - $row['terisi'];
+    
     if ($sisa_kuota == 0 || $row['publik'] == 0) continue;
+    
     $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
 ?>
 
@@ -586,7 +489,7 @@ if (mysqli_num_rows($result) > 0) {
     <div class="card-body">
       <div class="title-row">
         <h3><?php echo htmlspecialchars($row['tujuan']); ?></h3>
-        <span class="seat">SISA <?php echo $sisa_kuota; ?>  SEAT</span>
+        <span class="seat">SISA <?php echo $sisa_kuota; ?> SEAT</span>
       </div>
 
       <p class="via"><?php echo htmlspecialchars($row['deskripsi']); ?></p>

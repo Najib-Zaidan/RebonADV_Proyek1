@@ -34,11 +34,12 @@ if (isset($_POST['update_pembatalan'])) {
     echo "<script>alert('Status Berhasil Diperbarui!'); window.location='index.php?menu=pembatalan&tab=open';</script>";
 }
 
-// --- AMBIL DATA DETAIL ---
-$query = kueri("SELECT bo.*, t.tujuan, a.username, b.id_booking, b.status AS status_order, b.jumlah_peserta, t.harga_dp
+// --- AMBIL DATA DETAIL (JOIN ke tabel TUJUAN) ---
+$query = kueri("SELECT bo.*, tj.tujuan, a.username, b.id_booking, b.status AS status_order, b.jumlah_peserta, t.harga_dp
                 FROM batal_open bo
                 JOIN booking b ON bo.id_booking = b.id_booking
                 JOIN trip t ON b.id_trip = t.id_trip
+                JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                 JOIN akun a ON b.id_akun = a.id_akun
                 WHERE bo.id_batal = '$id'");
 $data = ambil($query);

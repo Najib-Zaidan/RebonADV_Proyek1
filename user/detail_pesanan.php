@@ -14,19 +14,20 @@ if(empty($id_booking)){
     exit;
 }
 
-// KODE DIPERBARUI: Ambil info booking + trip (ditambahkan kolom harga dan harga_dp)
+// KODE DIPERBARUI: Ambil info booking + trip dengan JOIN ke tabel TUJUAN
 $booking = kueri("
     SELECT 
         b.id_booking,
         b.tgl_booking,
         b.status,
         b.jumlah_peserta,
-        t.tujuan,
+        tj.tujuan,
         t.tgl_berangkat,
         t.harga,
         t.harga_dp
     FROM booking b
     JOIN trip t ON b.id_trip = t.id_trip
+    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
     WHERE b.id_booking = '$id_booking'
     AND b.id_akun = '$id_akun'
 ");

@@ -203,7 +203,7 @@ $menu = $_GET['menu'];
 /* ================= TRIP ================= */
 if($menu == "trip"):
 
-$hasil = kueri("SELECT * FROM trip");
+$hasil = kueri("SELECT t.*, tj.tujuan FROM trip t JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan");
 ?>
 
 <a href="tambah_trip_v2.php" class="btn-tambah">+ Tambah Trip</a>
@@ -306,13 +306,13 @@ $no++;
     <select name="sort" style="padding: 7px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; outline: none;">
       <option value="">Urutkan Pembayaran</option>
       <option value="ASC" <?php if($sort == 'ASC') echo 'selected'; ?>>Terkecil ke Terbesar</option>
-      <option value="DESC" <?php if($sort == 'DESC') echo 'selected'; ?>>Terbesar ke Terkecil</option>
+      <option value="DESC" <?php if($sort == 'DESC') echo 'selected'; ?>>Terbesar ke Kecil</option>
     </select>
 
     <select name="destinasi" style="padding: 7px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; outline: none;">
       <option value="">Semua Destinasi</option>
       <?php
-      $list_trip = kueri("SELECT DISTINCT tujuan FROM trip");
+      $list_trip = kueri("SELECT DISTINCT tujuan FROM tujuan");
       while($t = ambil($list_trip)){
         $selected = ($destinasi == $t['tujuan']) ? "selected" : "";
         echo "<option value='{$t['tujuan']}' $selected>{$t['tujuan']}</option>";
@@ -349,17 +349,18 @@ if ($filter == 'hari_ini') {
     $where[] = "YEAR(b.tgl_booking) = YEAR(CURDATE())";
 }
 
-if ($destinasi != '') $where[] = "t.tujuan = '$destinasi'";
+if ($destinasi != '') $where[] = "tj.tujuan = '$destinasi'";
 if ($status != '') $where[] = "b.status = '$status'";
 
 $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
 $order = ($sort != '') ? "ORDER BY total_bayar $sort" : "";
 
-$data_booking = kueri("SELECT b.*, t.tujuan, t.harga, t.tgl_berangkat, a.username AS nama,
+$data_booking = kueri("SELECT b.*, tj.tujuan, t.harga, t.tgl_berangkat, a.username AS nama,
                 (SELECT SUM(nominal) FROM payment_open 
                  WHERE id_booking = b.id_booking AND status = 'Diverifikasi') AS total_bayar
                 FROM booking b
                 JOIN trip t ON b.id_trip = t.id_trip
+                JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                 JOIN akun a ON b.id_akun = a.id_akun
                 $kondisi
                 $order");
@@ -557,7 +558,7 @@ $data_private = kueri("SELECT pt.*, a.username
       <option value="">Semua Destinasi</option>
       <?php
       // Mengambil destinasi berdasarkan tipe trip
-      $query_dest = ($type == 'open') ? "SELECT DISTINCT tujuan FROM trip" : "SELECT DISTINCT tujuan FROM private_trip";
+      $query_dest = ($type == 'open') ? "SELECT DISTINCT tujuan FROM tujuan" : "SELECT DISTINCT tujuan FROM private_trip";
       $list_trip = kueri($query_dest);
       while($t = ambil($list_trip)){
         $selected = ($destinasi == $t['tujuan']) ? "selected" : "";
@@ -595,7 +596,7 @@ if ($status != '') $where[] = "pay.status = '$status'";
 
 // Query bersyarat berdasarkan tipe (Open atau Private)
 if ($type == 'open') {
-    if ($destinasi != '') $where[] = "t.tujuan = '$destinasi'";
+    if ($destinasi != '') $where[] = "tj.tujuan = '$destinasi'";
     $kondisi = (count($where) > 0) ? "WHERE " . implode(" AND ", $where) : "";
     
     switch($sort) {
@@ -606,10 +607,11 @@ if ($type == 'open') {
         default: $order = "ORDER BY pay.id_payment DESC"; break;
     }
 
-    $sql = "SELECT pay.*, a.username AS nama_pemesan, t.tujuan, b.tgl_booking, b.jumlah_peserta 
+    $sql = "SELECT pay.*, a.username AS nama_pemesan, tj.tujuan, b.tgl_booking, b.jumlah_peserta 
             FROM payment_open pay
             JOIN booking b ON pay.id_booking = b.id_booking
             JOIN trip t ON b.id_trip = t.id_trip
+            JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
             JOIN akun a ON b.id_akun = a.id_akun
             $kondisi $order";
 } else {
@@ -722,9 +724,10 @@ $tab = $_GET['tab'] ?? 'open';
 if($tab == "open"):
   // Query untuk Peserta Open Trip
   $data_peserta = kueri("SELECT p.*, a.username, 
-                (SELECT t.tujuan 
+                (SELECT tj.tujuan 
                  FROM booking b 
                  JOIN trip t ON b.id_trip = t.id_trip 
+                 JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                  WHERE b.id_akun = a.id_akun AND b.status = 'Lunas' 
                  ORDER BY t.tgl_berangkat DESC LIMIT 1) AS trip_terakhir,
                 (SELECT COUNT(*) 
@@ -841,10 +844,11 @@ $tab = $_GET['tab'] ?? 'open';
 
 
 if($tab == "open"):
-  $data_batal = kueri("SELECT bo.*, t.tujuan, a.username, b.status AS status_booking
+  $data_batal = kueri("SELECT bo.*, tj.tujuan, a.username, b.status AS status_booking
                        FROM batal_open bo
                        JOIN booking b ON bo.id_booking = b.id_booking
                        JOIN trip t ON b.id_trip = t.id_trip
+                       JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                        JOIN akun a ON b.id_akun = a.id_akun
                        ORDER BY bo.tgl_pembatalan DESC");
 ?>
@@ -883,12 +887,13 @@ if($tab == "open"):
 
 
 <?php elseif($tab == "peserta"): 
-  $data_batal_p = kueri("SELECT bp.*, p.nama AS nama_peserta, t.tujuan, a.username
+  $data_batal_p = kueri("SELECT bp.*, p.nama AS nama_peserta, tj.tujuan, a.username
                          FROM batal_peserta bp
                          JOIN detail d ON bp.id_detail = d.id_detail
                          JOIN peserta_open p ON d.id_peserta = p.id_peserta
                          JOIN booking b ON d.id_booking = b.id_booking
                          JOIN trip t ON b.id_trip = t.id_trip
+                         JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                          JOIN akun a ON b.id_akun = a.id_akun
                          ORDER BY bp.tgl_pengajuan DESC");
 ?>

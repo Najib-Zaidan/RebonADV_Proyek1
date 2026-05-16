@@ -23,6 +23,7 @@ if (isset($_POST['update_payment'])) {
                          FROM payment_open p 
                          JOIN booking b ON p.id_booking = b.id_booking 
                          JOIN trip t ON b.id_trip = t.id_trip 
+                         JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                          WHERE p.id_payment = $id_payment"));
     
     $id_book = $info['id_booking'];
@@ -52,10 +53,11 @@ if (isset($_POST['update_payment'])) {
 }
 
 // 2. Ambil Data Detail Pembayaran & Booking (Ditarik ulang agar variabel $pay tersedia)
-$pay = ambil(kueri("SELECT p.*, b.tgl_booking, t.tujuan, a.username, b.jumlah_peserta, t.harga, b.id_booking
+$pay = ambil(kueri("SELECT p.*, b.tgl_booking, tj.tujuan, a.username, b.jumlah_peserta, t.harga, b.id_booking
                     FROM payment_open p
                     JOIN booking b ON p.id_booking = b.id_booking
                     JOIN trip t ON b.id_trip = t.id_trip
+                    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                     JOIN akun a ON b.id_akun = a.id_akun
                     WHERE p.id_payment = $id_payment"));
 

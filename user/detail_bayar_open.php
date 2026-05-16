@@ -14,7 +14,7 @@ if(empty($id_payment)){
     exit;
 }
 
-// Ambil detail data payment serta gabungkan dengan info booking & trip terkait untuk verifikasi kepemilikan akun
+// Ambil detail data payment serta gabungkan dengan info booking & trip terkait dengan JOIN ke tabel TUJUAN
 $payment = kueri("
     SELECT 
         p.id_payment,
@@ -25,11 +25,12 @@ $payment = kueri("
         p.status AS status_bayar,
         p.catatan AS catatan_user, -- Ini diambil dari inputan user saat kirim bayar
         b.jumlah_peserta,
-        t.tujuan,
+        tj.tujuan,
         t.tgl_berangkat
     FROM payment_open p
     JOIN booking b ON p.id_booking = b.id_booking
     JOIN trip t ON b.id_trip = t.id_trip
+    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
     WHERE p.id_payment = '$id_payment'
     AND b.id_akun = '$id_akun'
 ");

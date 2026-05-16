@@ -13,9 +13,11 @@ $peserta = kueri("SELECT * FROM peserta_open WHERE id_akun = '$id_akun'");
 $pesanan = kueri("
     SELECT
         b.*,
-        t.*
+        t.*,
+        tj.*
     FROM booking b
     JOIN trip t ON b.id_trip = t.id_trip
+    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
     WHERE b.id_akun = '$id_akun'
     ORDER BY b.tgl_booking DESC
 ");
@@ -23,10 +25,11 @@ $pembayaran = kueri("
     SELECT 
         py.*,
         b.jumlah_peserta,
-        t.tujuan
+        tj.tujuan
     FROM payment_open py
     JOIN booking b ON py.id_booking = b.id_booking
     JOIN trip t ON b.id_trip = t.id_trip
+    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
     WHERE b.id_akun = '$id_akun'
     ORDER BY py.tgl_bayar DESC
 ");

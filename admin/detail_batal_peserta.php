@@ -20,11 +20,12 @@ if (isset($_POST['update_pembatalan'])) {
         $data_bantu = ambil(kueri("SELECT id_detail FROM batal_peserta WHERE id_pembatalan = '$id'"));
         $id_det = $data_bantu['id_detail'];
 
-        // Ambil ID Booking dan ID Trip terkait sebelum dihapus
+        // Ambil ID Booking dan ID Trip terkait sebelum dihapus dengan JOIN ke tabel TUJUAN
         $cari_book = ambil(kueri("SELECT b.id_booking, b.id_trip, t.harga_dp 
                                  FROM detail d 
                                  JOIN booking b ON d.id_booking = b.id_booking 
                                  JOIN trip t ON b.id_trip = t.id_trip
+                                 JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                                  WHERE d.id_detail = '$id_det'"));
         $id_book = $cari_book['id_booking'];
         $harga_dp_trip = $cari_book['harga_dp'];
@@ -55,13 +56,14 @@ if (isset($_POST['update_pembatalan'])) {
     echo "<script>alert('Pembatalan Berhasil Diproses & Status Booking Diperbarui!'); window.location='index.php?menu=pembatalan&tab=peserta';</script>";
 }
 
-// --- AMBIL DATA DETAIL UNTUK TAMPILAN ---
-$query = kueri("SELECT bp.*, p.nama AS nama_peserta, t.tujuan, a.username, b.id_booking, b.status AS status_order, t.harga_dp
+// --- AMBIL DATA DETAIL UNTUK TAMPILAN (JOIN ke tabel TUJUAN) ---
+$query = kueri("SELECT bp.*, p.nama AS nama_peserta, tj.tujuan, a.username, b.id_booking, b.status AS status_order, t.harga_dp
                 FROM batal_peserta bp
                 JOIN detail d ON bp.id_detail = d.id_detail
                 JOIN peserta_open p ON d.id_peserta = p.id_peserta
                 JOIN booking b ON d.id_booking = b.id_booking
                 JOIN trip t ON b.id_trip = t.id_trip
+                JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
                 JOIN akun a ON b.id_akun = a.id_akun
                 WHERE bp.id_pembatalan = '$id'");
 $data = ambil($query);

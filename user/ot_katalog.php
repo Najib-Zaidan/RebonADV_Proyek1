@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 ?>
 
 <!doctype html>
@@ -9,39 +8,7 @@ session_start();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ot katalog</title>
-<!-- <audio id="backsound" loop>
-  <source src="../gambar/upload/angel.mp3" type="audio/mpeg">
-</audio>
 
-<div id="overlay-transparan"></div>
-
-<style>#overlay-transparan {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999999; /* Sangat tinggi agar tidak tertutup elemen lain */
-  background-color: transparent; /* Benar-benar bening */
-  cursor: default; /* Cursor tetap standar agar user tidak curiga ada tombol */
-}
-
-</style>
-<script>
-  const overlay = document.getElementById('overlay-transparan');
-const musik = document.getElementById('backsound');
-
-overlay.addEventListener('click', function() {
-    // Putar musik
-    musik.play().catch(e => console.log("Gagal putar:", e));
-
-    // Hapus total elemen pelapis agar user bisa klik menu/tombol asli di web
-    overlay.remove();
-    
-    console.log("Overlay dihapus, musik dimulai.");
-}, { once: true });
-
-</script> -->
   <style>
     * {
   margin: 0;
@@ -158,7 +125,7 @@ nav .active2 {
 .thumbs img {
   width: 120px;
   aspect-ratio: 3 / 2;
-    object-fit: cover;
+  object-fit: cover;
   border-radius: 8px;
 }
 
@@ -296,7 +263,7 @@ footer {
 }
 
 .footer-logo-img {
-  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  width: 220px; 
   height: auto;
   display: block;
 }
@@ -361,19 +328,9 @@ footer {
     opacity: 0.8;
     border: 2px solid #6b3df5;
 }
-
-
-
-
-</style>
-<!doctype html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Gn. Ciremai</title>
-    <link rel="stylesheet" href="ot_katalog.css" />
-  </head>
-  <body>
+  </style>
+</head>
+<body>
     <!-- NAVBAR -->
     <header class="navbar">
       <div class="logo">
@@ -408,67 +365,68 @@ footer {
     </header>
 
     <?php
+    require 'fungsi.php';
 
-require 'fungsi.php';
+    $id_trip = $_GET['id'];
 
-$id_trip = $_GET['id'];
-$sisa = mysqli_num_rows(kueri("SELECT id_booking FROM booking b JOIN trip t ON b.id_trip = $id_trip WHERE b.status != 'Dibatalkan'"));
-$sisa = ambil(kueri("SELECT
-            (t.kuota - SUM(b.jumlah_peserta)) sisa
-            FROM trip t
-            JOIN booking b
-            ON t.id_trip = b.id_trip
-            WHERE t.id_trip = $id_trip AND status != 'Dibatalkan'"));
-$data_trip = kueri("SELECT * FROM trip 
-                   INNER JOIN katalog ON trip.id_trip = katalog.id_trip 
-                   WHERE trip.id_trip = $id_trip");
-$trip = ambil($data_trip);
+    // Menghitung sisa kuota yang tersedia
+    $sisa = ambil(kueri("SELECT
+                (t.kuota - IFNULL(SUM(b.jumlah_peserta), 0)) sisa
+                FROM trip t
+                LEFT JOIN booking b
+                ON t.id_trip = b.id_trip AND b.status != 'Dibatalkan'
+                WHERE t.id_trip = $id_trip"));
 
+    // KODE DIPERBARUI: Query data dengan melakukan JOIN ke tabel tujuan
+    $data_trip = kueri("SELECT t.*, k.*, tj.tujuan 
+                       FROM trip t 
+                       INNER JOIN katalog k ON t.id_trip = k.id_trip 
+                       INNER JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
+                       WHERE t.id_trip = $id_trip");
+    $trip = ambil($data_trip);
 
-$data_gambar = kueri("SELECT * FROM gambar WHERE id_trip = $id_trip");
+    $data_gambar = kueri("SELECT * FROM gambar WHERE id_trip = $id_trip");
 
-$data_include = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip AND jenis = 'Include'");
-$data_exclude = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip AND jenis = 'Exclude'");
+    $data_include = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip AND jenis = 'Include'");
+    $data_exclude = kueri("SELECT * FROM fasilitas WHERE id_trip = $id_trip AND jenis = 'Exclude'");
 
-$data_meet = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip ORDER BY waktu ASC");
+    $data_meet = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip ORDER BY waktu ASC");
 
-$data_iten = kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC");
+    $data_iten = kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC");
 
-function tgl_indo($tanggal) {
-    $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-    $pecahkan = explode('-', $tanggal);
-    return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
-}
-?>
+    function tgl_indo($tanggal) {
+        $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $pecahkan = explode('-', $tanggal);
+        return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
+    }
+    ?>
 
 <main class="container">
   <div class="top-header">
         <div>
-          <h1><?= $trip['tujuan']; ?></h1>
-          <p>Via <?= $trip['rute']; ?></p>
+          <h1><?= htmlspecialchars($trip['tujuan']); ?></h1>
+          <p>Via <?= htmlspecialchars($trip['rute']); ?></p>
         </div>
 
         <div class="pax-box">
           <strong>Total Seat <?= $trip['kuota']; ?> Pax</strong>
           <br>
-          
           <span>Sisa <?= $sisa['sisa'] ?> pax lagi!</span>
         </div>
-        
-      </div>
+  </div>
+
     <div class="grid">
         <div class="left">
             <?php 
-            // Ambil gambar pertama untuk main-img
             $gambar_list = [];
             while($g = ambil($data_gambar)) { $gambar_list[] = $g; }
-            $main_img = !empty($gambar_list) ? $gambar_list[0]['nama_file'] : 'gunung.jpg';
+            $main_img = !empty($gambar_list) ? $gambar_list[0]['nama_file'] : 'default.jpg';
             ?>
             <img src="../gambar/upload/<?= $main_img; ?>" id="mainImg" class="main-img" />
 
             <div class="thumbs">
                 <?php foreach($gambar_list as $img) : ?>
-                    <img src="../gambar/upload/<?= $img['nama_file']; ?>" / class="thumb-img" onclick="changeImage(this)">
+                    <img src="../gambar/upload/<?= $img['nama_file']; ?>" class="thumb-img" onclick="changeImage(this)">
                 <?php endforeach; ?>
             </div>
 
@@ -486,7 +444,7 @@ function tgl_indo($tanggal) {
 
         <div class="right">
             <div class="deskripsi">
-                <?= nl2br($trip['deskripsi']); ?>
+                <?= nl2br(htmlspecialchars($trip['deskripsi'])); ?>
             </div>
 
             <h3>FASILITAS</h3>
@@ -495,7 +453,7 @@ function tgl_indo($tanggal) {
                     <p class="label">INCLUDE</p>
                     <ul>
                         <?php while($inc = ambil($data_include)) : ?>
-                            <li><?= $inc['fasilitas']; ?></li>
+                            <li><?= htmlspecialchars($inc['fasilitas']); ?></li>
                         <?php endwhile; ?>
                     </ul>
                 </div>
@@ -504,7 +462,7 @@ function tgl_indo($tanggal) {
                     <p class="label">EXCLUDE</p>
                     <ul>
                         <?php while($exc = ambil($data_exclude)) : ?>
-                            <li><?= $exc['fasilitas']; ?></li>
+                            <li><?= htmlspecialchars($exc['fasilitas']); ?></li>
                         <?php endwhile; ?>
                     </ul>
                 </div>
@@ -513,13 +471,13 @@ function tgl_indo($tanggal) {
             <h3>MEETING POINT</h3>
             <ul class="meeting-point">
                 <?php while($mp = ambil($data_meet)) : ?>
-                    <li><?= date('H.i', strtotime($mp['waktu'])); ?> WIB - <?= $mp['kota']; ?> (<?= $mp['daerah']; ?>)</li>
+                    <li><?= date('H.i', strtotime($mp['waktu'])); ?> WIB - <?= htmlspecialchars($mp['kota']); ?> (<?= htmlspecialchars($mp['daerah']); ?>)</li>
                 <?php endwhile; ?>
             </ul>
 
             <h3>CATATAN TAMBAHAN</h3>
             <div class="catatan">
-                <?= nl2br($trip['catatan']); ?>
+                <?= nl2br(htmlspecialchars($trip['catatan'])); ?>
             </div>
         </div>
     </div>
@@ -530,14 +488,14 @@ function tgl_indo($tanggal) {
             <?php while($it = ambil($data_iten)) : ?>
                 <li>
                     <span><?= date('H.i', strtotime($it['mulai'])); ?> - <?= date('H.i', strtotime($it['selesai'])); ?></span>
-                    <p><?= $it['kegiatan']; ?></p>
+                    <p><?= htmlspecialchars($it['kegiatan']); ?></p>
                 </li>
             <?php endwhile; ?>
         </ul>
     </div>
 </main>
-    <!-- FOOTER -->
 
+    <!-- FOOTER -->
     <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">
@@ -593,13 +551,11 @@ function tgl_indo($tanggal) {
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
     </footer>
-  </body>
-  <script>
+</body>
+
+<script>
 function changeImage(element) {
-    // Mengambil element gambar utama berdasarkan ID, lalu mengubah sumbernya (src)
     document.getElementById('mainImg').src = element.src;
 }
 </script>
-
 </html>
-
