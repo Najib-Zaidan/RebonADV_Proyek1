@@ -517,12 +517,12 @@ nav a{text-decoration:none;color:black;}
             <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $pr['jumlah_peserta']; ?> Orang</p>
         </div>
         <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA DEAL</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;"><?= $pr['harga'] ? 'Rp '.number_format($pr['harga']) : '<span style="color:#aaa; font-style:italic;">Nego</span>'; ?></p>
+            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TOTAL</p>
+            <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;"><?= $pr['harga'] ? 'Rp '.number_format($pr['harga']) : '<span style="color:#aaa; font-style:italic;">Menunggu ...</span>'; ?></p>
         </div>
         <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">DP DISEPAKATI</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;"><?= $pr['harga_dp'] ? 'Rp '.number_format($pr['harga_dp']) : '-'; ?></p>
+            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">DP MINIMAL</p>
+            <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;"><?= $pr['harga_dp'] ? 'Rp '.number_format($pr['harga_dp']) : '–'; ?></p>
         </div>
         <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
             <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">STATUS BAYAR</p>
@@ -544,18 +544,6 @@ nav a{text-decoration:none;color:black;}
                     <a href="form_pembayaran_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
                 <?php endif; ?>
                 
-                <?php if($pr['status_bayar'] != 'Dibatalkan' && $pr['status_trip'] == 'Disetujui'): ?>
-                    <a href="batal_private.php?id=<?= $id_pr; ?>" class="btn" style="color:#e53e3e; border:1px solid #e53e3e; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; background: transparent; text-decoration:none;">Batal</a>
-                <?php endif; ?>
-
-            <?php elseif ($status_batal_pr == 0): ?>
-                <div style="background: #fffaf0; padding: 6px 12px; border-radius: 8px; border: 1px solid #fbd38d;">
-                    <span style="color:#dd6b20; font-weight:800; font-size:12px;">⏳ Menunggu Batal</span>
-                </div>
-            <?php else: ?>
-                <div style="background: #f0fff4; padding: 6px 12px; border-radius: 8px; border: 1px solid #9ae6b4;">
-                    <span style="color:#38a169; font-weight:800; font-size:12px;">✅ Dibatalkan</span>
-                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -669,7 +657,7 @@ nav a{text-decoration:none;color:black;}
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 8px;">
-            <a href="detail_pembayaran.php?id=<?= $py['id_payment']; ?>" class="btn" style="margin:0; font-size: 11px; font-weight: bold; padding: 8px; background: #2d3748; color: white; text-align:center; border-radius: 8px; text-decoration:none; transition: 0.2s;">📄 Detail</a>
+            <a href="detail_bayar_open.php?id_payment=<?= $py['id_payment']; ?>" class="btn" style="margin:0; font-size: 11px; font-weight: bold; padding: 8px; background: #2d3748; color: white; text-align:center; border-radius: 8px; text-decoration:none; transition: 0.2s;">📄 Detail</a>
             <a href="../gambar/payment/<?= $py['bukti_bayar']; ?>" target="_blank" class="btn purple" style="margin:0; font-size: 11px; font-weight: bold; padding: 8px; text-align:center; border-radius: 8px; text-decoration:none; background: #6b3df5;">🔍 Bukti</a>
         </div>
     </div>
@@ -677,7 +665,7 @@ nav a{text-decoration:none;color:black;}
     <div style="padding: 12px 20px; background: #fdfdfd; border-top: 1px solid #f0f0f0; display: flex; align-items: flex-start; gap: 10px;">
         <div style="background: #edf2f7; padding: 5px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; color: #4a5568;">CATATAN</div>
         <p style="font-size: 12px; color: #4a5568; margin: 0; line-height: 1.5; font-style: italic;">
-            "<?= !empty($py['catatan']) ? $py['catatan'] : 'Tidak ada catatan dari penyewa.'; ?>"
+            "<?= !empty($py['catatan']) ? $py['catatan'] : 'Tidak ada catatan untuk pembayaran ini.'; ?>"
         </p>
     </div>
 </div>
@@ -756,7 +744,7 @@ nav a{text-decoration:none;color:black;}
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 8px;">
-            <a href="detail_pembayaran_private.php?id=<?= $pyp['id_payment']; ?>" class="btn" style="margin:0; font-size: 11px; font-weight: bold; padding: 8px; background: #2d3748; color: white; text-align:center; border-radius: 8px; text-decoration:none;">📄 Detail</a>
+            <a href="detail_bayar_private.php?id_payment=<?= $pyp['id_payment']; ?>" class="btn" style="margin:0; font-size: 11px; font-weight: bold; padding: 8px; background: #2d3748; color: white; text-align:center; border-radius: 8px; text-decoration:none;">📄 Detail</a>
             <a href="../gambar/payment_private/<?= $pyp['bukti_bayar']; ?>" target="_blank" class="btn red" style="margin:0; font-size: 11px; font-weight: bold; padding: 8px; text-align:center; border-radius: 8px; text-decoration:none; background: #ff4b2b; color: white;">🔍 Bukti</a>
         </div>
     </div>
