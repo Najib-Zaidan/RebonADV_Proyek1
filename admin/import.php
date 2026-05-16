@@ -10,6 +10,34 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
+$album = "CREATE TABLE album (
+    id_album INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(50)
+)";
+$galeri = "CREATE TABLE galeri (
+    id_galeri INT AUTO_INCREMENT PRIMARY KEY,
+    nama_file VARCHAR(150),
+    id_album INT,
+    FOREIGN KEY (id_album) REFERENCES album(id_album) ON DELETE CASCADE
+)";
+$notif = "CREATE TABLE notif (
+    id_notif INT AUTO_INCREMENT PRIMARY KEY,
+    pesan TEXT DEFAULT NULL,
+    waktu DATETIME NOT NULL DEFAULT NOW(),
+    id_akun INT,
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
+)";
+$rating = "CREATE TABLE rating (
+    id_rating INT AUTO_INCREMENT PRIMARY KEY,
+    rating INT NOT NULL,
+    ulasan TEXT,
+    id_tujuan INT,
+    id_trip INT,
+    id_akun INT,
+    FOREIGN KEY (id_tujuan) REFERENCES tujuan(id_tujuan) ON DELETE CASCADE,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE,
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
+)";
 $tujuan = "CREATE TABLE IF NOT EXISTS tujuan (
     id_tujuan INT AUTO_INCREMENT PRIMARY KEY,
     tujuan VARCHAR(50) NOT NULL,
@@ -1771,6 +1799,150 @@ $insert_batal_pt = "INSERT INTO batal_private (id_private, status, tgl_pembatala
 -- ID Private 13 (Gunung Welirang, Booking: 2026-04-12)
 (13, TRUE, '2026-04-20 10:15:22', 'Kondisi kesehatan salah satu anggota keluarga inti pemesan sedang menurun dan memerlukan perawatan intensif, mohon maaf trip harus kami batalkan.')
 ";
+
+$insert_rating = "INSERT INTO rating (rating, ulasan, id_tujuan, id_trip, id_akun) VALUES
+-- Trip 1 & Tujuan 1 (5 Rating)
+(5, 'Pengalaman mendaki yang luar biasa bersama tim open trip ini. Tour guide sangat ramah dan sabar menemani sampai puncak. Fasilitas tenda dan logistik juga sangat mencukupi.', 1, 1, 7),
+(4, 'Pemandangan gunungnya sangat indah dan jalurnya cukup menantang. Rundown acara agak sedikit ngaret dari jadwal awal. Tapi secara keseluruhan pelayanan dari pihak agen travel sudah oke.', 1, 1, 12),
+(3, NULL, 1, 1, 14),
+(5, 'Sangat puas dengan trip kali ini karena dapat teman-teman baru yang seru. Makanan yang disediakan selama di camp area juga enak sekali. Next time bakal order lagi di sini.', 1, 1, 6),
+(4, 'Trek pendakiannya lumayan menguras tenaga bagi pemula seperti saya. Beruntung porter dan guide cekatan membantu membawa barang bawaan. Terima kasih atas pengalamannya.', 1, 1, 9),
+
+-- Trip 2 & Tujuan 2 (5 Rating)
+(4, 'Fasilitas yang didapat sebanding dengan harga yang dibayarkan. Penjemputan di meeting point tepat waktu sesuai kesepakatan. Perlengkapan camping yang disediakan juga masih sangat layak pakai.', 2, 2, 15),
+(3, 'Jalur pendakian menuju puncak tertutup kabut tebal saat pagi hari. Guide kurang komunikatif dalam memberikan info jalur alternatif. Semoga bisa dievaluasi lagi ke depannya.', 2, 2, 8),
+(5, 'Open trip gunung paling berkesan yang pernah saya ikuti sejauh ini. Manajemen waktu dari panitia sangat disiplin dan tertata rapi. Bonus dokumentasi foto-fotonya juga keren abis.', 2, 2, 11),
+(4, NULL, 2, 2, 13),
+(5, 'Pemandangan sunrise di puncak gunung ini benar-benar tidak ada duanya. Pihak travel juga menyediakan perlengkapan medis yang lengkap di pos pendakian. Sangat direkomendasikan untuk dicoba.', 2, 2, 10),
+
+-- Trip 3 & Tujuan 3 (5 Rating)
+(3, 'Cuaca di atas gunung kurang mendukung karena hujan deras semalaman. Tenda agak sedikit bocor di bagian pojok sehingga barang-barang basah. Untung logistik makanan aman.', 3, 3, 6),
+(5, NULL, 3, 3, 14),
+(4, 'Suasana basecamp bersih dan nyaman untuk istirahat sebelum mulai mendaki. Guide memberikan instruksi keselamatan dengan sangat detail dan jelas. Perjalanan melelahkan tapi terbayar lunas.', 3, 3, 7),
+(5, 'Pelayanan dari awal pendaftaran sampai pulang sangat profesional. Porter sangat kuat dan membantu membawakan tenda kelompok dengan cepat. Liburan singkat yang sangat menyenangkan.', 3, 3, 12),
+(4, 'Secara keseluruhan semua agenda open trip berjalan dengan lancar tanpa kendala. Hanya saja menu makanan saat di gunung kurang bervariasi. Tapi tetap kenyang dan puas.', 3, 3, 11),
+
+-- Trip 4 & Tujuan 4 (5 Rating)
+(5, 'Gunung ini punya trek yang menantang tapi pemandangannya juara. Tim dokumentasi dari open trip ini sangat niat mengambil video perjalanan kami. Hasil editannya juga memuaskan sekali.', 4, 4, 9),
+(4, 'Sangat cocok untuk pendaki yang ingin cari suasana baru. Koordinasi antar panitia di lapangan perlu ditingkatkan lagi agar tidak bingung. Tapi pelayanan mereka tetap ramah.', 4, 4, 15),
+(4, NULL, 4, 4, 8),
+(3, 'Armada transportasi menuju ke basecamp agak kurang nyaman dan sempit. Beruntung suasana selama pendakian sangat seru sehingga bisa menutupi kekurangan tersebut. Harap diperbaiki lagi armada busnya.', 4, 4, 13),
+(5, 'Terima kasih sudah dibantu sampai bisa muncak dengan selamat tanpa cedera. Semua perlengkapan kelompok sudah disiapkan matang oleh panitia. Pasti bakal ikut open trip di sini lagi.', 4, 4, 10),
+
+-- Trip 5 & Tujuan 5 (5 Rating)
+(4, 'Pengalaman pertama naik gunung dan langsung ketagihan setelah ikut trip ini. Penjelasan mengenai adat istiadat lokal di area gunung disampaikan dengan baik oleh guide. Pengalaman yang sangat edukatif.', 5, 5, 12),
+(5, 'Semua fasilitas VIP yang dijanjikan di awal benar-benar terealisasi dengan baik. Makan mewah di atas gunung dan tidur di tenda yang hangat. Sangat sepadan dengan harga paketnya.', 5, 5, 6),
+(3, 'Peserta open trip terlalu banyak sehingga pergerakan rombongan menjadi agak lambat. Beberapa kali kami harus berhenti lama menunggu peserta di belakang yang kelelahan. Perlu pembatasan kuota kuota.', 5, 5, 11),
+(5, NULL, 5, 5, 7),
+(4, 'Jalur trackingnya cukup bersahabat untuk dinikmati santai akhir pekan. Pihak agen juga memberikan kaos souvenir gratis yang bahannya bagus. Terima kasih atas pelayanan terbaiknya.', 5, 5, 14),
+
+-- Trip 6 & Tujuan 6 (5 Rating)
+(4, 'Trek menuju sabana benar-benar indah dan menyejukkan mata. Sayangnya air bersih di pos bayangan agak terbatas sewaktu kami melintas. Untungnya tim guide sudah mengantisipasi dengan membawa stok tambahan.', 6, 6, 8),
+(5, 'Sangat puas dengan manajemen open trip kali ini karena semuanya serba teratur. Logistik melimpah dan tidak kekurangan makanan sama sekali selama di atas camp. Porter juga sangat ramah dan suka membantu.', 6, 6, 13),
+(3, NULL, 6, 6, 10),
+(4, 'Pemandangan lautan awan dari puncak gunung ini tidak pernah mengecewakan. Bus penjemputan datang tepat waktu sehingga kami tidak perlu menunggu lama di meeting point. Pertahankan terus pelayanannya.', 6, 6, 15),
+(5, 'Guide lokalnya sangat paham sejarah dan rute alternatif di gunung ini. Kami diajak melewati jalur yang lebih aman saat cuaca mulai memburuk di atas. Pengalaman mendaki yang sangat berharga dan aman.', 6, 6, 7),
+
+-- Trip 7 & Tujuan 7 (5 Rating)
+(5, NULL, 7, 7, 12),
+(3, 'Fasilitas transportasi menuju basecamp agak sedikit kurang bersih dan AC-nya kurang dingin. Namun suasana kebersamaan antar peserta di jalur pendakian sangat menutupi kekurangan tersebut. Semoga armadanya diperbarui.', 7, 7, 6),
+(4, 'Pendakian yang cukup melelahkan tapi terbayar lunas begitu sampai di area camp. Panitia sangat tanggap membantu mendirikan tenda saat angin kencang melanda. Makanan hangat yang disajikan juga sangat enak.', 7, 7, 14),
+(5, 'Baru pertama kali ikut agen ini dan langsung merasa sangat cocok dengan sistemnya. Briefing sebelum pendakian dilakukan dengan sangat jelas demi keselamatan bersama. Terima kasih atas perjalanannya.', 7, 7, 9),
+(4, 'Jalur pendakiannya cukup menantang bagi yang jarang berolahraga seperti saya. Untungnya ritme berjalan rombongan disesuaikan dengan kemampuan peserta paling lambat. Tidak ada yang ditinggal sendirian di belakang.', 7, 7, 11),
+
+-- Trip 8 & Tujuan 8 (5 Rating)
+(4, 'Pemandangan danau di dekat puncak gunung benar-benar memanjakan mata yang lelah. Tenda camping yang disediakan masih sangat bagus dan tidak ada kebocoran sama sekali. Pelayanan secara umum sudah sangat memuaskan.', 8, 8, 10),
+(5, 'Dokumentasi dari tim open trip ini sangat profesional dan niat banget. Kami mendapat banyak foto dan video sinematik selama perjalanan mendaki. Sangat sepadan dengan biaya paket yang dikeluarkan.', 8, 8, 15),
+(3, NULL, 8, 8, 8),
+(4, 'Rundown acara berjalan sesuai jadwal dari awal keberangkatan sampai pulang kembali. Menu makanannya juga bervariasi dan selalu disajikan dalam kondisi hangat. Hanya saja perlengkapan medisnya perlu diperbanyak.', 8, 8, 13),
+(5, 'Pengalaman open trip gunung yang luar biasa dan sangat seru dari awal sampai akhir. Saya mendapat banyak teman baru sesama pecinta alam di rombongan ini. Pasti akan memesan paket trip di sini lagi.', 8, 8, 6),
+
+-- Trip 9 & Tujuan 9 (5 Rating)
+(3, 'Cuaca badai di atas membuat kami tidak bisa melanjutkan perjalanan sampai ke puncak tertinggi. Pihak panitia mengambil keputusan untuk tetap di camp demi keselamatan bersama. Agak kecewa tapi keputusan mereka sudah benar.', 9, 9, 11),
+(5, NULL, 9, 9, 7),
+(4, 'Basecamp pendakiannya sangat bersih dan memiliki fasilitas MCK yang memadai untuk peserta. Koordinator trip sangat komunikatif dalam membagikan informasi penting selama perjalanan. Sangat direkomendasikan.', 9, 9, 14),
+(5, 'Semua perlengkapan kelompok mulai dari alat masak hingga tenda sudah disiapkan dengan matang. Peserta tinggal membawa perlengkapan pribadi saja tanpa perlu repot. Liburan akhir pekan yang sangat praktis.', 9, 9, 12),
+(4, 'Treknya lumayan licin karena sempat diguyur hujan gerimis di sore hari. Beruntung porter dengan sigap membantu membawakan tas beberapa peserta yang mulai kelelahan. Terima kasih atas bantuan dan pelayanannya.', 9, 9, 9),
+
+-- Trip 10 & Tujuan 10 (5 Rating)
+(5, 'Paket open trip gunung ini benar-benar memberikan pelayanan kelas VIP yang luar biasa. Kami disajikan makanan berat yang lezat bahkan saat berada di ketinggian ribuan meter. Tidur di tenda juga terasa sangat nyaman.', 10, 10, 13),
+(4, 'Sangat cocok untuk melepaskan penat dari rutinitas pekerjaan di perkotaan yang padat. Suasana alamnya masih sangat asri dan jalur trackingnya tidak terlalu ekstrem. Kinerja seluruh kru lapangan sudah sangat baik.', 10, 10, 8),
+(4, NULL, 10, 10, 6),
+(3, 'Jumlah peserta dalam satu kelompok kelihatannya agak terlalu banyak untuk kapasitas guide yang ada. Pergerakan rombongan jadi sering terhambat karena menunggu antrean di jalur sempit. Perlu ada pembatasan kuota lagi.', 10, 10, 15),
+(5, 'Penjemputan tepat waktu dan seluruh kru memperlakukan peserta dengan sangat ramah selama trip. Bonus kaos merchandise-nya juga memiliki bahan yang bagus dan nyaman dipakai. Pengalaman yang tidak akan terlupakan.', 10, 10, 11),
+
+-- Trip 11 & Tujuan 11 (5 Rating)
+(5, 'Pemandangan kawah di puncak gunung ini benar-benar magis dan luar biasa. Ditambah lagi pelayanan dari agen travel yang sangat ramah membuat perjalanan semakin berkesan. Sangat layak dicoba bagi para pecinta ketinggian.', 11, 11, 14),
+(4, 'Secara keseluruhan manajemen trip sudah tertata dengan sangat rapi dan disiplin waktu. Hanya saja porsi sarapan pagi di hari kedua agak kurang mengenyangkan untuk pendaki. Tapi fasilitas lainnya sudah oke banget.', 11, 11, 6),
+(3, NULL, 11, 11, 9),
+(5, 'Porter dan tour guide sangat kompak dalam mengurus tenda serta kebutuhan logistik para peserta. Kami tidak perlu khawatir kelaparan karena makanan selalu siap tepat waktu. Terima kasih banyak atas dedikasinya.', 11, 11, 12),
+(4, 'Treknya cukup menantang dengan kombinasi akar pohon dan bebatuan yang lumayan curam. Beruntung instruksi dari guide sebelum mendaki sangat membantu kami melewati jalur aman. Pengalaman yang seru.', 11, 11, 7),
+
+-- Trip 12 & Tujuan 12 (5 Rating)
+(4, NULL, 12, 12, 15),
+(3, 'Proses pendaftaran awal dan koordinasi di grup WhatsApp sedikit membingungkan karena admin lambat merespon. Namun setelah sampai di basecamp, pelayanan kru lapangan ternyata sangat cekatan dan ramah. Semoga komunikasi online diperbaiki.', 12, 12, 11),
+(5, 'Open trip terbaik yang pernah saya ikuti selama beberapa tahun terakhir ini. Suasana kebersamaan antar peserta sangat hangat karena panitia pintar mencairkan suasana di malam hari. Pasti ikut lagi di trip berikutnya.', 12, 12, 8),
+(4, 'Fasilitas transportasi dan perlengkapan camping yang disediakan berfungsi dengan sangat baik tanpa ada cacat. Tour guide juga sangat sabar menemani langkah kaki saya yang agak lambat ini. Benar-benar pelayanan yang tulus.', 12, 12, 13),
+(5, 'Sunrise di gunung ini adalah salah satu yang terbaik yang pernah saya saksikan seumur hidup. Pihak travel juga menyediakan dokumentasi video udara menggunakan drone yang hasilnya keren sekali. Puas banget dengan trip ini.', 12, 12, 10),
+
+-- Trip 13 & Tujuan 13 (5 Rating)
+(4, 'Jalur tracking menuju camp area relatif santai dan sangat ramah untuk pendaki pemula. Pemandangan hutan pinus di sepanjang jalan juga sangat menyejukkan pikiran yang sedang stres. Sangat direkomendasikan untuk liburan singkat.', 13, 13, 12),
+(5, 'Semua kru lapangan bekerja secara profesional dan selalu mengutamakan faktor keselamatan para peserta trip. Peralatan medis yang mereka bawa di tas darurat juga sangat lengkap dan meyakinkan. Terima kasih atas trip yang aman ini.', 13, 13, 7),
+(3, NULL, 13, 13, 14),
+(5, 'Makan mewah di atas gunung bukan lagi sekadar mitos kalau ikut open trip agen ini. Menu ayam bakar dan sup hangat yang disajikan saat cuaca dingin benar-benar nikmat tiada tara. Pelayanan VIP yang sesungguhnya.', 13, 13, 6),
+(4, 'Rundown kegiatan berjalan sangat on-time dari mulai penjemputan di stasiun sampai kembali pulang. Bonus merchandise kaos dan gantungan kuncinya juga punya desain yang bagus. Nilai tambah yang sangat menarik dari agen ini.', 13, 13, 11),
+
+-- Trip 14 & Tujuan 14 (5 Rating)
+(3, 'Kondisi cuaca saat di puncak kurang bersahabat karena angin kencang disertai badai kabut tebal. Akibatnya kami tidak bisa berlama-lama menikmati pemandangan dan harus segera turun ke camp. Manajemen evakuasinya sudah cukup baik.', 14, 14, 8),
+(5, NULL, 14, 14, 13),
+(4, 'Tempat meeting point yang disediakan sangat strategis dan memiliki area parkir serta ruang tunggu yang luas. Armada bus yang membawa rombongan kami juga bersih dan suspensinya nyaman selama perjalanan. Mantap lah.', 14, 14, 10),
+(5, 'Sangat berkesan bisa merayakan momen liburan di gunung yang indah ini bersama tim open trip. Pelayanan dari porter sangat luar biasa membantu membawakan tenda kelompok dengan cepat mendahului peserta. Top banget.', 14, 14, 15),
+(4, 'Treknya lumayan menguras stamina karena banyak bonus tanjakan terjal tanpa bonus jalan datar. Untungnya bonus pemandangan di atas puncak benar-benar membayar semua rasa lelah selama mendaki. Kru lapangan juga sangat suportif.', 14, 14, 9),
+
+-- Trip 15 & Tujuan 15 (5 Rating)
+(5, 'Terima kasih banyak kepada seluruh panitia yang sudah membimbing saya sampai ke puncak tertinggi dengan selamat. Ini adalah pengalaman pertama saya naik gunung dan langsung dibuat jatuh cinta oleh jalurnya. Pelayanan bintang lima.', 15, 15, 6),
+(4, 'Suasana basecamp awal sangat nyaman dan bersih dengan fasilitas air hangat yang membantu merilekskan otot sebelum mendaki. Informasi mengenai aturan adat setempat juga disampaikan dengan sangat jelas oleh guide lokal. Sangat edukatif.', 15, 15, 12),
+(4, NULL, 15, 15, 7),
+(3, 'Kuota peserta untuk trip kali ini sepertinya agak terlalu padat sehingga suasana di dalam tenda terasa sedikit sesak. Logistik makanan untungnya aman, tapi kenyamanan beristirahat jadi agak berkurang. Mohon kuotanya dievaluasi kembali.', 15, 15, 11),
+(5, 'Hasil dokumentasi foto dari tim panitia benar-benar estetik dan langsung dibagikan cepat lewat Google Drive setelah trip selesai. Pengalaman yang sangat menyenangkan bisa bertemu dengan teman-teman baru yang sehobi di sini.', 15, 15, 15),
+
+-- Trip 16 & Tujuan 16 (5 Rating)
+(4, 'Trek menuju puncak didominasi oleh bebatuan lepas yang cukup licin dan membutuhkan konsentrasi tinggi. Beruntung guide selalu memberikan arahan kaki yang aman di sepanjang jalur. Secara keseluruhan perjalanannya sangat seru.', 16, 16, 9),
+(5, 'Sangat terkesan dengan keramahan para porter yang tidak kenal lelah membantu membawa logistik kelompok. Tenda dome yang disediakan juga berukuran luas dan mampu menahan angin kencang dengan sangat baik. Sangat puas.', 16, 16, 14),
+(3, NULL, 16, 16, 11),
+(4, 'Rundown acara berjalan sesuai rencana awal meskipun sempat ada kendala sedikit saat registrasi di pos simaksi. Makanan yang dimasak oleh tim panitia di atas gunung rasanya di luar ekspektasi, enak sekali.', 16, 16, 6),
+(5, 'Pemandangan malam hari dari pos camp bertabur bintang yang sangat indah dan menakjubkan. Tim open trip juga sangat tertib dalam mengimbau peserta untuk membawa kembali sampah masing-masing ke bawah. Agen yang bertanggung jawab.', 16, 16, 13),
+
+-- Trip 17 & Tujuan 17 (5 Rating)
+(5, NULL, 17, 17, 7),
+(3, 'Bus pariwisata yang digunakan saat penjemputan di meeting point agak sedikit berisik di bagian mesinnya. Beruntung suasana keakraban antar peserta di dalam bus membuat perjalanan panjang tetap terasa menyenangkan. Semoga ada perbaikan armada.', 17, 17, 15),
+(4, 'Jalur pendakian gunung ini melewati kawasan hutan tropis yang masih sangat asri dan lebat. Guide lokal sangat informatif menjelaskan flora dan fauna endemik yang kami temui di sepanjang jalan. Pengalaman yang sangat menambah wawasan.', 17, 17, 10),
+(5, 'Fasilitas yang disediakan benar-benar sebanding dengan harga paket open trip yang ditawarkan. Peralatan masak lengkap dan pasokan air bersih selalu dijamin aman oleh panitia selama berada di atas. Sangat direkomendasikan.', 17, 17, 12),
+(4, 'Proses tracking melelahkan karena cuaca panas terik di siang hari tanpa banyak pohon peneduh. Panitia sangat sigap memberikan semangat dan membagikan buah segar saat istirahat di pos bayangan. Terima kasih pelayanannya.', 17, 17, 8),
+
+-- Trip 18 & Tujuan 18 (5 Rating)
+(4, 'Suasana di area puncak tidak terlalu ramai sehingga kami bisa puas mengambil foto tanpa harus mengantre lama. Transportasi pulang pergi juga nyaman dan drivernya mengemudi dengan sangat hati-hati. Nilai plus untuk kenyamanan ini.', 18, 18, 11),
+(5, 'Dokumentasi sinematik yang dihasilkan oleh tim kreatif open trip ini benar-benar juara dan estetik. Pembagian file lewat cloud juga sangat cepat, hanya selang sehari setelah trip selesai. Pasti akan ikut lagi di kesempatan berikutnya.', 18, 18, 6),
+(3, NULL, 18, 18, 14),
+(4, 'Menu makanan yang disajikan bervariasi dari sayur sup hangat hingga gorengan renyah di malam hari. Penanganan panitia terhadap peserta yang mengalami gejala ringan kram otot juga sangat cepat dan tepat. Kru lapangan jempolan.', 18, 18, 13),
+(5, 'Pengalaman mendaki yang sangat berkesan dan penuh tawa bersama rombongan open trip kali ini. Koordinasi panitia dari sebelum keberangkatan hingga pulang terjalin dengan sangat baik dan profesional. Terima kasih banyak.', 18, 18, 9),
+
+-- Trip 19 & Tujuan 19 (5 Rating)
+(3, 'Kabut tebal dan angin kencang melanda jalur punggungan gunung dari pagi hingga sore hari. Kami terpaksa tertahan cukup lama di dalam tenda dan tidak bisa menikmati pemandangan sekitar secara maksimal. Penjagaan dari guide tetap siaga.', 19, 19, 12),
+(5, NULL, 19, 19, 10),
+(4, 'Tempat istirahat di basecamp awal sangat bersih dan menyediakan fasilitas kopi serta teh hangat gratis untuk peserta. Penjelasan mengenai manajemen perjalanan disampaikan secara mendetail saat briefing malam sebelum mendaki. Sangat bagus.', 19, 19, 7),
+(5, 'Semua persiapan kelompok diurus secara totalitas oleh pihak agen travel tanpa ada kekurangan sedikit pun. Peserta benar-benar dimanjakan dan tinggal fokus menikmati keindahan alam gunung saja. Pelayanan yang luar biasa memuaskan.', 19, 19, 15),
+(4, 'Tanjakan demi tanjakan cukup menguras tenaga dan membuat kaki terasa sangat pegal di hari pertama. Namun semua itu terbayar lunas dengan pemandangan samudera awan yang sangat luas dari balik tenda. Pengalaman luar biasa.', 19, 19, 8),
+
+-- Trip 20 & Tujuan 20 (5 Rating)
+(5, 'Ini adalah open trip gunung terbaik yang pernah saya ikuti selama liburan tahun ini. Penjemputan di stasiun sangat tepat waktu dan komunikasi dengan admin via WhatsApp selalu direspon dengan cepat. Bintang lima untuk semua kru.', 20, 20, 13),
+(4, 'Jalur trackingnya relatif landai di awal dan baru mulai menanjak curam setelah melewati batas vegetasi hutan. Kondisi tenda yang diberikan masih sangat bersih dan harum seperti baru dicuci. Kru lapangan bekerja dengan sangat baik.', 20, 20, 6),
+(4, NULL, 20, 20, 12),
+(3, 'Jumlah peserta dalam satu rombongan kali ini agak terlalu banyak sehingga waktu istirahat di pos jadi sering molor. Logistik makanan untungnya melimpah, tapi ritme perjalanan menjadi kurang efisien karena terlalu sering berhenti. Perlu evaluasi kuota.', 20, 20, 14),
+(5, 'Mendapat banyak relasi dan teman baru sesama pendaki yang sangat kompak dari berbagai kota. Bonus kaos merchandise eksklusifnya juga menggunakan bahan katun yang tebal dan nyaman dipakai sehari-hari. Terima kasih atas trip serunya.', 20, 20, 11)
+";
+
+
 
 /*
 $insert_peserta = "INSERT INTO peserta (id_akun, nama, no_hp, tgl_lahir, alamat, riwayat) VALUES 
