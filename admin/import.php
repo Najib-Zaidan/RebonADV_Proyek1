@@ -18,7 +18,7 @@ $trip = "CREATE TABLE IF NOT EXISTS trip (
     harga INT NOT NULL,
     harga_dp INT NOT NULL,
     kuota INT NOT NULL,
-    rute VARCHAR(100) NOT NULL,
+    rute VARCHAR(150) NOT NULL,
     publik BOOLEAN NOT NULL DEFAULT FALSE,
     catatan TEXT
 )";

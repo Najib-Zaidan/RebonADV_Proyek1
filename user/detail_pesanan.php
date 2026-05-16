@@ -49,6 +49,23 @@ $peserta = kueri("
     LEFT JOIN batal_peserta bp ON bd.id_detail = bp.id_detail -- Tambahkan ini
     WHERE bd.id_booking = '$id_booking'
 ");
+
+// Inisialisasi variabel untuk menyimpan jumlah peserta agar bisa diakses di tabel bawah
+$total_peserta = 0; 
+
+// KODE TAMBAHAN: Ambil data riwayat pembayaran dari tabel payment_open
+$pembayaran = kueri("
+    SELECT 
+        id_payment,
+        tgl_bayar,
+        nominal,
+        bukti_bayar,
+        status,
+        catatan
+    FROM payment_open
+    WHERE id_booking = '$id_booking'
+    ORDER BY tgl_bayar DESC
+");
 ?>
 
 <!DOCTYPE html>
@@ -133,6 +150,9 @@ $peserta = kueri("
         .btn-pay { background: #28a745; }
         .btn-cancel-all { background: #dc3545; }
         .btn-cancel-person { background: #ffc107; color: #000; font-size: 12px; font-weight: bold; }
+        /* Style baru untuk tombol detail pembayaran */
+        .btn-detail { background: #007bff; color: white; font-size: 12px; }
+        .btn-detail:hover { background: #0056b3; }
         
         .btn-pay:hover { background: #218838; }
         .btn-cancel-all:hover { background: #c82333; }
@@ -164,6 +184,8 @@ $peserta = kueri("
     // Kita simpan status dalam variabel agar mudah digunakan berulang kali
     if($b = mysqli_fetch_assoc($booking)): 
         $status_sekarang = $b['status'];
+        // KODE TAMBAHAN: Simpan jumlah peserta ke variabel agar tidak hilang di luar block IF ini
+        $total_peserta = $b['jumlah_peserta']; 
     ?>
     <div class="card">
         <div class="title">Detail Booking</div>
@@ -240,12 +262,17 @@ $peserta = kueri("
                             <span class="btn" style="background: #28a745; cursor: default;">Dibatalkan</span>
 
                         <?php else: ?>
-                            <!-- Jika belum ada pengajuan pembatalan (status_verifikasi kosong/null) -->
-                            <a href="batal_peserta.php?id_detail=<?= $p['id_detail']; ?>&id_booking=<?= $id_booking; ?>" 
-                            class="btn btn-cancel-person"
-                            onclick="return confirm('Ajukan pembatalan untuk peserta ini?')">
-                            Batalkan Peserta
-                            </a>
+                            <!-- KODE TAMBAHAN: Cek jika jumlah peserta hanya 1 atau tinggal 1 -->
+                            <?php if($total_peserta <= 1): ?>
+                                <span class="status-label" style="font-size: 11px;"> – </span>
+                            <?php else: ?>
+                                <!-- Jika belum ada pengajuan pembatalan (status_verifikasi kosong/null) -->
+                                <a href="batal_peserta.php?id_detail=<?= $p['id_detail']; ?>&id_booking=<?= $id_booking; ?>" 
+                                class="btn btn-cancel-person"
+                                onclick="return confirm('Ajukan pembatalan untuk peserta ini?')">
+                                Batalkan Peserta
+                                </a>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                     <?php else: ?>
@@ -255,6 +282,51 @@ $peserta = kueri("
             </tr>
             <?php endwhile; ?>
 
+        </table>
+    </div>
+
+    <!-- KODE TAMBAHAN: Card Baru untuk Riwayat Pembayaran -->
+    <div class="card">
+        <div class="title">Riwayat Pembayaran</div>
+
+        <table>
+            <tr>
+                <th>Tanggal Bayar</th>
+                <th>Nominal</th>
+                <th>Status</th>
+                <th>Catatan</th>
+                <th>Aksi</th>
+            </tr>
+
+            <?php 
+            if(mysqli_num_rows($pembayaran) > 0):
+                while($pay = ambil($pembayaran)): 
+            ?>
+            <tr>
+                <td><?= $pay['tgl_bayar']; ?></td>
+                <td>Rp <?= number_format($pay['nominal'], 0, ',', '.'); ?></td>
+                <td>
+                    <?php if($pay['status'] == 'Diverifikasi'): ?>
+                        <span style="color: #28a745; font-weight: bold;"><?= $pay['status']; ?></span>
+                    <?php elseif($pay['status'] == 'Ditolak'): ?>
+                        <span style="color: #dc3545; font-weight: bold;"><?= $pay['status']; ?></span>
+                    <?php else: ?>
+                        <span style="color: #6c757d; font-weight: bold;"><?= $pay['status']; ?></span>
+                    <?php endif; ?>
+                </td>
+                <td><?= !empty($pay['catatan']) ? $pay['catatan'] : '-'; ?></td>
+                <td>
+                    <a href="detail_pembayaran.php?id_payment=<?= $pay['id_payment']; ?>" class="btn btn-detail">Detail</a>
+                </td>
+            </tr>
+            <?php 
+                endwhile;
+            else: 
+            ?>
+            <tr>
+                <td colspan="5" style="text-align: center; color: #777;">Belum ada riwayat pembayaran untuk pesanan ini.</td>
+            </tr>
+            <?php endif; ?>
         </table>
     </div>
 
