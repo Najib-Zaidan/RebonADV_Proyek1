@@ -8,23 +8,24 @@ if (!isset($_SESSION["login"])) {
 
 require 'konek.php';
 require 'fungsi.php';
+
+// Mengambil data tujuan beserta nilai default untuk auto-fill
+$result_tujuan = mysqli_query($konek, "SELECT id_tujuan, tujuan, kota, harga_def, harga_dp_def, rute_def FROM tujuan ORDER BY tujuan ASC");
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Tambah Trip</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <style>
-  body {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('bg1.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+body {
+    background: #f4f2f7;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 50px 20px;
+    padding: 20px 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,42 +38,43 @@ form {
     max-width: 900px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
+    box-sizing: border-box;
 }
 
 h3 {
     margin: 0 0 20px 0;
-    color: #fff;
-    font-size: 1.4rem;
-    border-bottom: 2px solid rgba(157, 2, 8, 0.1);
+    color: #6f42c1;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #e1d8f5;
     padding-bottom: 10px;
 }
 
 form > div[id^="section_"], 
 form > h3:first-of-type,
 form > div {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    border: 1px solid #e1d8f5;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.08);
+    box-sizing: border-box;
 }
 
 .item-row {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 15px;
-    padding: 20px;
+    background: #fdfbff;
+    border-radius: 12px;
+    padding: 15px;
     margin-bottom: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid #e1d8f5;
+    box-sizing: border-box;
 }
 
 label {
     display: block;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #4a0004;
+    color: #495057;
     font-size: 0.85rem;
 }
 
@@ -83,68 +85,85 @@ input[type="time"],
 textarea,
 select {
     width: 100%;
-    padding: 12px 15px;
+    padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid rgba(157, 2, 8, 0.2);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background: #ffffff;
     font-size: 1rem;
     box-sizing: border-box;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: #9d0208;
-    box-shadow: 0 0 0 3px rgba(157, 2, 8, 0.1);
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
+}
+
+input:disabled, select:disabled, textarea:disabled {
+    background: #e9ecef;
+    border-color: #ced4da;
+    cursor: not-allowed;
+    color: #6c757d;
 }
 
 button {
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 12px 20px;
+    border-radius: 8px;
     border: none;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s;
+    width: auto;
 }
 
 button[type="submit"] {
-    background: #9d0208;
+    background: #6f42c1;
     color: #fff;
-    padding: 18px;
+    padding: 16px;
     font-size: 1.1rem;
-    border-radius: 50px;
-    box-shadow: 0 10px 20px rgba(157, 2, 8, 0.4);
-    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+    margin-top: 10px;
+    width: 100%;
 }
 
 button[type="submit"]:hover {
-    background: #dc0000;
-    transform: translateY(-3px);
+    background: #5a32a3;
 }
 
 button[onclick^="add"] {
-    background: #4a0004;
-    color: #fff;
+    background: #e1d8f5;
+    color: #6f42c1;
     font-size: 0.9rem;
+    border: 1px solid rgba(111, 66, 193, 0.2);
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+button[onclick^="add"]:hover {
+    background: #d1c2f0;
 }
 
 button[onclick="removeRow(this)"] {
-    background: #ff4d4d;
+    background: #dc3545;
     color: #fff;
-    padding: 5px 15px;
-    margin-top: 10px;
+    padding: 8px 15px;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    width: 100%;
 }
 
 .preview-img {
-    width: 200px;
+    width: 100%;
+    max-width: 200px;
     height: 120px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-bottom: 15px;
-    border: 3px solid #fff;
+    border: 2px solid #e1d8f5;
     display: block;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 hr {
@@ -154,44 +173,60 @@ hr {
 .header-container {
     width: 100%;
     max-width: 900px;
-    margin: 0 auto 30px auto;
+    margin: 0 auto 20px auto;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 20px 30px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    padding: 15px 20px;
+    border-radius: 16px;
+    border: 1px solid #e1d8f5;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.08);
     box-sizing: border-box;
 }
 
 .header-container h1 {
     margin: 0;
-    color: #fff;
-    font-size: 1.8rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    color: #6f42c1;
+    font-size: 1.4rem;
 }
 
 .btn-kembali {
-    background: #4a0004;
-    color: #fff;
+    background: #fff;
+    color: #6f42c1;
     text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 12px;
+    padding: 10px 16px;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: 0.3s;
-    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.85rem;
+    transition: 0.2s;
+    border: 1px solid #6f42c1;
+    text-align: center;
 }
 
 .btn-kembali:hover {
-    background: #9d0208;
-    transform: translateX(-5px);
+    background: #f4f2f7;
 }
 
+/* Kustomisasi Responsif Khusus Mobile */
+@media (max-width: 576px) {
+    body {
+        padding: 15px 10px;
+    }
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+        text-align: center;
+    }
+    form > div[id^="section_"], form > div {
+        padding: 15px;
+    }
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], textarea, select {
+        font-size: 16px; /* Mencegah auto-zoom safari browser di iOS */
+    }
+}
 </style>
 <body>
 <div class="header-container">
@@ -204,7 +239,17 @@ hr {
     <h3>Informasi Trip</h3>
     <div>
         <label>Tujuan:</label>
-        <input type="text" name="tujuan" required>
+        <select name="id_tujuan" id="id_tujuan" required>
+            <option value="">-- Pilih Tujuan --</option>
+            <?php while($row_tujuan = mysqli_fetch_assoc($result_tujuan)) : ?>
+                <option value="<?= $row_tujuan['id_tujuan']; ?>" 
+                        data-harga="<?= $row_tujuan['harga_def']; ?>" 
+                        data-dp="<?= $row_tujuan['harga_dp_def']; ?>" 
+                        data-rute="<?= htmlspecialchars($row_tujuan['rute_def']); ?>">
+                    <?= htmlspecialchars($row_tujuan['tujuan'] . " (" . $row_tujuan['kota'] . ")"); ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
     </div>
     <div>
         <label>Tanggal Berangkat:</label>
@@ -216,11 +261,26 @@ hr {
     </div>
     <div>
         <label>Harga:</label>
-        <input type="number" name="harga" required>
+        <input type="number" name="harga" id="harga" required disabled>
+    </div>
+    <div>
+        <label>Harga DP:</label>
+        <input type="number" name="harga_dp" id="harga_dp" required disabled>
     </div>
     <div>
         <label>Kuota:</label>
         <input type="number" name="kuota" required>
+    </div>
+    <div>
+        <label>Rute Pendakian / Perjalanan:</label>
+        <input type="text" name="rute" id="rute" placeholder="Contoh: Jalur Palutungan" required disabled>
+    </div>
+    <div>
+        <label>Privasi Trip:</label>
+        <select name="publik" required>
+            <option value="0">Private (Sembunyikan)</option>
+            <option value="1">Publik (Tampilkan di Katalog)</option>
+        </select>
     </div>
     <div>
         <label>Catatan:</label>
@@ -284,7 +344,7 @@ hr {
         <h3>Gambar</h3>
         <div class="row">
             <label>Upload Gambar : </label>
-            <input type="file" name="files[]" required>
+            <input type="file" name="files[]" accept="image/*" required>
         </div>
     </div>
     <button type="button" onclick="addGambar()">Tambah Gambar</button>
@@ -303,14 +363,14 @@ function removeRow(btn) {
 function addItinerary() {
     let div = document.createElement('div');
     div.classList.add('item-row');
-    div.innerHTML = '<hr><label>Waktu Mulai : </label><input type="time" name="mulai[]" required> <br><label>Waktu Selesai : </label><input type="time" name="selesai[]" required> <br><label>Kegiatan : </label><input type="text" name="kegiatan[]" placeholder="Kegiatan" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.innerHTML = '<label>Waktu Mulai : </label><input type="time" name="mulai[]" required> <br><label>Waktu Selesai : </label><input type="time" name="selesai[]" required> <br><label>Kegiatan : </label><input type="text" name="kegiatan[]" placeholder="Kegiatan" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_itinerary').appendChild(div);
 }
 
 function addMeetpoint() {
     let div = document.createElement('div');
     div.classList.add('item-row');
-    div.innerHTML = '<hr><label>Waktu Penjemputan : </label><input type="time" name="waktu_mp[]" required> <br><label>Kota : </label><input type="text" name="kota_mp[]" placeholder="Kota" required> <br><label>Daerah : </label><input type="text" name="daerah_mp[]" placeholder="Daerah" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
+    div.innerHTML = '<label>Waktu Penjemputan : </label><input type="time" name="waktu_mp[]" required> <br><label>Kota : </label><input type="text" name="kota_mp[]" placeholder="Kota" required> <br><label>Daerah : </label><input type="text" name="daerah_mp[]" placeholder="Daerah" required> <button type="button" onclick="removeRow(this)">Hapus</button>';
     document.getElementById('section_meetpoint').appendChild(div);
 }
 
@@ -332,16 +392,54 @@ document.querySelectorAll('#section_trip > div, #section_itinerary > div, #secti
     el.classList.add('item-row');
 });
 
-const inputHarga = document.querySelector('input[name="harga"]');
-const form = inputHarga.closest('form');
+// Logika interaksi Dropdown Tujuan, Penguncian, dan Auto-Fill Data Default
+const selectTujuan = document.getElementById('id_tujuan');
+const inputHarga = document.getElementById('harga');
+const inputHargaDp = document.getElementById('harga_dp');
+const inputRute = document.getElementById('rute');
+const formNode = selectTujuan.closest('form');
 
-form.addEventListener('submit', function(e) {
+selectTujuan.addEventListener('change', function() {
+    if (this.value !== "") {
+        // Aktifkan input jika tujuan dipilih
+        inputHarga.disabled = false;
+        inputHargaDp.disabled = false;
+        inputRute.disabled = false;
+
+        // Ambil data default dari attribute option yang dipilih
+        const selectedOption = this.options[this.selectedIndex];
+        const hargaDef = selectedOption.getAttribute('data-harga');
+        const dpDef = selectedOption.getAttribute('data-dp');
+        const ruteDef = selectedOption.getAttribute('data-rute');
+
+        // Isi kolom otomatis (jika null di database, kosongkan)
+        inputHarga.value = hargaDef !== null ? hargaDef : "";
+        inputHargaDp.value = dpDef !== null ? dpDef : "";
+        inputRute.value = ruteDef !== null ? ruteDef : "";
+    } else {
+        // Kunci kembali dan kosongkan isi field jika dropdown direset
+        inputHarga.disabled = true;
+        inputHargaDp.disabled = true;
+        inputRute.disabled = true;
+        inputHarga.value = "";
+        inputHargaDp.value = "";
+        inputRute.value = "";
+    }
+});
+
+formNode.addEventListener('submit', function(e) {
     if (inputHarga.value <= 0) {
         e.preventDefault();
         alert('Harga harus lebih besar dari 0!');
         inputHarga.focus();
+        return;
+    }
+    if (inputHargaDp.value < 0) {
+        e.preventDefault();
+        alert('Harga DP tidak boleh minus!');
+        inputHargaDp.focus();
+        return;
     }
 });
-
 </script>
 </html>

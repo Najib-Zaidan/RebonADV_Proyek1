@@ -24,6 +24,7 @@ $notif = "CREATE TABLE notif (
     id_notif INT AUTO_INCREMENT PRIMARY KEY,
     pesan TEXT DEFAULT NULL,
     waktu DATETIME NOT NULL DEFAULT NOW(),
+    dibaca BOOLEAN NOT NULL DEFAULT FALSE,
     id_akun INT,
     FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
 )";

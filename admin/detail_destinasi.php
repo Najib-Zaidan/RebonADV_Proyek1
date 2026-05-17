@@ -29,6 +29,11 @@ if (!$destinasi) {
 // Menghitung total trip yang menggunakan destinasi ini
 $query_hitung_trip = kueri("SELECT COUNT(*) AS total_trip FROM trip WHERE id_tujuan = $id_tujuan");
 $total_trip = ambil($query_hitung_trip)['total_trip'] ?? 0;
+
+// Menghitung rata-rata rating dari pelanggan untuk destinasi ini
+$query_avg_rating = kueri("SELECT AVG(rating) AS rata_rating FROM rating WHERE id_tujuan = $id_tujuan");
+$avg_rating = ambil($query_avg_rating)['rata_rating'];
+$format_rating = $avg_rating ? number_format($avg_rating, 1) . " / 5.0" : "Belum Ada Rating";
 ?>
 
 <!DOCTYPE html>
@@ -53,24 +58,46 @@ body {
   margin: 0 auto;
 }
 
-/* LINK KEMBALI */
+/* LINK KEMBALI (REVISI: LEBIH BERWARNA & AKSEN UNGU) */
 .btn-kembali {
-  display: inline-block;
-  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 25px;
   text-decoration: none;
   color: #321180;
   font-weight: bold;
   font-size: 14px;
+  background: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border-left: 4px solid #6b3df5;
+  transition: 0.3s;
 }
 
 .btn-kembali:hover {
-  text-decoration: underline;
+  background: #f4f0ff;
+  transform: translateX(-3px);
 }
 
-/* HEADER */
+/* HEADER (REVISI: DIBUAT DENGAN AKSEN UNGU PANEL MODERN) */
 .header-title {
-  color: #321180;
-  margin-bottom: 25px;
+  background: linear-gradient(135deg, #321180, #6b3df5);
+  padding: 30px;
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(50, 17, 128, 0.2);
+}
+
+.header-title h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.header-title p {
+  font-size: 14px;
+  color: #e1d5ff;
 }
 
 /* LAYOUT GRID UTAMA */
@@ -250,12 +277,13 @@ tbody tr:hover {
 
 <div class="container">
 
-  <!-- Tombol Kembali ke Dashboard Menu Destinasi -->
-  <a href="index.php?menu=destinasi" class="btn-kembali">&larr; Kembali ke Manajamen Destinasi</a>
+  <!-- Tombol Kembali ke Dashboard Menu Destinasi (REVISI: DIBUAT BERWARNA AKSEN UNGU) -->
+  <a href="index.php?menu=destinasi" class="btn-kembali"><strong>&larr;</strong> &nbsp; Kembali ke Manajemen Destinasi</a>
 
+  <!-- HEADER (REVISI: DIUBAH MENJADI GRADIENT UNGU ELEGAN) -->
   <div class="header-title">
     <h1>Detail Master Destinasi</h1>
-    <p>Informasi lengkap mengenai destinasi dan riwayat penggunaannya pada program open trip.</p>
+    <p>Informasi lengkap mengenai spesifikasi destinasi, akumulasi performa, dan riwayat paket open trip Rebon Adventure.</p>
   </div>
 
   <div class="main-grid">
@@ -293,6 +321,12 @@ tbody tr:hover {
         <div class="info-item">
           <label>Harga DP Default</label>
           <span><?php echo $destinasi['harga_dp_def'] ? "Rp " . number_format($destinasi['harga_dp_def']) : "Belum Diatur"; ?></span>
+        </div>
+
+        <!-- REVISI: MENAMBAHKAN ELEMEN RATA-RATA RATING DARI PELANGGAN -->
+        <div class="info-item" style="border-left: 4px solid #ff9800; background: #fffdf5;">
+          <label style="color: #ba7a00;">Rata-Rata Rating</label>
+          <span style="color: #ff9800;">⭐ <?php echo $format_rating; ?></span>
         </div>
 
         <div class="info-item" style="grid-column: span 2;">

@@ -50,6 +50,22 @@ $pembayaran_private = kueri("
     WHERE t.id_akun = '$id_akun'
     ORDER BY py.tgl_bayar DESC
 ");
+
+// ==========================================
+// [LOGIKA TAMBAHAN] AMBIL DATA NOTIFIKASI
+// ==========================================
+$notifikasi = kueri("
+    SELECT * FROM notif 
+    WHERE id_akun = '$id_akun' 
+    ORDER BY waktu DESC
+");
+
+$cek_belum_dibaca = ambil(kueri("
+    SELECT COUNT(*) as total FROM notif 
+    WHERE id_akun = '$id_akun' AND dibaca = 0
+"));
+$jumlah_notif = $cek_belum_dibaca['total'];
+// ==========================================
 ?>
 
 <!DOCTYPE html>
@@ -160,7 +176,7 @@ nav a{text-decoration:none;color:black;}
    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-/* bagian kiri */
+/* bagian kaki */
 .profile-left{
   display: flex;
   flex-direction: column;
@@ -291,12 +307,80 @@ nav a{text-decoration:none;color:black;}
 
 .data-left p{margin-bottom:5px;}
 .data-right{display:flex;flex-direction:column;gap:8px;}
+
+/* ==========================================
+/* [STYLE TAMBAHAN] NOTIFIKASI STYLING UNGU ASIK
+/* ========================================== */
+.tab-notif {
+  position: relative;
+}
+.badge-notif {
+  background: #ff4b2b;
+  color: white;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 50%;
+  position: absolute;
+  top: -8px;
+  right: -18px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(255, 75, 43, 0.4);
+}
+.notif-card {
+  background: white;
+  padding: 20px;
+  margin-top: 15px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-left: 6px solid #6b3df5;
+  transition: 0.3s;
+}
+.notif-card.unreads {
+  background: rgba(107, 61, 245, 0.03);
+  border-left: 6px solid #321180;
+}
+.notif-left {
+  flex: 1;
+  padding-right: 20px;
+}
+.notif-msg {
+  font-size: 14px;
+  color: #2d3748;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.notif-time {
+  font-size: 12px;
+  color: #a0aec0;
+  font-weight: 600;
+}
+.notif-right {
+  display: flex;
+  align-items: center;
+}
+.btn-baca {
+  background: #f0f4f8;
+  color: #6b3df5;
+  border: 1px solid #d1d9e6;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  transition: 0.2s;
+}
+.btn-baca:hover {
+  background: #6b3df5;
+  color: white;
+}
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="logo">
     <img src="../gambar/REBON LOGO GRADIENT presisi.png">
@@ -308,14 +392,12 @@ nav a{text-decoration:none;color:black;}
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
         <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
             </span>
         </a>
 
         <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
             <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
@@ -323,10 +405,8 @@ nav a{text-decoration:none;color:black;}
       </nav>
 </header>
 
-<!-- HERO -->
 <div class="hero"></div>
 
-<!-- PROFILE -->
 <div class="profile-card">
 
 <div class="profil-left">
@@ -351,14 +431,18 @@ nav a{text-decoration:none;color:black;}
   </div>
 </div>
 
-<!-- TAB -->
 <div class="menu-tabs">
   <div class="tab active-tab" onclick="tab('peserta',this)">Peserta</div>
   <div class="tab" onclick="tab('pesanan',this)">Pesanan</div>
   <div class="tab" onclick="tab('pembayaran',this)">Pembayaran</div>
+  <div class="tab tab-notif" onclick="tab('notifikasi',this)">
+    Notifikasi
+    <?php if($jumlah_notif > 0): ?>
+      <span class="badge-notif"><?= $jumlah_notif; ?></span>
+    <?php endif; ?>
+  </div>
 </div>
 
-<!-- PESERTA -->
 <div id="peserta" class="tab-content active data-section">
 <a href="form.php" class="btn purple">+ Tambah Peserta</a>
 
@@ -380,12 +464,8 @@ nav a{text-decoration:none;color:black;}
 <?php endwhile; ?>
 </div>
 
-<!-- PESANAN -->
-<!-- PESANAN -->
-<!-- PESANAN -->
 <div id="pesanan" class="tab-content data-section">
-    <!-- Tombol Switch Open vs Private -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
     <div>
         <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Riwayat Pemesanan</h2>
         <p style="color: #718096; font-size: 14px; margin-top: 5px;">Kelola pesanan trip Anda di sini.</p>
@@ -404,7 +484,6 @@ nav a{text-decoration:none;color:black;}
 </div>
 
 
-    <!-- KONTEN OPEN TRIP -->
     <div id="trip-content-open">
         <?php 
         mysqli_data_seek($pesanan, 0); 
@@ -480,8 +559,7 @@ nav a{text-decoration:none;color:black;}
         <?php endwhile; ?>
     </div>
 
-    <!-- KONTEN PRIVATE TRIP -->
-<div id="trip-content-private" style="display:none; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div id="trip-content-private" style="display:none; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <?php 
     mysqli_data_seek($pesanan_private, 0);
     while($pr = ambil($pesanan_private)): 
@@ -556,11 +634,7 @@ nav a{text-decoration:none;color:black;}
  </div>
 </div>
 
-<!-- PEMBAYARAN -->
-<!-- PEMBAYARAN -->
-<!-- PEMBAYARAN -->
 <div id="pembayaran" class="tab-content data-section">
-    <!-- Header Tab & Switcher -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
     <div>
         <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Riwayat Pembayaran</h2>
@@ -580,7 +654,6 @@ nav a{text-decoration:none;color:black;}
 </div>
 
 
-    <!-- SECTION OPEN TRIP -->
     <div id="pay-content-open">
         <?php 
         mysqli_data_seek($pembayaran, 0); 
@@ -678,7 +751,6 @@ nav a{text-decoration:none;color:black;}
         endif; ?>
     </div>
 
-    <!-- SECTION PRIVATE TRIP -->
     <div id="pay-content-private" style="display: none;">
         <?php 
         if(mysqli_num_rows($pembayaran_private) > 0):
@@ -766,9 +838,39 @@ nav a{text-decoration:none;color:black;}
     </div>
 </div>
 
+<div id="notifikasi" class="tab-content data-section">
+  <div style="margin-bottom: 25px;">
+      <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Notifikasi Anda</h2>
+      <p style="color: #718096; font-size: 14px; margin-top: 5px;">Informasi terbaru mengenai pembaruan status dan jadwal trip Anda.</p>
+  </div>
+
+  <?php if(mysqli_num_rows($notifikasi) > 0): ?>
+      <?php while($nt = ambil($notifikasi)): ?>
+          <div class="notif-card <?= $nt['dibaca'] == 0 ? 'unreads' : ''; ?>">
+              <div class="notif-left">
+                  <p class="notif-msg">
+                      <?php if($nt['dibaca'] == 0): ?>
+                          <span style="color: #ff4b2b; margin-right: 4px;">●</span>
+                      <?php endif; ?>
+                      <?= $nt['pesan']; ?>
+                  </p>
+                  <p class="notif-time">
+                      📅 <?= date('d M Y', strtotime($nt['waktu'])); ?> | ⏰ <?= date('H:i', strtotime($nt['waktu'])); ?> WIB
+                  </p>
+              </div>
+              <div class="notif-right">
+                  <a href="baca_notif.php?id=<?= $nt['id_notif']; ?>" class="btn-baca">Lihat Detail</a>
+              </div>
+          </div>
+      <?php endwhile; ?>
+  <?php else: ?>
+      <div style="text-align:center; padding:40px; color:#999;">
+          <p>Belum ada pemberitahuan atau aktivitas terbaru.</p>
+      </div>
+  <?php endif; ?>
+</div>
 
 
-<!-- FOOTER -->
 <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">
@@ -826,12 +928,6 @@ nav a{text-decoration:none;color:black;}
     </footer>
 
 <script>
-function tab(id,el){
-  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active-tab'));
-  document.getElementById(id).classList.add('active');
-  el.classList.add('active-tab');
-}
 function switchTrip(type) {
     const openCont = document.getElementById('trip-content-open'); // Sesuaikan ID kontenmu
     const privCont = document.getElementById('trip-content-private'); // Sesuaikan ID kontenmu
