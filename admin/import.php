@@ -212,7 +212,10 @@ mysqli_query($konek, $peserta_pt);
 mysqli_query($konek, $payment_pt);
 mysqli_query($konek, $batal_pt);
 mysqli_query($konek, $batal_peserta);
-
+mysqli_query($konek, $notif);
+mysqli_query($konek, $album);
+mysqli_query($konek, $galeri);
+mysqli_query($konek, $rating);
 
 
 
@@ -2118,7 +2121,7 @@ mysqli_query($konek, $insert_private);
 mysqli_query($konek, $insert_peserta_pt);
 mysqli_query($konek, $insert_payment_pt);
 mysqli_query($konek, $insert_batal_pt);
-
+mysqli_query($konek, $insert_rating);
 
 /* For Admin Only 
    DON'T USE THIS

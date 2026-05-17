@@ -168,6 +168,7 @@ td img {
 
   <div class="menu">
     <a href="index.php?menu=trip">Open Trip</a>
+    <a href="index.php?menu=destinasi">Destinasi</a>
     <a href="index.php?menu=private">Private Trip</a>
     <a href="index.php?menu=booking">Pesanan</a>
     <a href="index.php?menu=payment">Pembayaran</a>
@@ -405,6 +406,93 @@ while($row=ambil($data_booking)){
 }
 ?>
 </table>
+
+<?php elseif($menu == "destinasi"): ?>
+
+<div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2 style="color: #321180;">Manajemen Destinasi</h2>
+        <p style="font-size: 14px; color: #666;">Kelola master data tujuan, wilayah, dan harga default trip.</p>
+    </div>
+    <!-- Tombol Tambah Destinasi -->
+    <a href="tambah_destinasi.php" class="btn-tambah" style="margin-top: 0; font-weight: bold; padding: 12px 20px;">
+        + Tambah Destinasi
+    </a>
+</div>
+
+<?php
+// Ambil data dari tabel tujuan yang baru sesuai struktur SQL Anda
+$data_destinasi = kueri("SELECT * FROM tujuan ORDER BY id_tujuan DESC");
+?>
+
+<!-- GRID LAYOUT CARD -->
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+    
+    <?php 
+    if(mysqli_num_rows($data_destinasi) > 0){
+        while($row = ambil($data_destinasi)){ 
+    ?>
+        <!-- Card Item -->
+        <div style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; border-left: 5px solid #6b3df5; transition: 0.3s;">
+            
+            <div>
+                <!-- Nama Destinasi -->
+                <h3 style="color: #321180; margin-bottom: 5px; font-size: 18px;"><?php echo $row['tujuan']; ?></h3>
+                
+                <!-- Lokasi Kota & Provinsi -->
+                <p style="font-size: 13px; color: #888; margin-bottom: 15px; display: flex; align-items: center; gap: 5px;">
+                    📍 <?php echo $row['kota']; ?>, <?php echo $row['provinsi']; ?>
+                </p>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 15px;">
+                
+                <!-- Detail Harga & Rute -->
+                <div style="font-size: 13px; color: #444; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                    <div>
+                        <span style="color: #666;">Harga Default:</span> <br>
+                        <strong style="color: #6b3df5; font-size: 14px;">
+                            <?php echo $row['harga_def'] ? "Rp " . number_format($row['harga_def']) : "-"; ?>
+                        </strong>
+                    </div>
+                    <div>
+                        <span style="color: #666;">DP Default:</span> <br>
+                        <strong style="color: #ff9800;">
+                            <?php echo $row['harga_dp_def'] ? "Rp " . number_format($row['harga_dp_def']) : "-"; ?>
+                        </strong>
+                    </div>
+                    <div>
+                        <span style="color: #666;">Rute Default:</span> <br>
+                        <span style="font-style: italic; color: #555; font-size: 12px;">
+                            <?php echo $row['rute_def'] ?? "Belum diatur"; ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi (Ubah & Detail) -->
+            <div style="display: flex; gap: 10px; margin-top: auto;">
+                <a href="detail_destinasi.php?id=<?php echo $row['id_tujuan']; ?>" 
+                   style="flex: 1; text-align: center; background: #f4f0ff; color: #321180; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: bold; border: 1px solid #321180; transition: 0.3s; text-decoration: none;">
+                   Detail
+                </a>
+                <a href="ubah_destinasi.php?id=<?php echo $row['id_tujuan']; ?>" 
+                   style="flex: 1; text-align: center; background: #6b3df5; color: white; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: bold; transition: 0.3s; text-decoration: none;">
+                   Ubah
+                </a>
+            </div>
+
+        </div>
+    <?php 
+        } 
+    } else {
+        echo "<div style='grid-column: 1/-1; background: white; padding: 30px; text-align: center; border-radius: 12px; color: #666;'>Belum ada data destinasi. Klik tombol di atas untuk menambah.</div>";
+    }
+    ?>
+
+</div>
+
+
+
 
 <?php elseif($menu == "private"): ?>
 
