@@ -175,6 +175,7 @@ td img {
     <a href="index.php?menu=peserta">Peserta</a>
     <a href="index.php?menu=pembatalan">Pembatalan</a>
     <a href="index.php?menu=laporan">Laporan</a>
+    <a href="index.php?menu=galeri">Galeri</a>
   </div>
 
   <div class="logout">
@@ -1062,6 +1063,97 @@ if($tab == "open"):
   </table>
 
 <?php endif; ?>
+
+<?php elseif($menu == "galeri"): ?>
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    
+    <div>
+        <h2 style="color:#321180;">Galeri Gunung</h2>
+        <p style="font-size:14px; color:#666;">
+            Kelola album dan foto galeri.
+        </p>
+    </div>
+
+    <a href="tambah_album.php"
+       style="padding:10px 15px; background:#6b3df5; color:white; border-radius:8px; text-decoration:none;">
+       + Tambah Album
+    </a>
+
+</div>
+
+<?php
+$data = kueri("
+SELECT a.*,
+(
+    SELECT nama_file
+    FROM galeri g
+    WHERE g.id_album = a.id_album
+    LIMIT 1
+) AS cover
+FROM album a
+ORDER BY a.id_album DESC
+");
+?>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:20px;">
+
+<?php while($row = ambil($data)): ?>
+
+<div style="
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+">
+
+<img src="../gambar/galeri/<?php echo $row['cover'] ?: 'default.jpg'; ?>"
+     style="width:100%; height:220px; object-fit:cover;">
+
+<div style="padding:15px;">
+
+<h3 style="margin-bottom:15px; color:#321180;">
+    <?php echo $row['nama']; ?>
+</h3>
+
+<div style="display:flex; gap:10px;">
+
+<a href="detail_album.php?id=<?php echo $row['id_album']; ?>"
+   style="
+   flex:1;
+   text-align:center;
+   padding:8px;
+   background:#321180;
+   color:white;
+   border-radius:8px;
+   text-decoration:none;
+   ">
+   Detail
+</a>
+
+<a href="hapus_album.php?id=<?php echo $row['id_album']; ?>"
+   onclick="return confirm('Hapus album?')"
+   style="
+   flex:1;
+   text-align:center;
+   padding:8px;
+   background:red;
+   color:white;
+   border-radius:8px;
+   text-decoration:none;
+   ">
+   Hapus
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<?php endwhile; ?>
+
+</div>
 
   <?php elseif($menu == "laporan"): ?>
 

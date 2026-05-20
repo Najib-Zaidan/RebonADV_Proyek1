@@ -535,19 +535,66 @@ footer {
       </div>
     </section>
 
-    <!-- GALERI -->
     <section class="galeri">
-      <h2>GALERI KAMI</h2>
 
-      <div class="galeri-container">
-        <img src="../gambar/profil1.jpeg" />
-        <img src="../gambar/profil2.jpeg" />
-        <img src="../gambar/profil3.jpeg" />
-        <img src="../gambar/gunung.jpg" />
-        <img src="../gambar/gunung.jpg" />
-        <img src="../gambar/gunung.jpg" />
-      </div>
-    </section>
+<h2>GALERI KAMI</h2>
+
+<div class="galeri-container">
+
+<?php
+$data = mysqli_query($konek,"
+SELECT a.*,
+(
+    SELECT nama_file
+    FROM galeri g
+    WHERE g.id_album = a.id_album
+    LIMIT 1
+) AS cover
+FROM album a
+ORDER BY a.id_album DESC
+");
+
+while($g = mysqli_fetch_assoc($data)):
+?>
+
+<a href="detail_galeri_user.php?id=<?php echo $g['id_album']; ?>"
+   style="text-decoration:none;">
+
+<div style="
+position:relative;
+overflow:hidden;
+border-radius:15px;
+">
+
+<img src="../gambar/galeri/<?php echo $g['cover']; ?>"
+     style="
+     width:100%;
+     height:260px;
+     object-fit:cover;
+     ">
+
+<div style="
+position:absolute;
+bottom:0;
+width:100%;
+padding:15px;
+background:linear-gradient(transparent, rgba(0,0,0,0.9));
+color:white;
+font-weight:bold;
+font-size:20px;
+">
+<?php echo $g['nama']; ?>
+</div>
+
+</div>
+
+</a>
+
+<?php endwhile; ?>
+
+</div>
+
+</section>
 
     <!-- FOOTER -->
     <footer>
