@@ -10,22 +10,34 @@ WHERE id_album='$id'
 
 if(isset($_POST['upload'])){
 
-    $foto = $_FILES['foto']['name'];
-    $tmp  = $_FILES['foto']['tmp_name'];
+    $jumlah = count($_FILES['foto']['name']);
 
-    move_uploaded_file(
-        $tmp,
-        "../gambar/galeri/".$foto
-    );
+    for($i=0; $i<$jumlah; $i++){
 
-    mysqli_query($konek,"
-    INSERT INTO galeri
-    VALUES(
-        NULL,
-        '$foto',
-        '$id'
-    )
-    ");
+        $namaFile = $_FILES['foto']['name'][$i];
+        $tmp      = $_FILES['foto']['tmp_name'][$i];
+
+        if($namaFile != ''){
+
+            $ext = pathinfo($namaFile, PATHINFO_EXTENSION);
+
+            $namaBaru = time().'_galeri_'.$id.'_'.$ext;
+
+            move_uploaded_file(
+                $tmp,
+                "../gambar/galeri/".$namaBaru
+            );
+
+            mysqli_query($konek,"
+            INSERT INTO galeri
+            VALUES(
+                NULL,
+                '$namaBaru',
+                '$id'
+            )
+            ");
+        }
+    }
 
     header("Location:detail_album.php?id=$id");
 }
@@ -144,7 +156,7 @@ body{
 /* GALERI */
 .galeri-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
     gap:20px;
 }
 
@@ -162,7 +174,7 @@ body{
 
 .foto-card img{
     width:100%;
-    height:240px;
+    height:220px;
     object-fit:cover;
     display:block;
 }
@@ -190,7 +202,7 @@ body{
     </div>
 
     <a href="index.php?menu=galeri" class="btn btn-kembali">
-        ← Kembali
+        Kembali
     </a>
 
 </div>
@@ -200,7 +212,7 @@ body{
 
     <div class="upload-title">
         <h3>Upload Foto</h3>
-        <p>Tambahkan foto baru ke dalam album.</p>
+        <p>Bisa upload banyak foto sekaligus.</p>
     </div>
 
     <form method="POST"
@@ -208,7 +220,9 @@ body{
           class="form-upload">
 
         <input type="file"
-               name="foto"
+               name="foto[]"
+               multiple
+               accept="image/*"
                required>
 
         <button name="upload"
@@ -227,6 +241,7 @@ body{
 $fotos = mysqli_query($konek,"
 SELECT * FROM galeri
 WHERE id_album='$id'
+ORDER BY id_galeri DESC
 ");
 
 if(mysqli_num_rows($fotos) > 0):

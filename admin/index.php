@@ -1077,7 +1077,7 @@ if($tab == "open"):
 
     <a href="tambah_album.php"
        style="padding:10px 15px; background:#6b3df5; color:white; border-radius:8px; text-decoration:none;">
-       + Tambah Album
+       Tambah Album
     </a>
 
 </div>

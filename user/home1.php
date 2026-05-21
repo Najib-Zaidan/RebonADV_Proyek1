@@ -527,7 +527,7 @@ footer {
           sesuai request kamu. Liburan jadi lebih intimate dan bebas drama.
         </p>
 
-        <a href="private.html">RENCANAKAN TRIP SEKARANG</a>
+        <a href="private_trip.php">RENCANAKAN TRIP SEKARANG</a>
       </div>
 
       <div class="private-img">
@@ -537,53 +537,123 @@ footer {
 
     <section class="galeri">
 
+<style>
+
+.galeri{
+    padding:40px 6%;
+}
+
+.galeri h2{
+    text-align:center;
+    font-size:30px;
+    margin-bottom:25px;
+    color:#333;
+}
+
+.galeri-container{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    justify-content:center;
+}
+
+.card-galeri{
+    width:180px;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    transition:0.3s;
+}
+
+.card-galeri:hover{
+    transform:translateY(-3px);
+}
+
+.grid-foto{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2px;
+    padding:2px;
+}
+
+.grid-foto img{
+    width:100%;
+    height:85px;
+    object-fit:cover;
+    display:block;
+}
+
+.kosong{
+    width:100%;
+    height:85px;
+    background:#ddd;
+}
+
+.judul-album{
+    padding:10px;
+    text-align:center;
+    font-size:14px;
+    font-weight:bold;
+    color:#333;
+}
+
+</style>
+
 <h2>GALERI KAMI</h2>
 
 <div class="galeri-container">
 
 <?php
+
 $data = mysqli_query($konek,"
-SELECT a.*,
-(
-    SELECT nama_file
-    FROM galeri g
-    WHERE g.id_album = a.id_album
-    LIMIT 1
-) AS cover
-FROM album a
-ORDER BY a.id_album DESC
+SELECT *
+FROM album
+ORDER BY id_album DESC
 ");
 
 while($g = mysqli_fetch_assoc($data)):
+
+$fotos = mysqli_query($konek,"
+SELECT nama_file
+FROM galeri
+WHERE id_album='$g[id_album]'
+LIMIT 4
+");
+
+$gambar = [];
+
+while($f = mysqli_fetch_assoc($fotos)){
+    $gambar[] = $f['nama_file'];
+}
+
 ?>
 
 <a href="detail_galeri_user.php?id=<?php echo $g['id_album']; ?>"
-   style="text-decoration:none;">
+style="text-decoration:none;">
 
-<div style="
-position:relative;
-overflow:hidden;
-border-radius:15px;
-">
+<div class="card-galeri">
 
-<img src="../gambar/galeri/<?php echo $g['cover']; ?>"
-     style="
-     width:100%;
-     height:260px;
-     object-fit:cover;
-     ">
+<div class="grid-foto">
 
-<div style="
-position:absolute;
-bottom:0;
-width:100%;
-padding:15px;
-background:linear-gradient(transparent, rgba(0,0,0,0.9));
-color:white;
-font-weight:bold;
-font-size:20px;
-">
-<?php echo $g['nama']; ?>
+<?php for($i=0; $i<4; $i++): ?>
+
+    <?php if(isset($gambar[$i])): ?>
+
+        <img src="../gambar/galeri/<?php echo $gambar[$i]; ?>">
+
+    <?php else: ?>
+
+        <div class="kosong"></div>
+
+    <?php endif; ?>
+
+<?php endfor; ?>
+
+</div>
+
+<div class="judul-album">
+    <?php echo $g['nama']; ?>
 </div>
 
 </div>
