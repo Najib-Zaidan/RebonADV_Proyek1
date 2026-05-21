@@ -505,87 +505,270 @@ $data_destinasi = kueri("SELECT * FROM tujuan ORDER BY id_tujuan DESC");
 
 <?php elseif($menu == "private"): ?>
 
-<div style="margin-bottom: 20px;">
-    <h2 style="color: #321180;">Daftar Pengajuan Private Trip</h2>
-    <p style="font-size: 14px; color: #666;">Kelola permintaan private trip dari pengguna di sini.</p>
-</div>
-
-<?php
-// Query untuk mengambil data private trip dan nama akun pemesan
-$data_private = kueri("SELECT pt.*, a.username 
-                       FROM private_trip pt 
-                       JOIN akun a ON pt.id_akun = a.id_akun 
-                       ORDER BY pt.tgl_booking DESC");
+<?php 
+// Mengatur switch tab internal (default ke 'pengajuan_baru')
+$sub_tab = $_GET['sub'] ?? 'pengajuan_baru';
 ?>
 
-<table>
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>Pemesan</th>
-            <th>Tujuan</th>
-            <th>Peserta</th>
-            <th>Tgl Berangkat</th>
-            <th>Tgl Booking</th> 
-            <th>Status Trip</th>
-            <th>Status Bayar</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $no = 1;
-        if(mysqli_num_rows($data_private) > 0){
-            while($row = ambil($data_private)){
-                // Styling Warna Status Trip
-                $st_trip_color = "orange";
-                if($row['status_trip'] == 'Disetujui') $st_trip_color = "green";
-                if($row['status_trip'] == 'Ditolak') $st_trip_color = "red";
+<div style="margin-bottom: 20px;">
+    <h2 style="color: #321180;">Daftar Pengajuan Private Trip</h2>
+    <p style="font-size: 14px; color: #666;">Kelola permintaan private trip dan log pengajuan perubahan data dari pengguna di sini.</p>
+</div>
 
-                // Styling Warna Status Bayar
-                $st_bayar_color = "#666";
-                if($row['status_bayar'] == 'Lunas') $st_bayar_color = "green";
-                if($row['status_bayar'] == 'Belum Bayar') $st_bayar_color = "red";
-        ?>
+<div style="margin-bottom: 20px; border-bottom: 2px solid #e1d8f5; padding-bottom: 10px;">
+    <a href="index.php?menu=private&sub=pengajuan_baru" 
+       style="text-decoration: none; padding: 8px 16px; font-weight: bold; font-size: 14px; margin-right: 10px; color: <?php echo ($sub_tab == 'pengajuan_baru') ? '#321180; border-bottom: 3px solid #321180;' : '#888'; ?>; display: inline-block;">
+       Pengajuan Baru
+    </a>
+    <a href="index.php?menu=private&sub=pengajuan_perubahan" 
+       style="text-decoration: none; padding: 8px 16px; font-weight: bold; font-size: 14px; color: <?php echo ($sub_tab == 'pengajuan_perubahan') ? '#321180; border-bottom: 3px solid #321180;' : '#888'; ?>; display: inline-block;">
+       Pengajuan Perubahan
+    </a>
+</div>
+
+<?php if($sub_tab == 'pengajuan_baru'): ?>
+    <?php
+    // Query asli untuk mengambil data pengajuan private trip utama
+    $data_private = kueri("SELECT pt.*, a.username 
+                           FROM private_trip pt 
+                           JOIN akun a ON pt.id_akun = a.id_akun 
+                           ORDER BY pt.tgl_booking DESC");
+    ?>
+
+    <table>
+        <thead>
             <tr>
-                <td><?php echo $no; ?></td>
-                <td>
-                    <strong><?php echo $row['nama']; ?></strong><br>
-                    <small style="color: #6b3df5;">@<?php echo $row['username']; ?></small>
-                </td>
-                <td><?php echo $row['tujuan']; ?></td>
-                <td><?php echo $row['jumlah_peserta']; ?> Orang</td>
-                <td><?php echo date('d/m/Y', strtotime($row['tgl_berangkat'])); ?></td>
-                
-                <!-- Kolom Tgl Booking (Hanya Tanggal) -->
-                <td>
-                    <?php echo date('d/m/Y', strtotime($row['tgl_booking'])); ?>
-                </td>
-
-                <td style="color: <?php echo $st_trip_color; ?>; font-weight: bold;">
-                    <?php echo $row['status_trip']; ?>
-                </td>
-                <td>
-                    <span style="padding: 4px 8px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: <?php echo $st_bayar_color; ?>;">
-                        <?php echo $row['status_bayar']; ?>
-                    </span>
-                </td>
-                <td>
-                    <a href="detail_private.php?id=<?php echo $row['id_private']; ?>" 
-                       style="background: #321180; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px;">
-                       Detail
-                    </a>
-                </td>
+                <th>No</th>
+                <th>Pemesan</th>
+                <th>Tujuan</th>
+                <th>Peserta</th>
+                <th>Tgl Berangkat</th>
+                <th>Tgl Booking</th> 
+                <th>Status Trip</th>
+                <th>Status Bayar</th>
+                <th>Aksi</th>
             </tr>
-        <?php
-                $no++;
+        </thead>
+        <tbody>
+            <?php
+            $no = 1;
+            if(mysqli_num_rows($data_private) > 0){
+                while($row = ambil($data_private)){
+                    // Styling Warna Status Trip
+                    $st_trip_color = "orange";
+                    if($row['status_trip'] == 'Disetujui') $st_trip_color = "green";
+                    if($row['status_trip'] == 'Ditolak') $st_trip_color = "red";
+
+                    // Styling Warna Status Bayar
+                    $st_bayar_color = "#666";
+                    if($row['status_bayar'] == 'Lunas') $st_bayar_color = "green";
+                    if($row['status_bayar'] == 'Belum Bayar') $st_bayar_color = "red";
+            ?>
+                <tr>
+                    <td><?php echo $no; ?></td>
+                    <td>
+                        <strong><?php echo $row['nama']; ?></strong><br>
+                        <small style="color: #6b3df5;">@<?php echo $row['username']; ?></small>
+                    </td>
+                    <td><?php echo $row['tujuan']; ?></td>
+                    <td><?php echo $row['jumlah_peserta']; ?> Orang</td>
+                    <td><?php echo date('d/m/Y', strtotime($row['tgl_berangkat'])); ?></td>
+                    <td><?php echo date('d/m/Y', strtotime($row['tgl_booking'])); ?></td>
+                    <td style="color: <?php echo $st_trip_color; ?>; font-weight: bold;">
+                        <?php echo $row['status_trip']; ?>
+                    </td>
+                    <td>
+                        <span style="padding: 4px 8px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: <?php echo $st_bayar_color; ?>;">
+                            <?php echo $row['status_bayar']; ?>
+                        </span>
+                    </td>
+                    <td>
+                        <a href="detail_private.php?id=<?php echo $row['id_private']; ?>" 
+                           style="background: #321180; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px;">
+                           Detail
+                        </a>
+                    </td>
+                </tr>
+            <?php
+                    $no++;
+                }
+            } else {
+                echo "<tr><td colspan='9' align='center' style='padding: 20px;'>Belum ada pengajuan Private Trip.</td></tr>";
             }
-        } else {
-            echo "<tr><td colspan='9' align='center' style='padding: 20px;'>Belum ada pengajuan Private Trip.</td></tr>";
+            ?>
+        </tbody>
+    </table>
+
+<?php elseif($sub_tab == 'pengajuan_perubahan'): ?>
+    <?php
+    /**
+     * Query data pengajuan perubahan dengan membandingkan data asli:
+     * Mengambil semua kolom baru dari ubah_private (up) dan kolom asli dari private_trip (pt)
+     * untuk mendeteksi perubahan data secara real-time di sisi admin.
+     */
+    $data_perubahan = kueri("SELECT 
+                                up.id_ubah,
+                                up.id_private,
+                                up.nama AS nama_baru,
+                                up.no_hp AS no_hp_baru,
+                                up.tujuan AS tujuan_baru,
+                                up.tgl_berangkat AS tgl_berangkat_baru,
+                                up.tgl_pulang AS tgl_pulang_baru,
+                                up.jumlah_peserta AS jumlah_baru,
+                                up.catatan AS catatan_baru,
+                                up.tgl_pengajuan,
+                                pt.nama AS nama_asli,
+                                pt.tujuan AS tujuan_asli,
+                                pt.tgl_berangkat AS tgl_berangkat_asli,
+                                pt.tgl_pulang AS tgl_pulang_asli,
+                                pt.jumlah_peserta AS jumlah_asli,
+                                a.username 
+                             FROM ubah_private up
+                             JOIN private_trip pt ON up.id_private = pt.id_private
+                             JOIN akun a ON pt.id_akun = a.id_akun
+                             WHERE up.status = 0
+                             ORDER BY up.tgl_pengajuan DESC");
+    ?>
+
+    <style>
+        .table-perubahan th {
+            background-color: #321180;
+            color: white;
+            padding: 12px 10px;
         }
-        ?>
-    </tbody>
-</table>
+        .table-perubahan td {
+            padding: 12px 10px;
+            vertical-align: top;
+            font-size: 13px;
+        }
+        .data-asli {
+            color: #888;
+            text-decoration: line-through;
+            font-size: 11px;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .data-baru-berubah {
+            color: #2e7d32;
+            font-weight: bold;
+            background-color: #e8f5e9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .data-tetap {
+            color: #333;
+        }
+        .badge-info-perubahan {
+            padding: 4px 8px; 
+            background: #ffeeba; 
+            color: #856404; 
+            border-radius: 5px; 
+            font-size: 11px; 
+            font-weight: bold;
+            display: inline-block;
+        }
+    </style>
+
+    <table class="table-perubahan" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+            <tr>
+                <th width="5%">No</th>
+                <th width="15%">Pemesan</th>
+                <th width="15%">Destinasi / Tujuan</th>
+                <th width="12%">Jumlah Peserta</th>
+                <th width="20%">Rencana Tanggal</th>
+                <th width="18%">Catatan Alasan</th>
+                <th width="10%">Waktu Ajuan</th>
+                <th width="5%" style="text-align: center;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $no = 1;
+            if(mysqli_num_rows($data_perubahan) > 0){
+                while($row = ambil($data_perubahan)){
+                    $catatan_alasan = !empty($row['catatan_baru']) ? htmlspecialchars($row['catatan_baru']) : '-';
+                    
+                    // Cek Perubahan Tujuan
+                    $tujuan_berubah = ($row['tujuan_baru'] !== $row['tujuan_asli']);
+                    
+                    // Cek Perubahan Jumlah Peserta
+                    $jumlah_berubah = ($row['jumlah_baru'] != $row['jumlah_asli']);
+                    
+                    // Cek Perubahan Tanggal Berangkat / Pulang
+                    $tanggal_berubah = ($row['tgl_berangkat_baru'] !== $row['tgl_berangkat_asli'] || $row['tgl_pulang_baru'] !== $row['tgl_pulang_asli']);
+            ?>
+                <tr style="border-bottom: 1px solid #e1d8f5;">
+                    <td><?php echo $no; ?></td>
+                    <td>
+                        <strong><?php echo htmlspecialchars($row['nama_baru']); ?></strong>
+                        <?php if($row['nama_baru'] !== $row['nama_asli']): ?>
+                            <br><span class="data-asli">Asli: <?php echo htmlspecialchars($row['nama_asli']); ?></span>
+                        <?php endif; ?>
+                        <small style="color: #6b3df5; display: block; margin-top: 2px;">@<?php echo $row['username']; ?></small>
+                    </td>
+                    <td>
+                        <?php if($tujuan_berubah): ?>
+                            <span class="data-asli"><?php echo htmlspecialchars($row['tujuan_asli']); ?></span>
+                            <span class="data-baru-berubah"><i class="fa-solid fa-arrow-right" style="font-size: 10px;"></i> <?php echo htmlspecialchars($row['tujuan_baru']); ?></span>
+                        <?php else: ?>
+                            <span class="data-tetap"><?php echo htmlspecialchars($row['tujuan_baru']); ?></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if($jumlah_berubah): ?>
+                            <span class="data-asli"><?php echo $row['jumlah_asli']; ?> Orang</span>
+                            <span class="data-baru-berubah"><?php echo $row['jumlah_baru']; ?> Orang</span>
+                        <?php else: ?>
+                            <span class="data-tetap"><?php echo $row['jumlah_baru']; ?> Orang</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php 
+                        $tgl_asli_format = date('d/m/Y', strtotime($row['tgl_berangkat_asli'])) . " - " . date('d/m/Y', strtotime($row['tgl_pulang_asli']));
+                        $tgl_baru_format = date('d/m/Y', strtotime($row['tgl_berangkat_baru'])) . " - " . date('d/m/Y', strtotime($row['tgl_pulang_baru']));
+                        ?>
+                        <?php if($tanggal_berubah): ?>
+                            <span class="data-asli"><?php echo $tgl_asli_format; ?></span>
+                            <span class="data-baru-berubah" style="font-size: 12px;"><?php echo $tgl_baru_format; ?></span>
+                        <?php else: ?>
+                            <span class="data-tetap"><?php echo $tgl_baru_format; ?></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <div style="max-height: 60px; overflow-y: auto; font-style: normal;">
+                            <span class="badge-info-perubahan" style="margin-bottom: 4px;">Alasan Perubahan:</span><br>
+                            <small style="color: #555; line-height: 1.3; display: block;"><?php echo $catatan_alasan; ?></small>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="color: #666; font-size: 12px;">
+                            <?php echo date('d/m/Y', strtotime($row['tgl_pengajuan'])); ?><br>
+                            <small style="color: #999;"><?php echo date('H:i', strtotime($row['tgl_pengajuan'])); ?> WIB</small>
+                        </span>
+                    </td>
+                    <td align="center" style="vertical-align: middle;">
+                        <a href="kelola_perubahan.php?id_ubah=<?php echo $row['id_ubah']; ?>" 
+                           style="background: #6b3df5; color: white; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 12px; font-weight: bold; display: inline-block; box-shadow: 0 2px 4px rgba(107,61,245,0.2);">
+                           Review
+                        </a>
+                    </td>
+                </tr>
+            <?php
+                    $no++;
+                }
+            } else {
+                echo "<tr><td colspan='8' align='center' style='padding: 30px; color: #888; font-weight: bold;'>Tidak ada berkas pengajuan perubahan data trip baru saat ini.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+
+
+
+<?php endif; ?>
+
 
 
 

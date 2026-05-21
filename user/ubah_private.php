@@ -407,7 +407,11 @@ if (isset($_POST['submit'])) {
           </div>
         </div>
 
+<<<<<<< HEAD
+        <textarea name="catatan" placeholder="Catatan Tambahan Alasan Perubahan" rows="5" required></textarea>
+=======
         <textarea name="catatan" placeholder="Catatan Tambahan Alasan Perubahan" rows="5"><?php echo $data_old['catatan']; ?></textarea>
+>>>>>>> 112096f2d4cea1aa43f694d2d1f4cf0ef23aae82
 
         <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" value="<?php echo $data_old['jumlah_peserta']; ?>" required />
 

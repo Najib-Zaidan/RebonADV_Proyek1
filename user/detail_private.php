@@ -440,7 +440,7 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
             // TOMBOL TAMBAHAN: Ajukan Perubahan (Hanya bisa diajukan jika trip belum dibatalkan/refund)
             if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund' && !$is_mengajukan_batal):
             ?>
-                <a href="ubah_private_trip.php?id_private=<?= $id_private; ?>" class="btn btn-edit-trip">Ajukan Perubahan</a>
+                <a href="ubah_private.php?id_private=<?= $id_private; ?>" class="btn btn-edit-trip">Ajukan Perubahan</a>
             <?php endif; ?>
 
             <?php 
