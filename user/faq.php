@@ -304,17 +304,6 @@ h5 {
 
       <div class="faq-filter">
 
-    <!-- SEMUA -->
-    <label class="filter-card">
-
-        <input type="radio" name="faq-filter" id="all" checked>
-
-        <div class="filter-content">
-            <h4>Semua</h4>
-        </div>
-
-    </label>
-
 
     <!-- UMUM -->
     <label class="filter-card">
@@ -506,11 +495,7 @@ filters.forEach(filter => {
 
         faqs.forEach(faq => {
 
-            if(id === 'all'){
-                faq.style.display = 'block';
-            }
-
-            else if(faq.classList.contains(id)){
+            if(faq.classList.contains(id)){
                 faq.style.display = 'block';
             }
 
@@ -523,8 +508,21 @@ filters.forEach(filter => {
     });
 
 });
+window.addEventListener('load', () => {
 
+    faqs.forEach(faq => {
 
+        if(faq.classList.contains('umum')){
+            faq.style.display = 'block';
+        }
+
+        else{
+            faq.style.display = 'none';
+        }
+
+    });
+
+});
 /* ================= FAQ OPEN CLOSE ================= */
 
 const questions = document.querySelectorAll(".faq-question");
