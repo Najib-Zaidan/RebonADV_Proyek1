@@ -34,6 +34,10 @@ body {
 }
 
 /* SIDEBAR */
+.full-sidebar {
+   position: fixed;
+}
+
 .sidebar {
   width: 250px;
   background: linear-gradient(180deg, #5a1ee6, #321180);
@@ -67,6 +71,7 @@ body {
 /* LOGOUT */
 .logout {
   margin-top: 30px;
+  margin-bottom: 15px;
 }
 
 .logout button {
@@ -84,6 +89,7 @@ body {
   flex: 1;
   background: #f4f0ff;
   padding: 30px;
+  margin-left: 250px;
 }
 
 /* HEADER */
@@ -163,25 +169,27 @@ td img {
 <div class="container">
 
 <!-- SIDEBAR -->
-<div class="sidebar">
-  <h2>Admin Panel</h2>
+<div class="full-sidebar">
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
 
-  <div class="menu">
-    <a href="index.php?menu=trip">Open Trip</a>
-    <a href="index.php?menu=destinasi">Destinasi</a>
-    <a href="index.php?menu=private">Private Trip</a>
-    <a href="index.php?menu=booking">Pesanan</a>
-    <a href="index.php?menu=payment">Pembayaran</a>
-    <a href="index.php?menu=peserta">Peserta</a>
-    <a href="index.php?menu=pembatalan">Pembatalan</a>
-    <a href="index.php?menu=laporan">Laporan</a>
-    <a href="index.php?menu=galeri">Galeri</a>
-  </div>
+    <div class="menu">
+      <a href="index.php?menu=trip">Open Trip</a>
+      <a href="index.php?menu=destinasi">Destinasi</a>
+      <a href="index.php?menu=private">Private Trip</a>
+      <a href="index.php?menu=booking">Pesanan</a>
+      <a href="index.php?menu=payment">Pembayaran</a>
+      <a href="index.php?menu=peserta">Peserta</a>
+      <a href="index.php?menu=pembatalan">Pembatalan</a>
+      <a href="index.php?menu=laporan">Laporan</a>
+      <a href="index.php?menu=galeri">Galeri</a>
+    </div>
 
-  <div class="logout">
-    <a href="logout.php" onclick="return confirm('Yakin Ingin Keluar?')">
-      <button>Logout</button>
-    </a>
+    <div class="logout">
+      <a href="logout.php" onclick="return confirm('Yakin Ingin Keluar?')">
+        <button>Logout</button>
+      </a>
+    </div>
   </div>
 </div>
 
