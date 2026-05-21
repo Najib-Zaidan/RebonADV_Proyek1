@@ -10,6 +10,20 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
+$ubah_pt = "CREATE TABLE IF NOT EXISTS ubah_private (
+    id_ubah INT AUTO_INCREMENT PRIMARY KEY,
+    id_private INT,
+    nama VARCHAR(100) NOT NULL,
+    no_hp VARCHAR(20) NOT NULL,
+    tujuan VARCHAR(100) NOT NULL,
+    tgl_berangkat DATE NOT NULL,
+    tgl_pulang DATE NOT NULL,
+    tgl_pengajuan DATETIME NOT NULL DEFAULT NOW(),
+    catatan TEXT,
+    jumlah_peserta INT NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (id_private) REFERENCES private_trip(id_private) ON DELETE CASCADE
+)";
 $album = "CREATE TABLE album (
     id_album INT AUTO_INCREMENT PRIMARY KEY,
     nama VARCHAR(50)
@@ -212,6 +226,7 @@ mysqli_query($konek, $private);
 mysqli_query($konek, $peserta_pt);
 mysqli_query($konek, $payment_pt);
 mysqli_query($konek, $batal_pt);
+mysqli_query($konek, $ubah_pt);
 mysqli_query($konek, $batal_peserta);
 mysqli_query($konek, $notif);
 mysqli_query($konek, $album);
