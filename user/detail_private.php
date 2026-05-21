@@ -40,6 +40,10 @@ $cek_batal = kueri("SELECT status FROM batal_private WHERE id_private = '$id_pri
 $data_batal = ambil($cek_batal);
 $is_mengajukan_batal = mysqli_num_rows($cek_batal) > 0;
 
+// Cek apakah booking ini sedang mengajukan perubahan di tabel ubah_private (status FALSE/0)
+$cek_ubah = kueri("SELECT status FROM ubah_private WHERE id_private = '$id_private' AND status = FALSE");
+$is_mengajukan_ubah = mysqli_num_rows($cek_ubah) > 0;
+
 // Ambil data peserta private trip
 $peserta = kueri("
     SELECT 
@@ -300,12 +304,18 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
             gap: 12px; 
         }
 
+        /* Label Khusus Info Tulisan Status (Misal: Pesanan Sudah Dibatalkan) */
         .status-label {
-            font-size: 13px;
-            color: #ffe3cc;
+            font-size: 14px;
+            color: #ffffff;
             font-style: normal;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         .card .status-label {
@@ -437,10 +447,13 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
             <?php endif; ?>
 
             <?php 
-            // TOMBOL TAMBAHAN: Ajukan Perubahan (Hanya bisa diajukan jika trip belum dibatalkan/refund)
+            // TOMBOL AKSI PERUBAHAN
             if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund' && !$is_mengajukan_batal):
-            ?>
-                <a href="ubah_private_trip.php?id_private=<?= $id_private; ?>" class="btn btn-edit-trip">Ajukan Perubahan</a>
+                if($is_mengajukan_ubah): ?>
+                    <span class="btn" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); cursor: default;">Perubahan sedang diproses...</span>
+                <?php else: ?>
+                    <a href="ubah_private.php?id_private=<?= $id_private; ?>" class="btn btn-edit-trip">Ajukan Perubahan</a>
+                <?php endif; ?>
             <?php endif; ?>
 
             <?php 
@@ -487,7 +500,6 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
                         <td><?= !empty($p['riwayat']) ? $p['riwayat'] : '-'; ?></td>
                         <td>
                             <?php if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund'): ?>
-                                <!-- Aksi diubah menjadi Ubah Peserta -->
                                 <a href="ubah_peserta_private.php?id_peserta=<?= $p['id_peserta']; ?>&id_private=<?= $id_private; ?>" 
                                 class="btn btn-edit-person">
                                     Ubah Peserta

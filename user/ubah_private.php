@@ -79,385 +79,286 @@ if (isset($_POST['submit'])) {
   <title>Pengajuan Perubahan Private Trip</title>
 
   <style>
-    :root {
-      --purple-dark: #4b00ff;
-      --purple-mid: #7a2cff;
-      --purple-light: #4b00ff;
-      --cream: #ffff;
-      --lavender: #eee3ff;
-      --input-border: rgba(0, 0, 0, 0.08);
-      --text-dark: #111;
-      --radius: 12px;
-      --max-width: 1150px;
-      --page-padding: 40px;
-      --shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color: var(--text-dark);
-    }
-
     body {
-      background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
+        font-family: 'Segoe UI', Arial, sans-serif;
+        /* Mengikuti tema background detail_pesanan.php */
+        background: linear-gradient(135deg, #f1eefc 0%, #e5defa 100%);
+        background-attachment: fixed;
+        margin: 0;
+        padding: 15px;
+        color: #4a3b70;
     }
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 80px;
-      background: #f4f0e5;
+    .container {
+        max-width: 900px;
+        margin: auto;
     }
 
-    .logo img {
-      height: 50px;
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(107, 61, 245, 0.08);
+        border: 1px solid rgba(107, 61, 245, 0.1);
+        box-sizing: border-box;
     }
 
-    nav {
-      display: flex;
-      gap: 30px;
-      align-items: center;
+    /* Card Utama bertema ungu asik dengan aksen lingkaran transparan */
+    .card-main {
+        background: linear-gradient(135deg, #6b3df5 0%, #4922c7 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 8px 25px rgba(107, 61, 245, 0.25);
+        position: relative;
+        overflow: hidden;
     }
 
-    nav a {
-      text-decoration: none;
-      color: black;
-      font-weight: 500;
+    .card-main::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        pointer-events: none;
     }
 
-    nav .active3 {
-      color: #6b3df5;
+    .title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .active5 {
-      background: #6b3df5;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
+    /* Judul pada card putih biasa */
+    .card .title {
+        color: #4922c7;
+        border-bottom: 2px solid #e5defa;
+        padding-bottom: 8px;
     }
 
-    .hero-area {
-      padding: 48px 20px;
+    /* Judul pada card utama ungu */
+    .card-main .title {
+        color: white;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.15);
     }
 
-    .hero-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      background: var(--cream);
-      border-radius: 12px;
-      padding: 28px;
-      display: flex;
-      gap: 28px;
-      box-shadow: var(--shadow);
-      align-items: flex-start;
+    /* Info grid penyusunan kode trip agar rapi */
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
 
-    /* Image area */
-    .card-image {
-      flex: 0 0 48%;
+    .info {
+        margin-bottom: 0;
+        font-size: 15px;
+        line-height: 1.5;
     }
 
-    .image-wrap {
-      position: relative;
-      border-radius: 14px;
-      overflow: hidden;
+    /* Tombol Kembali / Back Link */
+    .back {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px 18px;
+        background: #4a3b70;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(74, 59, 112, 0.15);
     }
 
-    .image-wrap img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      aspect-ratio: 1/1;
-      min-height: 420px;
+    .back:hover {
+        background: #342852;
+        transform: translateY(-1px);
     }
 
-    .hero-title {
-      position: absolute;
-      left: 20px;
-      bottom: 28px;
-      margin: 0;
-      font-size: 42px;
-      line-height: 1.1;
-      color: white;
-      font-weight: 800;
-      text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-    }
-
-    /* Form area */
-    .card-form {
-      flex: 0 0 46%;
-    }
-
+    /* Form styling agar seirama dengan inputan modern premium */
     .trip-form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
     }
 
-    .form-info-text {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 5px;
-      font-weight: 600;
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b3df5;
     }
 
     .trip-form input[type="text"],
     .trip-form input[type="date"],
     .trip-form input[type="number"],
     .trip-form textarea {
-      background: var(--lavender);
-      border-radius: 10px;
-      border: 1px solid var(--input-border);
-      padding: 12px 14px;
-      font-size: 15px;
-      outline: none;
-      box-shadow: 0 10px 25px rgba(97, 88, 88, 0.1);
-      width: 100%;
+        font-family: inherit;
+        background: #fdfbff;
+        border-radius: 8px;
+        border: 1px solid #eae6fa;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: #4a3b70;
+        outline: none;
+        box-shadow: inset 0 1px 3px rgba(107, 61, 245, 0.03);
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
     }
 
     .trip-form input:focus,
     .trip-form textarea:focus {
-      border: 2px solid #6b3df5;
-      background: #e6e0ff;
+        border-color: #6b3df5;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(107, 61, 245, 0.15);
     }
 
     .trip-form textarea {
-      resize: vertical;
+        resize: vertical;
     }
 
-    /* Tanggal */
+    /* Tata letak input tanggal berdampingan */
     .date-group {
-      display: flex;
-      gap: 10px;
-      width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        width: 100%;
     }
 
-    .date-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .date-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #6b3df5;
-      margin-bottom: 2px;
-      margin-left: 2px;
-    }
-
-    /* Button */
-    .cta-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 10px;
-    }
-
+    /* Tombol Submit Orange Menyalanya dipertahankan dengan sentuhan modern */
     .btn-submit-ubah {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: linear-gradient(180deg, #ff5722 0%, #ff9800 100%);
-      color: white;
-      border: none;
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 16px;
-      text-decoration: none;
-      transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, #ff5722 0%, #ff9800 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 15px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25);
+        align-self: flex-end;
     }
 
     .btn-submit-ubah:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(255, 87, 34, 0.35);
     }
 
-    /* Footer */
-    footer {
-      background-color: #fdfae6;
-      padding: 40px 10% 20px 10%;
-      color: #333;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 30px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 30px;
-    }
-
-    .footer-column h4 {
-      font-size: 16px;
-      margin-bottom: 15px;
-      font-weight: 800;
-    }
-
-    .footer-column ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .footer-column ul li {
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .contact-item {
-      margin-bottom: 10px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .footer-logo-img {
-      width: 220px;
-      height: auto;
-      display: block;
-    }
-
-    .copyright {
-      text-align: center;
-      font-size: 12px;
-      margin-top: 20px;
-      font-weight: bold;
-      color: #333;
+    /* Media Queries Responsif untuk Layar Handphone */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+        .card {
+            padding: 18px;
+            border-radius: 12px;
+        }
+        .date-group {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .btn-submit-ubah {
+            width: 100%;
+        }
     }
   </style>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
 
-<header class="navbar">
-  <div class="logo">
-    <img src="../gambar/REBON LOGO GRADIENT presisi.png" alt="Rebon Adventure" />
-  </div>
+<div class="container">
 
-  <nav>
-    <a href="home1.php" class="active1">Home</a>
-    <a href="open_trip.php" class="active2">Open</a>
-    <a href="private_trip.php" class="active3">Private</a>
-    <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-    <a href="profiluser.php">
-      <?php if (isset($_SESSION['username'])): ?>
-        <span style="color:blue; margin-right:10px;">
-          👤 <?php echo $_SESSION['username']; ?>
-        </span>
-    </a>
-        <a href="logout_user.php">
-          <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
-        </a>
-      <?php else: ?>
-        <a href="login_user.php">
-          <button class="active5">Masuk</button>
-        </a>
-      <?php endif; ?>
-  </nav>
-</header>
+    <a href="profiluser.php" class="back">← Kembali ke Riwayat</a>
 
-<main class="hero-area">
-  <div class="hero-inner">
-
-    <div class="card-image">
-      <div class="image-wrap">
-        <img src="../gambar/123.jpg" alt="Destinasi"/>
-        <h1 class="hero-title">Ubah Rencana<br>Trip Anda</h1>
-      </div>
-    </div>
-
-    <aside class="card-form">
-      <form action="" method="post" class="trip-form">
-        
-        <div class="form-info-text">
-          <i class="fa-solid : data-old-id"></i> Kode Trip: #PT-<?php echo $data_old['id_private']; ?>
+    <div class="card card-main">
+        <div class="title">
+            <i></i> Detail Private Trip
         </div>
-
-        <input type="text" name="nama" placeholder="Nama Lengkap" autocomplete="off" value="<?php echo $data_old['nama']; ?>" required />
-
-        <input type="text" name="nohp" placeholder="Nomor Telepon" autocomplete="off" value="<?php echo $data_old['no_hp']; ?>" required />
-
-        <input type="text" name="destinasi" placeholder="Lokasi Destinasi" autocomplete="off" value="<?php echo $data_old['tujuan']; ?>" required />
-
-        <div class="date-group">
-          <div class="date-wrapper">
-            <span class="date-label">Tanggal Berangkat Baru</span>
-            <input type="date" name="tgl_berangkat" value="<?php echo $data_old['tgl_berangkat']; ?>" required>
-          </div>
-
-          <div class="date-wrapper">
-            <span class="date-label">Tanggal Pulang Baru</span>
-            <input type="date" name="tgl_pulang" value="<?php echo $data_old['tgl_pulang']; ?>" required>
-          </div>
+        <div class="info-grid">
+            <div class="info">
+                <b>Kode Trip Saat Ini:</b> 
+                <span style="background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 4px; font-weight: bold; font-family: monospace;">
+                    #PT-<?php echo $data_old['id_private']; ?>
+                </span>
+            </div>
+            <div class="info" style="opacity: 0.9; font-size: 13px; margin-top: 5px;">
+                *Silakan isi formulir di bawah ini untuk mengajukan perubahan data rencana perjalanan Anda kepada admin.
+            </div>
         </div>
-
-        <textarea name="catatan" placeholder="Catatan Tambahan Alasan Perubahan" rows="5"><?php echo $data_old['catatan']; ?></textarea>
-
-        <input type="number" name="jumlah" placeholder="Jumlah Peserta" min="1" value="<?php echo $data_old['jumlah_peserta']; ?>" required />
-
-        <div class="cta-row">
-          <button type="submit" name="submit" class="btn-submit-ubah">
-            <i class="fa-solid fa-paper-plane"></i> Ajukan Perubahan
-          </button>
-        </div>
-
-      </form>
-    </aside>
-
-  </div>
-</main>
-
-<footer>
-  <div class="footer-content">
-    <div class="footer-column logo-col">
-      <img src="../gambar/logo-rebon.png" class="footer-logo-img" />
     </div>
 
-    <div class="footer-column">
-      <h4>KONTAK KAMI</h4>
-      <div class="contact-item">✉ rebonadventure@gmail.com</div>
-      <div class="contact-item">📞 +62 812-3456-7890</div>
-      <div class="contact-item">📍 Cirebon, Indonesia</div>
+    <div class="card">
+        <div class="title">Formulir Perubahan Rencana</div>
+
+        <form action="" method="post" class="trip-form">
+            
+            <div class="form-group">
+                <label><i class="fa-solid fa-user"></i> Nama Lengkap</label>
+                <input type="text" name="nama" placeholder="Nama Lengkap Pemesan" autocomplete="off" value="<?php echo $data_old['nama']; ?>" required />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-phone"></i> Nomor Telepon</label>
+                <input type="text" name="nohp" placeholder="Contoh: 0812345xxxxx" autocomplete="off" value="<?php echo $data_old['no_hp']; ?>" required />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-map-location-dot"></i> Lokasi Destinasi</label>
+                <input type="text" name="destinasi" placeholder="Tujuan Destinasi Baru" autocomplete="off" value="<?php echo $data_old['tujuan']; ?>" required />
+            </div>
+
+            <div class="date-group">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-plus"></i> Tanggal Berangkat Baru</label>
+                    <input type="date" name="tgl_berangkat" value="<?php echo $data_old['tgl_berangkat']; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-minus"></i> Tanggal Pulang Baru</label>
+                    <input type="date" name="tgl_pulang" value="<?php echo $data_old['tgl_pulang']; ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-comment-dots"></i> Alasan & Catatan Tambahan Perubahan</label>
+                <textarea name="catatan" placeholder="Tuliskan detail atau alasan mengapa rencana trip ingin dirubah..." rows="4"><?php echo $data_old['catatan']; ?></textarea>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-users"></i> Jumlah Peserta</label>
+                <input type="number" name="jumlah" placeholder="Minimal 1 Peserta" min="1" value="<?php echo $data_old['jumlah_peserta']; ?>" required />
+            </div>
+
+            <button type="submit" name="submit" class="btn-submit-ubah">
+                <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan Perubahan
+            </button>
+
+        </form>
     </div>
 
-    <div class="footer-column">
-      <h4>LAYANAN KAMI</h4>
-      <ul>
-        <li>OPEN TRIP</li>
-        <li>PRIVATE TRIP</li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h4>INFORMASI</h4>
-      <ul>
-        <li>TENTANG KAMI</li>
-        <li>TRIP TERSEDIA</li>
-        <li>FAQ</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="copyright">
-    © 2026 REBON ADVENTURE
-  </div>
-</footer>
+</div>
 
 </body>
 </html>
