@@ -464,7 +464,7 @@ footer {
           Bersama <b>Teman Baru</b>
         </h1>
 
-        <a href="tentangkami.html">Tentang Kami</a>
+        <a href="tentang_kami.php">Tentang Kami</a>
       </div>
     </section>
 
