@@ -410,7 +410,7 @@ $peserta   = kueri("SELECT po.*, b.tgl_booking, b.status AS status_bayar
             <a href="ubah_tripv2.php?id=<?php echo $id_trip; ?>" class="btn-action btn-ubah">
                 <i class="fa-solid fa-pen-to-square"></i> Ubah Trip
             </a>
-            <a href="cetak_laporan.php?id=<?php echo $id_trip; ?>" class="btn-action btn-cetak">
+            <a href="laporan_per_trip.php?id=<?php echo $id_trip; ?>" class="btn-action btn-cetak">
                 <i class="fa-solid fa-print"></i> Cetak Laporan
             </a>
         </div>
