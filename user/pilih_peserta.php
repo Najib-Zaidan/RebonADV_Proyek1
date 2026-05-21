@@ -3,7 +3,10 @@ session_start();
 
 $id = $_SESSION['id_akun'];
 $id_trip = $_GET['id'];
-
+if (!isset($_SESSION['username'])) {
+    header("Location: login_user.php");
+    exit;
+}
 require 'fungsi.php';
 
 $query = "SELECT id_peserta, id_akun, nama, no_hp, usia, alamat, riwayat 
