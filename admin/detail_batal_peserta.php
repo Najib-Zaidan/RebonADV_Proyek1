@@ -1,63 +1,17 @@
 <?php
-include "fungsi.php"; 
+session_start();
+if (!isset($_SESSION["login"])) {
+    header("Location: login.php");
+    exit;
+}
+
+require 'fungsi.php'; 
 
 $id = $_GET['id'] ?? '';
 if (empty($id)) { echo "<script>window.location='index.php?menu=pembatalan&tab=peserta';</script>"; exit; }
 
-// --- LOGIKA EKSEKUSI ---
-if (isset($_POST['update_pembatalan'])) {
-    $status_pilihan = $_POST['status_verifikasi']; // Disetujui atau Ditolak
-    $waktu_sekarang = date('Y-m-d H:i:s');
-    
-    // 1. Update status dan tgl_verifikasi di tabel batal_peserta
-    kueri("UPDATE batal_peserta SET 
-            status_verifikasi = '$status_pilihan', 
-            tgl_verifikasi = '$waktu_sekarang' 
-           WHERE id_pembatalan = '$id'");
-    
-    // 2. Jika Disetujui, maka eksekusi pembersihan data
-    if ($status_pilihan == 'Disetujui') {
-        $data_bantu = ambil(kueri("SELECT id_detail FROM batal_peserta WHERE id_pembatalan = '$id'"));
-        $id_det = $data_bantu['id_detail'];
-
-        // Ambil ID Booking dan ID Trip terkait sebelum dihapus dengan JOIN ke tabel TUJUAN
-        $cari_book = ambil(kueri("SELECT b.id_booking, b.id_trip, t.harga_dp 
-                                 FROM detail d 
-                                 JOIN booking b ON d.id_booking = b.id_booking 
-                                 JOIN trip t ON b.id_trip = t.id_trip
-                                 JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
-                                 WHERE d.id_detail = '$id_det'"));
-        $id_book = $cari_book['id_booking'];
-        $harga_dp_trip = $cari_book['harga_dp'];
-
-        // Hapus data dari detail (peserta resmi keluar)
-        kueri("DELETE FROM detail WHERE id_detail = '$id_det'");
-
-        // Kurangi jumlah peserta di tabel booking
-        kueri("UPDATE booking SET jumlah_peserta = jumlah_peserta - 1 WHERE id_booking = '$id_book'");
-
-        // --- CEK APAKAH PESERTA SUDAH HABIS (0) ---
-        $cek_sisa = ambil(kueri("SELECT jumlah_peserta FROM booking WHERE id_booking = '$id_book'"));
-        
-        if ($cek_sisa['jumlah_peserta'] <= 0) {
-            // Hitung total uang yang sudah masuk dan diverifikasi
-            $cek_uang = ambil(kueri("SELECT SUM(nominal) AS total FROM payment_open 
-                                     WHERE id_booking = '$id_book' AND status = 'Diverifikasi'"));
-            $total_bayar = $cek_uang['total'] ?? 0;
-
-            // Tentukan status booking (Refund jika bayar > DP, selain itu Dibatalkan)
-            $status_akhir_booking = ($total_bayar > $harga_dp_trip) ? "Refund" : "Dibatalkan";
-
-            // Update status booking utama karena peserta sudah kosong
-            kueri("UPDATE booking SET status = '$status_akhir_booking' WHERE id_booking = '$id_book'");
-        }
-    }
-
-    echo "<script>alert('Pembatalan Berhasil Diproses & Status Booking Diperbarui!'); window.location='index.php?menu=pembatalan&tab=peserta';</script>";
-}
-
-// --- AMBIL DATA DETAIL UNTUK TAMPILAN (JOIN ke tabel TUJUAN) ---
-$query = kueri("SELECT bp.*, p.nama AS nama_peserta, tj.tujuan, a.username, b.id_booking, b.status AS status_order, t.harga_dp
+// --- AMBIL DATA DETAIL UNTUK TAMPILAN & NOTIFIKASI (JOIN ke tabel TUJUAN dan AKUN) ---
+$query = kueri("SELECT bp.*, p.nama AS nama_peserta, tj.tujuan, a.username, b.id_booking, b.status AS status_order, t.harga_dp, b.id_akun
                 FROM batal_peserta bp
                 JOIN detail d ON bp.id_detail = d.id_detail
                 JOIN peserta_open p ON d.id_peserta = p.id_peserta
@@ -68,7 +22,87 @@ $query = kueri("SELECT bp.*, p.nama AS nama_peserta, tj.tujuan, a.username, b.id
                 WHERE bp.id_pembatalan = '$id'");
 $data = ambil($query);
 
-if (!$data) { echo "<script>alert('Data tidak ditemukan'); window.location='index.php?menu=pembatalan&tab=peserta';</script>"; exit; }
+// Cek jika data tidak ditemukan (bisa terjadi jika data sudah dihapus atau ID salah)
+if (!$data) { 
+    echo "<script>alert('Data tidak ditemukan atau sudah diproses sebelumnya.'); window.location='index.php?menu=pembatalan&tab=peserta';</script>"; 
+    exit; 
+}
+
+$id_booking_terkait = $data['id_booking'];
+$id_akun_user = $data['id_akun'];
+$nama_peserta_batal = $data['nama_peserta'];
+$tujuan_trip = $data['tujuan'];
+
+// --- LOGIKA EKSEKUSI ---
+if (isset($_POST['update_pembatalan'])) {
+    $status_pilihan = $_POST['status_verifikasi']; // Disetujui atau Ditolak
+    $waktu_sekarang = date('Y-m-d H:i:s');
+    $pesan_notif = "";
+    
+    // Jika admin memilih "Biarkan Menunggu" tidak perlu memproses database dan notifikasi
+    if ($status_pilihan == 'Menunggu') {
+        echo "<script>window.location='index.php?menu=pembatalan&tab=peserta';</script>";
+        exit;
+    }
+    
+    // **SKENARIO 1: Pengajuan Pembatalan Anggota DITOLAK Admin**
+    if ($status_pilihan == 'Ditolak') {
+        // Logika kembali ke awal: Hapus baris pengajuan di tabel batal_peserta karena ditolak
+        kueri("DELETE FROM batal_peserta WHERE id_pembatalan = '$id'");
+        
+        // Buat pesan notifikasi penolakan untuk user
+        $pesan_notif = "Pengajuan pembatalan untuk peserta bernama " . $nama_peserta_batal . " pada trip " . $tujuan_trip . " (Booking ID: #" . $id_booking_terkait . ") telah DITOLAK oleh admin. Anggota tersebut tetap terdaftar sebagai peserta aktif.";
+        
+        kueri("INSERT INTO notif (pesan, id_akun) VALUES ('$pesan_notif', $id_akun_user)");
+        
+        echo "<script>alert('Pembatalan Ditolak! Data pengajuan dihapus & user telah dinotifikasi.'); window.location='index.php?menu=pembatalan&tab=peserta';</script>";
+        exit;
+    }
+    
+    // **SKENARIO 2 & 3: Pengajuan Pembatalan Anggota DISETUJUI Admin**
+    if ($status_pilihan == 'Disetujui') {
+        // 1. Update status dan tgl_verifikasi di tabel batal_peserta
+        kueri("UPDATE batal_peserta SET 
+                status_verifikasi = 'Disetujui', 
+                tgl_verifikasi = '$waktu_sekarang' 
+               WHERE id_pembatalan = '$id'");
+
+        $id_det = $data['id_detail'];
+        $harga_dp_trip = $data['harga_dp'];
+
+        // Hapus data dari detail (peserta resmi keluar)
+        kueri("DELETE FROM detail WHERE id_detail = '$id_det'");
+
+        // Kurangi jumlah peserta di tabel booking
+        kueri("UPDATE booking SET jumlah_peserta = jumlah_peserta - 1 WHERE id_booking = '$id_booking_terkait'");
+
+        // Ambil sisa kuota rombongan setelah dikurangi
+        $cek_sisa = ambil(kueri("SELECT jumlah_peserta FROM booking WHERE id_booking = '$id_booking_terkait'"));
+        $sisa_peserta = $cek_sisa['jumlah_peserta'] ?? 0;
+        
+        if ($sisa_peserta <= 0) {
+            // **SKENARIO 3: Anggota habis (0), otomatis membatalkan seluruh invoice booking grup**
+            $cek_uang = ambil(kueri("SELECT SUM(nominal) AS total FROM payment_open 
+                                     WHERE id_booking = '$id_booking_terkait' AND status = 'Diverifikasi'"));
+            $total_bayar = $cek_uang['total'] ?? 0;
+
+            // Tentukan status akhir booking utama grup (Refund jika bayar > DP, selain itu Dibatalkan)
+            $status_akhir_booking = ($total_bayar > $harga_dp_trip) ? "Refund" : "Dibatalkan";
+            kueri("UPDATE booking SET status = '$status_akhir_booking' WHERE id_booking = '$id_booking_terkait'");
+
+            $pesan_notif = "Pembatalan peserta " . $nama_peserta_batal . " disetujui. Karena tidak ada anggota lain yang tersisa, seluruh pesanan Anda untuk trip " . $tujuan_trip . " (Booking ID: #" . $id_booking_terkait . ") otomatis diubah menjadi " . strtoupper($status_akhir_booking) . ".";
+        } else {
+            // **SKENARIO 2: Masih ada sisa peserta lain di dalam rombongan grup**
+            $pesan_notif = "Pengajuan pembatalan untuk peserta bernama " . $nama_peserta_batal . " pada trip " . $tujuan_trip . " (Booking ID: #" . $id_booking_terkait . ") telah DISETUJUI. Sisa anggota rombongan Anda kini menjadi " . $sisa_peserta . " orang.";
+        }
+
+        // Masukkan notifikasi ke database
+        kueri("INSERT INTO notif (pesan, id_akun) VALUES ('$pesan_notif', $id_akun_user)");
+        
+        echo "<script>alert('Pembatalan Berhasil Disetujui, Status Booking Diperbarui, & user telah dinotifikasi!'); window.location='index.php?menu=pembatalan&tab=peserta';</script>";
+        exit;
+    }
+}
 ?>
 <div style="padding: 20px; font-family: 'Poppins', sans-serif;">
     <div style="margin-bottom: 20px;">
@@ -119,8 +153,8 @@ if (!$data) { echo "<script>alert('Data tidak ditemukan'); window.location='inde
                         <label style="font-size: 13px; font-weight: bold; color: #321180;">Tindakan Admin:</label>
                         <select name="status_verifikasi" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e0dbff; margin: 10px 0 20px 0; outline: none; font-family: inherit;">
                             <option value="Menunggu" <?php echo ($data['status_verifikasi'] == 'Menunggu') ? 'selected' : ''; ?>>Biarkan Menunggu</option>
-                            <option value="Disetujui">Setujui (Hapus Peserta & Kurangi Kuota)</option>
-                            <option value="Ditolak">Tolak Pembatalan</option>
+                            <option value="Disetujui">Setujui (Hapus Peserta & Sesuaikan Grup)</option>
+                            <option value="Ditolak">Tolak Pembatalan (Hapus Pengajuan)</option>
                         </select>
 
                         <?php if ($data['status_verifikasi'] == 'Menunggu'): ?>

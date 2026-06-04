@@ -10,23 +10,6 @@ require 'fungsi.php';
 // Ambil ID Private dari URL
 $id_private = $_GET['id'];
 
-// Logika Update Status Trip & Harga
-if (isset($_POST['update_status'])) {
-    $status_baru = $_POST['status_trip'];
-    $harga = $_POST['harga'] ?? 0;
-    $harga_dp = $_POST['harga_dp'] ?? 0;
-
-    $update = kueri("UPDATE private_trip SET 
-                     status_trip = '$status_baru', 
-                     harga = '$harga', 
-                     harga_dp = '$harga_dp' 
-                     WHERE id_private = $id_private");
-    
-    if ($update) {
-        echo "<script>alert('Status trip berhasil diperbarui!'); window.location.href='detail_private.php?id=$id_private';</script>";
-    }
-}
-
 // Ambil Data Utama Private Trip
 $data = kueri("SELECT pt.*, a.username FROM private_trip pt 
                JOIN akun a ON pt.id_akun = a.id_akun 
@@ -35,6 +18,60 @@ $trip = ambil($data);
 
 if (!$trip) {
     die("Data tidak ditemukan.");
+}
+
+// Logika Update Status Trip & Harga
+if (isset($_POST['update_status'])) {
+    $status_baru = $_POST['status_trip'];
+    $harga_baru = $_POST['harga'] ?? 0;
+    $harga_dp_baru = $_POST['harga_dp'] ?? 0;
+
+    // Ambil data lama untuk pembanding
+    $status_lama = $trip['status_trip'];
+    $harga_lama = $trip['harga'] ?? 0;
+    $harga_dp_lama = $trip['harga_dp'] ?? 0;
+
+    // Validasi PHP: Jika status diubah ke Disetujui tapi harga kosong/0
+    if ($status_baru == 'Disetujui' && ($harga_baru <= 0 || $harga_dp_baru <= 0)) {
+        echo "<script>alert('Gagal! Harga Total dan Minimal DP wajib diisi saat menyetujui trip.'); window.history.back();</script>";
+        exit;
+    }
+
+    // 1. Update data pengajuan trip ke database
+    $update = kueri("UPDATE private_trip SET 
+                     status_trip = '$status_baru', 
+                     harga = '$harga_baru', 
+                     harga_dp = '$harga_dp_baru' 
+                     WHERE id_private = $id_private");
+    
+    if ($update) {
+        $id_akun_user = $trip['id_akun'];
+        $tujuan_trip = $trip['tujuan'];
+        $pesan_notif = "";
+
+        // 2. Cek apakah ada perubahan status trip (Skenario Utama)
+        if ($status_baru !== $status_lama) {
+            if ($status_baru == 'Disetujui') {
+                $pesan_notif = "Pengajuan Private Trip kamu ke " . $tujuan_trip . " telah DISETUJUI oleh admin. Silakan cek rincian harga untuk melakukan pembayaran.";
+            } elseif ($status_baru == 'Ditolak') {
+                $pesan_notif = "Mohon maaf, pengajuan Private Trip kamu ke " . $tujuan_trip . " telah DITOLAK oleh admin. Silakan hubungi kami untuk informasi lebih lanjut.";
+            } else {
+                $pesan_notif = "Status pengajuan Private Trip kamu ke " . $tujuan_trip . " dikembalikan menjadi Belum Disetujui.";
+            }
+        } 
+        // 3. Skenario Alternatif: Status TIDAK berubah (Misal sama-masing tetap 'Disetujui'), baru cek perubahan harga
+        elseif (abs($harga_baru - $harga_lama) > 0.00001 || abs($harga_dp_baru - $harga_dp_lama) > 0.00001) {
+            $pesan_notif = "Admin telah memperbarui rincian harga untuk Private Trip kamu ke " . $tujuan_trip . ". Silakan periksa kembali detail tagihan Anda.";
+        }
+
+        // 4. Masukkan ke tabel notif jika ada pesan yang terbentuk
+        if (!empty($pesan_notif)) {
+            kueri("INSERT INTO notif (pesan, id_akun) VALUES ('$pesan_notif', $id_akun_user)");
+        }
+
+        echo "<script>alert('Data trip berhasil diperbarui!'); window.location.href='detail_private.php?id=$id_private';</script>";
+        exit;
+    }
 }
 ?>
 
@@ -256,19 +293,19 @@ if (!$trip) {
             
             <div class="card">
                 <h3>Kelola Status Trip</h3>
-                <form action="" method="POST">
+                <form action="" method="POST" onsubmit="return validasiForm()">
                     <label>Ubah Status</label>
-                    <select name="status_trip">
+                    <select name="status_trip" id="status_trip" onchange="cekKondisiInput()">
                         <option value="Belum Disetujui" <?php if($trip['status_trip'] == 'Belum Disetujui') echo 'selected'; ?>>Belum Disetujui</option>
                         <option value="Disetujui" <?php if($trip['status_trip'] == 'Disetujui') echo 'selected'; ?>>Disetujui</option>
                         <option value="Ditolak" <?php if($trip['status_trip'] == 'Ditolak') echo 'selected'; ?>>Ditolak</option>
                     </select>
 
                     <label>Harga Total (Rp)</label>
-                    <input type="number" name="harga" value="<?php echo $trip['harga']; ?>" placeholder="Tentukan harga trip...">
+                    <input type="number" name="harga" id="harga" value="<?php echo $trip['harga']; ?>" placeholder="Tentukan harga trip...">
 
                     <label>Minimal DP (Rp)</label>
-                    <input type="number" name="harga_dp" value="<?php echo $trip['harga_dp']; ?>" placeholder="Tentukan minimal DP...">
+                    <input type="number" name="harga_dp" id="harga_dp" value="<?php echo $trip['harga_dp']; ?>" placeholder="Tentukan minimal DP...">
 
                     <button type="submit" name="update_status" class="btn-save">Simpan Perubahan</button>
                 </form>
@@ -314,6 +351,46 @@ if (!$trip) {
         </div>
     </div>
 </div>
+
+<script>
+// Fungsi JavaScript untuk memantau perubahan input secara realtime
+function cekKondisiInput() {
+    const statusSelect = document.getElementById('status_trip').value;
+    const inputHarga = document.getElementById('harga');
+    const inputDP = document.getElementById('harga_dp');
+    
+    // Status awal dari database PHP
+    const statusAwal = "<?php echo $trip['status_trip']; ?>";
+
+    // Jika status diubah ke 'Disetujui' dan sebelumnya statusnya masih 'Belum Disetujui'
+    if (statusSelect === 'Disetujui' && statusAwal === 'Belum Disetujui') {
+        inputHarga.placeholder = "WAJIB DIISI! Tentukan harga trip...";
+        inputDP.placeholder = "WAJIB DIISI! Tentukan minimal DP...";
+    } else {
+        inputHarga.placeholder = "Tentukan harga trip...";
+        inputDP.placeholder = "Tentukan minimal DP...";
+    }
+}
+
+// Fungsi intercept sebelum form tersubmit ke backend
+function validasiForm() {
+    const statusSelect = document.getElementById('status_trip').value;
+    const harga = parseFloat(document.getElementById('harga').value) || 0;
+    const hargaDP = parseFloat(document.getElementById('harga_dp').value) || 0;
+    const statusAwal = "<?php echo $trip['status_trip']; ?>";
+
+    if (statusSelect === 'Disetujui' && statusAwal === 'Belum Disetujui') {
+        if (harga <= 0 || hargaDP <= 0) {
+            alert('Kolom Harga Total dan Minimal DP wajib diisi dengan benar saat menyetujui pengajuan trip pertama kali!');
+            return false; // Membatalkan submit form
+        }
+    }
+    return true; // Mengizinkan submit form
+}
+
+// Jalankan fungsi saat halaman pertama kali dimuat
+window.onload = cekKondisiInput;
+</script>
 
 </body>
 </html>
