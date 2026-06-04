@@ -244,9 +244,14 @@ footer {
     <label>Nominal Pembayaran:</label>
     <input type="number" name="nominal" required>
     <hr>
-    <label>Bukti Pembayaran:</label>
-    <input type="file" name="bukti_bayar" accept="image/*" required>
-    <hr>
+<label>Bukti Pembayaran:</label>
+<input type="file" name="bukti_bayar" accept="image/*" required>
+
+<small style="color:black;">
+    <i>*Maksimal ukuran file 5MB</i>
+</small>
+
+<hr>
     <label>Catatan:</label>
 <textarea name="catatan" rows="4" placeholder="Tulis catatan pembayaran (opsional)..." 
 style="width:100%; padding:12px; border:none; border-radius:8px; background:#cfc6e8; resize:none;"></textarea>
