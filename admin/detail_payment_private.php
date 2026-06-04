@@ -11,11 +11,28 @@ require 'fungsi.php';
 
 $id_payment = $_GET['id'];
 
+// Ambil Data Detail Pembayaran & Private Trip di awal (Termasuk id_akun untuk keperluan notifikasi)
+$pay = ambil(kueri("SELECT p.*, pt.tgl_booking, pt.tujuan, a.username, pt.jumlah_peserta, pt.harga, pt.id_private, pt.id_akun
+                    FROM payment_private p
+                    JOIN private_trip pt ON p.id_private = pt.id_private
+                    JOIN akun a ON pt.id_akun = a.id_akun
+                    WHERE p.id_payment = $id_payment"));
+
+if (!$pay) {
+    die("Data pembayaran tidak ditemukan.");
+}
+
+$id_private = $pay['id_private'];
+
+// 1. Logika Update Status Pembayaran & Otomatisasi Status Booking Private
 if (isset($_POST['update_payment'])) {
     $status_baru = $_POST['status_pembayaran'];
+    $status_lama = $pay['status'];
     
+    // Update status di payment_private
     kueri("UPDATE payment_private SET status = '$status_baru' WHERE id_payment = $id_payment");
 
+    // --- LOGIKA OTOMATISASI STATUS BOOKING PRIVATE ---
     $info = ambil(kueri("SELECT p.id_private, pt.harga, pt.harga_dp 
                          FROM payment_private p 
                          JOIN private_trip pt ON p.id_private = pt.id_private 
@@ -25,10 +42,12 @@ if (isset($_POST['update_payment'])) {
     $total_lunas = $info['harga'];
     $min_dp = $info['harga_dp'];
 
+    // Hitung akumulasi pembayaran yang statusnya 'Diverifikasi'
     $cek_total = ambil(kueri("SELECT SUM(nominal) as total FROM payment_private 
                               WHERE id_private = $id_priv AND status = 'Diverifikasi'"));
     $total_masuk = $cek_total['total'] ?? 0;
 
+    // Tentukan Status Booking Baru
     if ($total_masuk >= $total_lunas) {
         $status_booking = "Lunas";
     } elseif ($total_masuk >= $min_dp) {
@@ -39,18 +58,33 @@ if (isset($_POST['update_payment'])) {
         $status_booking = "Belum Bayar";
     }
 
+    // Update ke tabel private_trip (kolom status_bayar)
     kueri("UPDATE private_trip SET status_bayar = '$status_booking' WHERE id_private = $id_priv");
 
+    // --- LOGIKA NOTIFIKASI OTOMATIS BERDASARKAN PERUBAHAN STATUS ---
+    if ($status_baru !== $status_lama) {
+        $id_akun_user = $pay['id_akun'];
+        $tujuan_trip = $pay['tujuan'];
+        $nominal_bayar = number_format($pay['nominal']);
+        $pesan_notif = "";
+
+        if ($status_baru == 'Diverifikasi') {
+            $pesan_notif = "Pembayaran Private Trip Anda sebesar Rp " . $nominal_bayar . " untuk tujuan " . $tujuan_trip . " (Trip ID: #" . $id_private . ") telah BERHASIL DIVERIFIKASI. Status pembayaran Anda: " . $status_booking . ".";
+        } elseif ($status_baru == 'Ditolak') {
+            $pesan_notif = "Pembayaran Private Trip Anda sebesar Rp " . $nominal_bayar . " untuk tujuan " . $tujuan_trip . " (Trip ID: #" . $id_private . ") telah DITOLAK oleh admin. Silakan periksa kembali bukti transfer Anda atau hubungi admin.";
+        } elseif ($status_baru == 'Belum Diverifikasi') {
+            $pesan_notif = "Status verifikasi pembayaran Private Trip Anda sebesar Rp " . $nominal_bayar . " ke " . $tujuan_trip . " dikembalikan ke status Menunggu Verifikasi.";
+        }
+
+        // Simpan baris notifikasi baru ke database
+        if (!empty($pesan_notif)) {
+            kueri("INSERT INTO notif (pesan, id_akun) VALUES ('$pesan_notif', $id_akun_user)");
+        }
+    }
+
     echo "<script>alert('Status pembayaran dan booking private berhasil diperbarui!'); window.location.href='index.php?menu=payment&type=private';</script>";
+    exit;
 }
-
-$pay = ambil(kueri("SELECT p.*, pt.tgl_booking, pt.tujuan, a.username, pt.jumlah_peserta, pt.harga, pt.id_private
-                    FROM payment_private p
-                    JOIN private_trip pt ON p.id_private = pt.id_private
-                    JOIN akun a ON pt.id_akun = a.id_akun
-                    WHERE p.id_payment = $id_payment"));
-
-$id_private = $pay['id_private'];
 ?>
 
 <!DOCTYPE html>

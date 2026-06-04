@@ -11,9 +11,26 @@ require 'fungsi.php';
 
 $id_payment = $_GET['id'];
 
+// Ambil Data Detail Pembayaran & Booking di awal agar bisa digunakan untuk pembanding dan logika POST
+$pay = ambil(kueri("SELECT p.*, b.tgl_booking, tj.tujuan, a.username, b.jumlah_peserta, t.harga, b.id_booking, b.id_akun
+                    FROM payment_open p
+                    JOIN booking b ON p.id_booking = b.id_booking
+                    JOIN trip t ON b.id_trip = t.id_trip
+                    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
+                    JOIN akun a ON b.id_akun = a.id_akun
+                    WHERE p.id_payment = $id_payment"));
+
+if (!$pay) {
+    die("Data pembayaran tidak ditemukan.");
+}
+
+$id_booking = $pay['id_booking'];
+$total_tagihan = $pay['harga'] * $pay['jumlah_peserta'];
+
 // 1. Logika Update Status Pembayaran & Otomatisasi Status Booking
 if (isset($_POST['update_payment'])) {
     $status_baru = $_POST['status_pembayaran'];
+    $status_lama = $pay['status'];
     
     // Update status di payment_open
     kueri("UPDATE payment_open SET status = '$status_baru' WHERE id_payment = $id_payment");
@@ -49,20 +66,30 @@ if (isset($_POST['update_payment'])) {
     // Update ke tabel booking
     kueri("UPDATE booking SET status = '$status_booking' WHERE id_booking = $id_book");
 
+    // --- LOGIKA CEK SKENARIO PERUBAHAN STATUS UNTUK NOTIFIKASI ---
+    if ($status_baru !== $status_lama) {
+        $id_akun_user = $pay['id_akun'];
+        $tujuan_trip = $pay['tujuan'];
+        $nominal_bayar = number_format($pay['nominal']);
+        $pesan_notif = "";
+
+        if ($status_baru == 'Diverifikasi') {
+            $pesan_notif = "Pembayaran Anda sebesar Rp " . $nominal_bayar . " untuk booking trip ke " . $tujuan_trip . " (Booking ID: #" . $id_booking . ") telah BERHASIL DIVERIFIKASI. Status booking Anda saat ini: " . $status_booking . ".";
+        } elseif ($status_baru == 'Ditolak') {
+            $pesan_notif = "Pembayaran Anda sebesar Rp " . $nominal_bayar . " untuk booking trip ke " . $tujuan_trip . " (Booking ID: #" . $id_booking . ") telah DITOLAK oleh admin. Silakan periksa kembali bukti transfer Anda atau hubungi kami.";
+        } elseif ($status_baru == 'Belum Diverifikasi') {
+            $pesan_notif = "Status verifikasi pembayaran Anda sebesar Rp " . $nominal_bayar . " untuk trip ke " . $tujuan_trip . " ditangguhkan/dikembalikan ke status Menunggu Verifikasi.";
+        }
+
+        // Masukkan data ke tabel notif jika pesan berhasil dibuat
+        if (!empty($pesan_notif)) {
+            kueri("INSERT INTO notif (pesan, id_akun) VALUES ('$pesan_notif', $id_akun_user)");
+        }
+    }
+
     echo "<script>alert('Status pembayaran dan booking berhasil diperbarui!'); window.location.href='index.php?menu=payment';</script>";
+    exit;
 }
-
-// 2. Ambil Data Detail Pembayaran & Booking (Ditarik ulang agar variabel $pay tersedia)
-$pay = ambil(kueri("SELECT p.*, b.tgl_booking, tj.tujuan, a.username, b.jumlah_peserta, t.harga, b.id_booking
-                    FROM payment_open p
-                    JOIN booking b ON p.id_booking = b.id_booking
-                    JOIN trip t ON b.id_trip = t.id_trip
-                    JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
-                    JOIN akun a ON b.id_akun = a.id_akun
-                    WHERE p.id_payment = $id_payment"));
-
-$id_booking = $pay['id_booking'];
-$total_tagihan = $pay['harga'] * $pay['jumlah_peserta'];
 
 // 3. Ambil Daftar Peserta
 $daftar_peserta = kueri("SELECT p.* FROM peserta_open p 
@@ -75,7 +102,6 @@ $daftar_peserta = kueri("SELECT p.* FROM peserta_open p
 <head>
     <title>Verifikasi Pembayaran #<?php echo $id_payment; ?></title>
     <style>
-        /* Style tetap sama sesuai keinginanmu */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #d9d9d9; color: #333; padding: 30px; }
         .container { max-width: 1300px; margin: auto; }
