@@ -210,54 +210,62 @@ nav ul li a.active {
 }
 
 
-.card {
-    background: #fdfae6;
-    padding: 15px;
-    border-radius: 15px; /* Lebih bulat sesuai gambar */
-    width: 300px; /* Ukuran pas untuk 3 kolom di layar desktop */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Efek bayangan halus */
+.card{
+    background:#fdfae6;
+    padding:15px;
+    border-radius:18px;
+    width:320px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    transition:.3s;
 }
+
 .card:hover{
-    background-color: #5758bb;
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    transform:translateY(-5px);
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
 }
 
-.btn-cek {
-    background: #5758bb;
-    color: white;
-    padding: 12px 40px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.3);
+.card a{
+    text-decoration:none;
+    color:inherit;
 }
 
-
-.img-main { width: 100%; border-radius: 5px; }
-
-.img-grid {
-    display: flex;
-    gap: 5px;
-    margin-top: 10px;
+.img-main{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:10px;
+    display:block;
 }
 
-.img-grid img { width: 32%; border-radius: 3px; }
-
-.btn-detail {
-    background: #5758bb;
-    color: white;
-    width: 100%;
-    border: none;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
+.img-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+    margin-top:8px;
 }
+
+.img-grid img{
+    width:100%;
+    height:75px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.btn-detail{
+    background:#5758bb;
+    color:white;
+    width:100%;
+    border:none;
+    padding:12px;
+    margin-top:12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+}
+
 .btn-detail:hover{
-    background-color: #5758bb;
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    transform:translateY(-2px);
 }
 
 .detail {
@@ -567,53 +575,86 @@ footer {
     </section>
 
     <section class="gallery-container">
+
     <div class="card-wrapper">
-        <a href="open_trip.php">
-        <div class="card">
-            <img src="../gambar/gunung.jpg" class="img-main" alt="Gunung">
-            <div class="img-grid">
-                <img src="../gambar/thumb.jpg" alt="Sub 1">
-                <img src="../gambar/thumb.jpg" alt="Sub 2">
-                <img src="../gambar/thumb.jpg" alt="Sub 3">
-            </div>
-            <button class="btn-detail">Lihat selengkapnya ></button>
-            </a>
-        </div>
 
-        <div class="card">
-            <a href="open_trip.php">
-            <img src="../gambar/gunung.jpg" class="img-main" alt="Gunung">
-            <div class="img-grid">
-                <img src="../gambar/thumb.jpg" alt="Sub 1">
-                <img src="../gambar/thumb.jpg" alt="Sub 2">
-                <img src="../gambar/thumb.jpg" alt="Sub 3">
-            </div>
-            <button class="btn-detail">Lihat selengkapnya ></button>
-            </a>
-        </div>
+<?php
+require 'konek.php';
 
-        <div class="card">
-            <a href="open_trip.php">
-            <img src="../gambar/gunung.jpg" class="img-main" alt="Gunung">
-            <div class="img-grid">
-                <img src="../gambar/thumb.jpg" alt="Sub 1">
-                <img src="../gambar/thumb.jpg" alt="Sub 2">
-                <img src="../gambar/thumb.jpg" alt="Sub 3">
-            </div>
-            <button class="btn-detail">Lihat selengkapnya ></button>
-            </a>
-        </div>
+$foto = mysqli_query($konek,"
+    SELECT nama_file
+    FROM galeri
+    ORDER BY id_galeri DESC
+    LIMIT 4
+");
+
+$gambar = [];
+
+while($f = mysqli_fetch_assoc($foto)){
+    $gambar[] = $f['nama_file'];
+}
+?>
+
+<div class="card galeri-card">
+
+    <?php if(isset($gambar[0])){ ?>
+        <img src="../gambar/galeri/<?php echo $gambar[0]; ?>"
+             class="img-main"
+             alt="Galeri">
+    <?php } ?>
+
+    <div class="img-grid">
+
+        <?php for($i=1; $i<=3; $i++): ?>
+
+            <?php if(isset($gambar[$i])): ?>
+
+                <img src="../gambar/galeri/<?php echo $gambar[$i]; ?>"
+                     alt="Galeri">
+
+            <?php else: ?>
+
+                <img src="../gambar/thumb.jpg"
+                     alt="Kosong">
+
+            <?php endif; ?>
+
+        <?php endfor; ?>
 
     </div>
 
-        <div>
-   <a href="open_trip.php">
-            <button class="detail">Lihat selengkapnya ></button>
-    </a>
+    <div style="
+        padding:15px 10px 5px;
+        font-size:22px;
+        font-weight:bold;
+        text-align:center;
+    ">
+        Galeri Pendakian Rebon Adventure
     </div>
+
+    <div style="
+        text-align:center;
+        padding:0 20px 15px;
+        color:#666;
+    ">
+        Dokumentasi perjalanan dan kegiatan pendakian bersama Rebon Adventure.
+    </div>
+
+    <div style="text-align:center;padding-bottom:20px;">
+        <a href="dokumentasi_rebon.php" class="btn-detail">
+            Lihat Dokumentasi >
+        </a>
+    </div>
+
+</div>
+
+</div>
+
+
     <div class="faq">
         <a href="faq.php" class="faq-bar">FAQ</a>
     </div>
+
 </section>
 <!-- FOOTER -->
 

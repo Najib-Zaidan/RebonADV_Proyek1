@@ -3,214 +3,338 @@ require 'konek.php';
 
 $id = $_GET['id'];
 
-$album = mysqli_fetch_assoc(mysqli_query($konek,"
-SELECT * FROM album
-WHERE id_album='$id'
-"));
+$album = mysqli_fetch_assoc(mysqli_query(
+    $konek,
+    "SELECT * FROM album WHERE id_album='$id'"
+));
 
-if(isset($_POST['upload'])){
+/* EDIT NAMA ALBUM */
+if(isset($_POST['edit_album'])){
 
-    $jumlah = count($_FILES['foto']['name']);
+    $nama_album = mysqli_real_escape_string(
+        $konek,
+        $_POST['nama_album']
+    );
 
-    for($i=0; $i<$jumlah; $i++){
+    mysqli_query(
+        $konek,
+        "UPDATE album
+         SET nama='$nama_album'
+         WHERE id_album='$id'"
+    );
 
-        $namaFile = $_FILES['foto']['name'][$i];
-        $tmp      = $_FILES['foto']['tmp_name'][$i];
-
-        if($namaFile != ''){
-
-            $ext = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
-
-            $namaBaru = time().'_'.$i.'_'.uniqid().'.'.$ext;
-
-            if(move_uploaded_file(
-                $tmp,
-                "../gambar/galeri/".$namaBaru
-            )){
-
-                mysqli_query($konek,"
-                    INSERT INTO galeri
-                    VALUES(
-                        NULL,
-                        '$namaBaru',
-                        '$id'
-                    )
-                ");
-            }
-        }
-    }
-
-    header("Location: detail_album.php?id=$id");
+    echo "<script>
+            alert('Nama album berhasil diubah');
+            location.href='detail_album.php?id=$id';
+          </script>";
     exit;
 }
+
+/* HAPUS FOTO TERPILIH */
+if(isset($_POST['hapus_terpilih'])){
+
+    if(!empty($_POST['foto_hapus'])){
+
+        foreach($_POST['foto_hapus'] as $id_galeri){
+
+            $q = mysqli_query(
+                $konek,
+                "SELECT * FROM galeri
+                 WHERE id_galeri='$id_galeri'"
+            );
+
+            $foto = mysqli_fetch_assoc($q);
+
+            if(file_exists("../gambar/galeri/".$foto['nama_file'])){
+                unlink("../gambar/galeri/".$foto['nama_file']);
+            }
+
+            mysqli_query(
+                $konek,
+                "DELETE FROM galeri
+                 WHERE id_galeri='$id_galeri'"
+            );
+        }
+
+        echo "<script>
+                alert('Foto berhasil dihapus');
+                location.href='detail_album.php?id=$id';
+              </script>";
+        exit;
+    }
+}
+
+/* UPLOAD FOTO */
+if(isset($_POST['upload'])){
+
+    foreach($_FILES['foto']['tmp_name'] as $key => $tmp){
+
+        if(empty($tmp)){
+            continue;
+        }
+
+        $nama = time().'_'.$key.'_'.$_FILES['foto']['name'][$key];
+
+        move_uploaded_file(
+            $tmp,
+            "../gambar/galeri/".$nama
+        );
+
+        mysqli_query(
+            $konek,
+            "INSERT INTO galeri(id_album,nama_file)
+             VALUES('$id','$nama')"
+        );
+    }
+
+    echo "<script>
+            alert('Foto berhasil diupload');
+            location.href='detail_album.php?id=$id';
+          </script>";
+    exit;
+}
+
+$data = mysqli_query(
+    $konek,
+    "SELECT * FROM galeri
+     WHERE id_album='$id'
+     ORDER BY id_galeri DESC"
+);
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-<title><?php echo $album['nama']; ?></title>
-
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
 
-body{
-    background:#f4f0ff;
-    padding:30px;
-}
-
-/* HEADER */
-.header{
+.album-header{
     display:flex;
     justify-content:space-between;
-    align-items:center;
+    align-items:flex-start;
+    gap:20px;
     margin-bottom:25px;
+    padding:25px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.album-header h2{
+    margin:0;
+    color:#222;
+    font-size:28px;
+}
+
+.album-header p{
+    color:#777;
+    margin:8px 0 18px;
+}
+
+.edit-album-form{
+    display:flex;
+    gap:10px;
     flex-wrap:wrap;
-    gap:15px;
 }
 
-.header h2{
-    color:#321180;
-    margin-bottom:5px;
-}
-
-.header p{
-    color:#666;
-    font-size:14px;
-}
-
-/* BUTTON */
-.btn{
-    padding:10px 18px;
+.edit-album-form input{
+    padding:12px 15px;
+    border:1px solid #ddd;
     border-radius:10px;
-    text-decoration:none;
-    font-size:14px;
+    min-width:260px;
+    outline:none;
+}
+
+.btn-save{
+    padding:12px 18px;
+    border:none;
+    border-radius:10px;
+    background:#6b3df5;
+    color:white;
+    cursor:pointer;
     font-weight:bold;
-    transition:0.3s;
+}
+
+.btn-save:hover{
+    opacity:.9;
 }
 
 .btn-kembali{
-    background:#ece8ff;
-    color:#321180;
+    background:#111;
+    color:white;
+    text-decoration:none;
+    padding:12px 18px;
+    border-radius:12px;
+    font-weight:bold;
 }
 
-.btn-kembali:hover{
-    background:#ddd4ff;
-}
-
-/* CARD UPLOAD */
-.upload-card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.08);
-    margin-bottom:30px;
-}
-
-.upload-title{
-    margin-bottom:18px;
+.upload-box{
+    background:#fff;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    margin-bottom:25px;
 }
 
 .upload-title h3{
-    color:#321180;
     margin-bottom:5px;
 }
 
 .upload-title p{
     color:#777;
-    font-size:14px;
+    margin-bottom:15px;
+}
+
+.edit-album-form .edit_nama_album{
+    color:black;
 }
 
 .form-upload{
     display:flex;
-    gap:15px;
-    align-items:center;
+    gap:10px;
     flex-wrap:wrap;
 }
 
 .form-upload input[type=file]{
     flex:1;
-    background:#fafafa;
-    border:1px solid #ddd;
     padding:12px;
+    border:1px dashed #ccc;
     border-radius:10px;
 }
 
 .btn-upload{
-    padding:12px 20px;
     background:#6b3df5;
     color:white;
     border:none;
+    padding:12px 20px;
     border-radius:10px;
-    cursor:pointer;
     font-weight:bold;
-    transition:0.3s;
+    cursor:pointer;
 }
 
-.btn-upload:hover{
-    background:#5527dd;
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    background:#fff;
+    padding:15px 20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
-/* GALERI */
+.btn-hapus{
+    background:#e53935;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
 .galeri-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
     gap:20px;
 }
 
 .foto-card{
-    background:white;
-    border-radius:16px;
+    background:#fff;
+    border-radius:18px;
     overflow:hidden;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    transition:0.3s;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    transition:.3s;
 }
 
 .foto-card:hover{
     transform:translateY(-4px);
 }
 
-.foto-card img{
+.foto-wrapper{
+    position:relative;
+}
+
+.foto-wrapper img{
     width:100%;
     height:220px;
     object-fit:cover;
     display:block;
 }
 
-/* EMPTY */
-.kosong{
-    background:white;
-    padding:40px;
-    border-radius:16px;
-    text-align:center;
-    color:#777;
-    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+.checkbox-foto{
+    position:absolute;
+    top:12px;
+    left:12px;
+    width:22px;
+    height:22px;
+    cursor:pointer;
 }
+
+.foto-footer{
+    padding:15px;
+}
+
+.btn-hapus-satu{
+    display:block;
+    text-align:center;
+    background:#e53935;
+    color:white;
+    padding:10px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.btn-hapus-satu:hover{
+    opacity:.9;
+}
+
+@media(max-width:768px){
+
+    .album-header{
+        flex-direction:column;
+    }
+
+    .toolbar{
+        flex-direction:column;
+        gap:15px;
+        align-items:flex-start;
+    }
+
+}
+
 </style>
 
-</head>
-<body>
 
-<!-- HEADER -->
-<div class="header">
+<div class="album-header">
 
     <div>
         <h2>Album : <?php echo $album['nama']; ?></h2>
-        <p>Kelola foto galeri album gunung.</p>
+        <p>Kelola foto galeri album gunung</p>
+
+        <form method="POST" class="edit-album-form">
+
+                <p class="edit_nama_album">Edit Nama Album:</p>
+            <input type="text"
+                   name="nama_album"
+                   value="<?php echo $album['nama']; ?>"
+                   required>
+
+            <button type="submit"
+                    name="edit_album"
+                    class="btn-save">
+                Simpan Nama Album
+            </button>
+
+        </form>
     </div>
 
-    <a href="index.php?menu=galeri" class="btn btn-kembali">
+    <a href="index.php?menu=galeri"
+       class="btn-kembali">
         Kembali
     </a>
 
 </div>
 
-<!-- CARD UPLOAD -->
-<div class="upload-card">
+
+<div class="upload-box">
 
     <div class="upload-title">
         <h3>Upload Foto</h3>
@@ -236,56 +360,66 @@ body{
 
 </div>
 
-<!-- GALERI FOTO -->
+
+<form method="POST">
+
+<div class="toolbar">
+
+    <label>
+        <input type="checkbox" id="pilih_semua">
+        Pilih Semua
+    </label>
+
+    <button type="submit"
+            name="hapus_terpilih"
+            onclick="return confirm('Hapus semua foto yang dipilih?')"
+            class="btn-hapus">
+        Hapus Foto Terpilih
+    </button>
+
+</div>
+
 <div class="galeri-grid">
 
-<?php
-$fotos = mysqli_query($konek,"
-SELECT * FROM galeri
-WHERE id_album='$id'
-ORDER BY id_galeri DESC
-");
+<?php while($f = mysqli_fetch_assoc($data)){ ?>
 
-if(mysqli_num_rows($fotos) > 0):
+    <div class="foto-card">
 
-while($f = mysqli_fetch_assoc($fotos)):
-?>
+        <div class="foto-wrapper">
 
-<div class="foto-card">
+            <input type="checkbox"
+                   class="checkbox-foto"
+                   name="foto_hapus[]"
+                   value="<?php echo $f['id_galeri']; ?>">
 
-    <img src="../gambar/galeri/<?php echo $f['nama_file']; ?>">
+            <img src="../gambar/galeri/<?php echo $f['nama_file']; ?>">
 
-    <div style="padding:12px;">
+        </div>
 
-        <a href="hapus_foto.php?id=<?php echo $f['id_galeri']; ?>&album=<?php echo $id; ?>"
-           onclick="return confirm('Hapus foto ini?')"
-           style="
-           display:block;
-           text-align:center;
-           background:red;
-           color:white;
-           padding:10px;
-           border-radius:10px;
-           text-decoration:none;
-           font-size:14px;
-           font-weight:bold;
-           ">
-           Hapus Foto
-        </a>
+        <div class="foto-footer">
+
+            <a href="hapus_foto.php?id=<?php echo $f['id_galeri']; ?>&album=<?php echo $id; ?>"
+               onclick="return confirm('Hapus foto ini?')"
+               class="btn-hapus-satu">
+                Hapus Foto
+            </a>
+
+        </div>
 
     </div>
 
-</div>
-
-<?php endwhile; else: ?>
-
-<div class="kosong" style="grid-column:1/-1;">
-    Belum ada foto di album ini.
-</div>
-
-<?php endif; ?>
+<?php } ?>
 
 </div>
 
-</body>
-</html>
+</form>
+
+<script>
+document.getElementById('pilih_semua').addEventListener('change', function(){
+
+    document.querySelectorAll('input[name="foto_hapus[]"]').forEach(function(item){
+        item.checked = document.getElementById('pilih_semua').checked;
+    });
+
+});
+</script>
