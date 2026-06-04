@@ -19,27 +19,29 @@ if(isset($_POST['upload'])){
 
         if($namaFile != ''){
 
-            $ext = pathinfo($namaFile, PATHINFO_EXTENSION);
+            $ext = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
 
-            $namaBaru = time().'_galeri_'.$id.'_'.$ext;
+            $namaBaru = time().'_'.$i.'_'.uniqid().'.'.$ext;
 
-            move_uploaded_file(
+            if(move_uploaded_file(
                 $tmp,
                 "../gambar/galeri/".$namaBaru
-            );
+            )){
 
-            mysqli_query($konek,"
-            INSERT INTO galeri
-            VALUES(
-                NULL,
-                '$namaBaru',
-                '$id'
-            )
-            ");
+                mysqli_query($konek,"
+                    INSERT INTO galeri
+                    VALUES(
+                        NULL,
+                        '$namaBaru',
+                        '$id'
+                    )
+                ");
+            }
         }
     }
 
-    header("Location:detail_album.php?id=$id");
+    header("Location: detail_album.php?id=$id");
+    exit;
 }
 ?>
 

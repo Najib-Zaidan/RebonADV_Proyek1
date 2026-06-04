@@ -1,5 +1,6 @@
 <?php
 session_start();
+// Memastikan admin sudah login
 if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
@@ -17,7 +18,7 @@ $id_ubah = mysqli_real_escape_string($konek, $_GET['id_ubah']);
 
 // 2. Logika Proses Persetujuan (Aksi Admin)
 if (isset($_POST['proses_perubahan'])) {
-    $aksi = $_POST['aksi_perubahan']; // 'Setujui' atau 'Tolak'
+    $aksi = $_POST['aksi_perubahan']; // 'Setujui' or 'Tolak'
     $id_private_target = $_POST['id_private'];
     
     // Ambil data perubahan untuk keperluan update jika disetujui
@@ -25,7 +26,16 @@ if (isset($_POST['proses_perubahan'])) {
     $d_baru = ambil($q_ambil_baru);
 
     if ($aksi == 'Setujui') {
-        // Update data utama di tabel private_trip dengan data baru dari ubah_private
+        // VALIDASI HARGA: Wajib diisi dan tidak boleh 0 atau minus jika disetujui
+        $harga_baru    = isset($_POST['harga_baru']) ? intval($_POST['harga_baru']) : 0;
+        $harga_dp_baru = isset($_POST['harga_dp_baru']) ? intval($_POST['harga_dp_baru']) : 0;
+
+        if ($harga_baru <= 0 || $harga_dp_baru <= 0) {
+            echo "<script>alert('Gagal! Anda memilih untuk MENYETUJUI, maka Harga Trip dan Harga DP baru wajib ditentukan dan tidak boleh 0!'); window.history.back();</script>";
+            exit;
+        }
+
+        // Ambil komponen data perubahan dari tabel log ubah_private
         $nama_b      = mysqli_real_escape_string($konek, $d_baru['nama']);
         $no_hp_b     = mysqli_real_escape_string($konek, $d_baru['no_hp']);
         $tujuan_b    = mysqli_real_escape_string($konek, $d_baru['tujuan']);
@@ -34,7 +44,7 @@ if (isset($_POST['proses_perubahan'])) {
         $jumlah_b    = $d_baru['jumlah_peserta'];
         $catatan_b   = mysqli_real_escape_string($konek, $d_baru['catatan']);
 
-        // Jalankan update ke tabel utama, kembalikan status_trip ke 'Belum Disetujui' agar admin bisa meninjau ulang harganya jika diperlukan
+        // Jalankan update ke tabel utama (Disesuaikan dengan kolom: harga, harga_dp, status_trip)
         $update_utama = kueri("UPDATE private_trip SET 
                                nama = '$nama_b',
                                no_hp = '$no_hp_b',
@@ -43,31 +53,36 @@ if (isset($_POST['proses_perubahan'])) {
                                tgl_pulang = '$tgl_pul_b',
                                jumlah_peserta = '$jumlah_b',
                                catatan = '$catatan_b',
+                               harga = '$harga_baru',
+                               harga_dp = '$harga_dp_baru',
                                status_trip = 'Belum Disetujui' 
                                WHERE id_private = $id_private_target");
         
+        // EKSEKUSI PERUBAHAN STATUS PESERTA
+        // 1. Ubah yang 'Pengajuan' menjadi 'Aktif'
+        kueri("UPDATE peserta_private SET status_peserta = 'Aktif' WHERE id_private = $id_private_target AND status_peserta = 'Pengajuan'");
+        // 2. Hapus peserta yang berstatus 'Pending Hapus'
+        kueri("DELETE FROM peserta_private WHERE id_private = $id_private_target AND status_peserta = 'Pending Hapus'");
+
         // Ubah status log perubahan menjadi 1 (Selesai diproses)
         $update_log = kueri("UPDATE ubah_private SET status = 1 WHERE id_ubah = $id_ubah");
 
         if ($update_utama && $update_log) {
             // [LOGIKA NOTIFIKASI - DISETUJUI]
-            // Mengambil id_akun pemilik trip berdasarkan target tabel private_trip
             $q_pemilik = kueri("SELECT id_akun FROM private_trip WHERE id_private = $id_private_target LIMIT 1");
             if (mysqli_num_rows($q_pemilik) > 0) {
                 $d_pemilik = ambil($q_pemilik);
                 $id_user_penerima = $d_pemilik['id_akun'];
-                $pesan_notif = "Pengajuan perubahan data untuk Private Trip Anda ke destinasi $tujuan_b telah DISETUJUI oleh admin.";
+                $pesan_notif = "Pengajuan perubahan data dan peserta untuk Private Trip Anda ke destinasi $tujuan_b telah DISETUJUI oleh admin. Harga paket trip telah disesuaikan ulang.";
                 
-                // Menyesuaikan struktur tabel notif (id_akun, pesan, dibaca = 0)
                 kueri("INSERT INTO notif (id_akun, pesan, dibaca) VALUES ($id_user_penerima, '$pesan_notif', 0)");
             }
 
-            echo "<script>alert('Pengajuan perubahan DISETUJUI. Data master trip telah diperbarui!'); window.location.href='detail_private.php?id=$id_private_target';</script>";
+            echo "<script>alert('Pengajuan perubahan DISETUJUI. Data master trip, daftar peserta, dan harga baru telah diperbarui!'); window.location.href='detail_private.php?id=$id_private_target';</script>";
             exit;
         }
     } else {
         // [LOGIKA NOTIFIKASI - DITOLAK]
-        // Mengambil id_akun pemilik trip dan data tujuan sebelum record ubah_private dihapus dari database
         $q_pemilik = kueri("SELECT pt.id_akun, up.tujuan FROM private_trip pt 
                             JOIN ubah_private up ON pt.id_private = up.id_private 
                             WHERE up.id_ubah = $id_ubah LIMIT 1");
@@ -75,17 +90,22 @@ if (isset($_POST['proses_perubahan'])) {
             $d_pemilik = ambil($q_pemilik);
             $id_user_penerima = $d_pemilik['id_akun'];
             $tujuan_tujuan = $d_pemilik['tujuan'];
-            $pesan_notif = "Mohon maaf, pengajuan perubahan data untuk Private Trip Anda ke destinasi $tujuan_tujuan telah DITOLAK oleh admin.";
+            $pesan_notif = "Mohon maaf, pengajuan perubahan data dan peserta untuk Private Trip Anda ke destinasi $tujuan_tujuan telah DITOLAK oleh admin.";
             
-            // Menyesuaikan struktur tabel notif (id_akun, pesan, dibaca = 0)
             kueri("INSERT INTO notif (id_akun, pesan, dibaca) VALUES ($id_user_penerima, '$pesan_notif', 0)");
         }
 
-        // REVISI: Jika ditolak, hapus baris pengajuan perubahan dari tabel ubah_private agar tidak tabrakan di sisi user
+        // KEMBALIKAN STATUS PESERTA KARENA DITOLAK
+        // 1. Hapus yang tadinya baru diajukan ('Pengajuan')
+        kueri("DELETE FROM peserta_private WHERE id_private = $id_private_target AND status_peserta = 'Pengajuan'");
+        // 2. Kembalikan yang tadinya mau dihapus ('Pending Hapus') menjadi 'Aktif' kembali
+        kueri("UPDATE peserta_private SET status_peserta = 'Aktif' WHERE id_private = $id_private_target AND status_peserta = 'Pending Hapus'");
+
+        // Hapus baris pengajuan perubahan dari tabel ubah_private
         $hapus_log = kueri("DELETE FROM ubah_private WHERE id_ubah = $id_ubah");
         
         if ($hapus_log) {
-            echo "<script>alert('Pengajuan perubahan telah DITOLAK dan data pengajuan berhasil dihapus.'); window.location.href='index.php?menu=private&sub=pengajuan_perubahan';</script>";
+            echo "<script>alert('Pengajuan perubahan telah DITOLAK. Data ajuan dihapus dan daftar peserta dikembalikan ke semula.'); window.location.href='index.php?menu=private&sub=pengajuan_perubahan';</script>";
             exit;
         }
     }
@@ -100,6 +120,7 @@ $query_review = kueri("SELECT
                         pt.nama AS nama_asli, pt.no_hp AS no_hp_asli, pt.tujuan AS tujuan_asli, 
                         pt.tgl_berangkat AS tgl_berangkat_asli, pt.tgl_pulang AS tgl_pulang_asli, 
                         pt.jumlah_peserta AS jumlah_asli, pt.status_trip, pt.status_bayar,
+                        pt.harga AS harga_asli, pt.harga_dp AS harga_dp_asli,
                         a.username 
                        FROM ubah_private up
                        JOIN private_trip pt ON up.id_private = pt.id_private
@@ -111,6 +132,13 @@ $review = ambil($query_review);
 if (!$review) {
     die("Data pengajuan perubahan tidak ditemukan atau sudah diproses.");
 }
+
+$id_private_current = $review['id_private'];
+
+// 4. Ambil data peserta berdasarkan status eksisting untuk review admin
+$q_peserta_baru  = kueri("SELECT * FROM peserta_private WHERE id_private = $id_private_current AND status_peserta = 'Pengajuan'");
+$q_peserta_hapus = kueri("SELECT * FROM peserta_private WHERE id_private = $id_private_current AND status_peserta = 'Pending Hapus'");
+$q_peserta_tetap = kueri("SELECT * FROM peserta_private WHERE id_private = $id_private_current AND status_peserta = 'Aktif'");
 ?>
 
 <!DOCTYPE html>
@@ -168,18 +196,18 @@ if (!$review) {
             margin-bottom: 15px;
             font-weight: bold;
         }
-        .table-perbandingan {
+        .table-perbandingan, .table-peserta {
             width: 100%;
             border-collapse: collapse;
         }
-        .table-perbandingan th {
+        .table-perbandingan th, .table-peserta th {
             background-color: #e1d8f5;
             color: #321180;
             text-align: left;
             padding: 10px;
             font-size: 14px;
         }
-        .table-perbandingan td {
+        .table-perbandingan td, .table-peserta td {
             padding: 12px 10px;
             border-bottom: 1px solid #f0f0f0;
             font-size: 14px;
@@ -210,6 +238,13 @@ if (!$review) {
             border-radius: 5px;
             box-sizing: border-box;
         }
+        .input-harga-container {
+            background-color: #f9f8ff;
+            border: 1px dashed #6b3df5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
         .btn-aksi {
             width: 100%;
             padding: 12px;
@@ -227,12 +262,6 @@ if (!$review) {
         .btn-setuju:hover {
             background-color: #235e26;
         }
-        .btn-tolak {
-            background-color: #c62828;
-        }
-        .btn-tolak:hover {
-            background-color: #9a1f1f;
-        }
         .alert-alasan {
             background-color: #fff3cd;
             color: #856404;
@@ -242,6 +271,16 @@ if (!$review) {
             font-size: 14px;
             margin-top: 5px;
         }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .badge-tambah { background-color: #e8f5e9; color: #2e7d32; }
+        .badge-hapus { background-color: #ffebee; color: #c62828; }
+        .badge-tetap { background-color: #e3f2fd; color: #1565c0; }
     </style>
 </head>
 <body>
@@ -313,7 +352,7 @@ if (!$review) {
                         </tr>
 
                         <tr>
-                            <td><strong>Jumlah Peserta</strong></td>
+                            <td><strong>Jumlah Kuota Peserta</strong></td>
                             <td>
                                 <?php if($review['jumlah_baru'] != $review['jumlah_asli']): ?>
                                     <span class="txt-asli">Asli: <?php echo $review['jumlah_asli']; ?> Orang</span>
@@ -354,47 +393,166 @@ if (!$review) {
                     </tbody>
                 </table>
             </div>
+
+            <div class="card">
+                <div class="card-title">Manajemen Perubahan Daftar Peserta</div>
+                <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+                    Daftar di bawah memuat data rincian rombongan anggota yang baru ditambahkan atau dihapus oleh pemesan.
+                </p>
+
+                <table class="table-peserta">
+                    <thead>
+                        <tr>
+                            <th>Nama Peserta</th>
+                            <th>Usia</th>
+                            <th>Alamat</th>
+                            <th>Riwayat Medis</th>
+                            <th width="20%">Status Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(mysqli_num_rows($q_peserta_baru) > 0): ?>
+                            <?php while($p_baru = ambil($q_peserta_baru)): ?>
+                                <tr style="background-color: #f4faf4;">
+                                    <td><strong><?php echo htmlspecialchars($p_baru['nama']); ?></strong></td>
+                                    <td><?php echo $p_baru['usia']; ?> Tahun</td>
+                                    <td><?php echo htmlspecialchars($p_baru['alamat']); ?></td>
+                                    <td><?php echo htmlspecialchars($p_baru['riwayat']); ?></td>
+                                    <td><span class="badge badge-tambah">+ Baru Diajukan</span></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
+
+                        <?php if(mysqli_num_rows($q_peserta_hapus) > 0): ?>
+                            <?php while($p_hapus = ambil($q_peserta_hapus)): ?>
+                                <tr style="background-color: #fff5f5; color: #c62828;">
+                                    <td><del><?php echo htmlspecialchars($p_hapus['nama']); ?></del></td>
+                                    <td><?php echo $p_hapus['usia']; ?> Tahun</td>
+                                    <td><?php echo htmlspecialchars($p_hapus['alamat']); ?></td>
+                                    <td><?php echo htmlspecialchars($p_hapus['riwayat']); ?></td>
+                                    <td><span class="badge badge-hapus">✕ Akan Dihapus</span></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
+
+                        <?php if(mysqli_num_rows($q_peserta_tetap) > 0): ?>
+                            <?php while($p_tetap = ambil($q_peserta_tetap)): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($p_tetap['nama']); ?></td>
+                                    <td><?php echo $p_tetap['usia']; ?> Tahun</td>
+                                    <td><?php echo htmlspecialchars($p_tetap['alamat']); ?></td>
+                                    <td><?php echo htmlspecialchars($p_tetap['riwayat']); ?></td>
+                                    <td><span class="badge badge-tetap">Tetap</span></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
+
+                        <?php if(mysqli_num_rows($q_peserta_baru) == 0 && mysqli_num_rows($q_peserta_hapus) == 0 && mysqli_num_rows($q_peserta_tetap) == 0): ?>
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #888;">Belum ada anggota peserta terdaftar di dalam klan trip ini.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="right-column">
             <div class="card">
                 <div class="card-title">Aksi Validasi Admin</div>
                 
-                <div style="margin-bottom: 15px; font-size: 14px;">
-                    <span style="display:block; margin-bottom: 5px;">Status Utama Trip Saat Ini:</span>
+                <div style="margin-bottom: 10px; font-size: 14px;">
+                    <span>Status Utama Trip Saat Ini:</span><br>
                     <strong style="color: orange;"><?php echo $review['status_trip']; ?></strong>
                 </div>
-                <div style="margin-bottom: 20px; font-size: 14px;">
-                    <span style="display:block; margin-bottom: 5px;">Status Pembayaran:</span>
-                    <strong style="color: #321180; background: #f0f0f0; padding: 3px 8px; border-radius: 4px; font-size: 12px;">
-                        <?php echo $review['status_bayar']; ?>
-                    </strong>
+                <div style="margin-bottom: 15px; font-size: 14px;">
+                    <span>Harga Trip Lama / DP Lama:</span><br>
+                    <strong>Rp <?php echo number_format($review['harga_asli'], 0, ',', '.'); ?></strong> / 
+                    <span style="color: #666;">Rp <?php echo number_format($review['harga_dp_asli'], 0, ',', '.'); ?></span>
                 </div>
 
-                <form action="" method="POST" onsubmit="return confirm('Apakah Anda yakin dengan keputusan pengujian ini?');">
+                <form action="" method="POST" onsubmit="return verifikasiKeputusan();">
                     <input type="hidden" name="id_private" value="<?php echo $review['id_private']; ?>">
                     
                     <label style="font-size: 14px; font-weight: bold; display: block; margin-bottom: 8px;">Pilih Keputusan:</label>
-                    <select name="aksi_perubahan" class="form-control" required>
+                    <select name="aksi_perubahan" id="aksi_perubahan" class="form-control" onchange="togglePersyaratanHarga()" required>
                         <option value="Setujui">Setujui & Perbarui Data Master</option>
                         <option value="Tolak">Tolak Permintaan Perubahan</option>
                     </select>
 
+                    <div class="input-harga-container" id="box_harga_baru">
+                        <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; color:#4922c7;">
+                            Harga Paket Trip Baru (Rp):
+                        </label>
+                        <input type="number" name="harga_baru" id="harga_baru" class="form-control" placeholder="Contoh: 3500000" min="0" value="<?php echo $review['harga_asli']; ?>">
+                        
+                        <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; color:#4922c7;">
+                            Harga Down Payment (DP) Baru (Rp):
+                        </label>
+                        <input type="number" name="harga_dp_baru" id="harga_dp_baru" class="form-control" placeholder="Contoh: 500000" min="0" value="<?php echo $review['harga_dp_asli']; ?>">
+                        
+                        <span style="font-size: 11px; color:#e67e22; display:block; line-height: 1.3;">
+                            *Wajib diisi jika menyetujui perubahan data penyesuaian jumlah kuota/tanggal/peserta.
+                        </span>
+                    </div>
+
                     <div style="margin-top: 15px;">
-                        <button type="submit" name="proses_perubahan" class="btn-aksi btn-setuju">
+                        <button type="submit" name="proses_perubahan" class="btn-aksi btn-setuju" id="btn_submit_aksi">
                             ✓ Eksekusi Keputusan
                         </button>
                     </div>
                 </form>
 
                 <p style="font-size: 11px; color: #888; text-align: center; margin-top: 15px; line-height: 1.4;">
-                    *Jika disetujui, sistem akan menyalin data ajuan baru ke data inti perjalanan pengguna.
+                    *Jika disetujui, sistem otomatis menyalin data ajuan baru, menyinkronkan status peserta baru, serta menghapus data peserta yang dikeluarkan.
                 </p>
             </div>
         </div>
 
     </div>
 </div>
+
+<script>
+function togglePersyaratanHarga() {
+    var aksi = document.getElementById('aksi_perubahan').value;
+    var boxHarga = document.getElementById('box_harga_baru');
+    var inputTrip = document.getElementById('harga_baru');
+    var inputDp = document.getElementById('harga_dp_baru');
+    var btn = document.getElementById('btn_submit_aksi');
+
+    if(aksi === 'Setujui') {
+        boxHarga.style.display = 'block';
+        inputTrip.required = true;
+        inputDp.required = true;
+        btn.style.backgroundColor = '#2e7d32';
+        btn.innerHTML = '✓ Eksekusi Persetujuan';
+    } else {
+        boxHarga.style.display = 'none';
+        inputTrip.required = false;
+        inputDp.required = false;
+        btn.style.backgroundColor = '#c62828';
+        btn.innerHTML = '✕ Eksekusi Penolakan';
+    }
+}
+
+function verifikasiKeputusan() {
+    var aksi = document.getElementById('aksi_perubahan').value;
+    if(aksi === 'Setujui') {
+        var inputTrip = parseInt(document.getElementById('harga_baru').value) || 0;
+        var inputDp = parseInt(document.getElementById('harga_dp_baru').value) || 0;
+        
+        if(inputTrip <= 0 || inputDp <= 0) {
+            alert('Nilai Harga Trip dan DP tidak boleh kosong atau bernilai 0 jika Anda ingin menyetujui pengajuan ini!');
+            return false;
+        }
+        return confirm('Konfirmasi: Menyetujui data trip beserta perubahan struktur status anggotanya?');
+    }
+    return confirm('Apakah Anda yakin ingin MENOLAK? Data pengajuan baru dan draft peserta pengajuan akan dibersihkan sistem.');
+}
+
+// Inisialisasi awal saat halaman dibuka
+togglePersyaratanHarga();
+</script>
 
 </body>
 </html>

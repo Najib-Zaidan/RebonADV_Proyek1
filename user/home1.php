@@ -124,13 +124,28 @@ nav .active1 {
   background: linear-gradient(135deg, #7f5af0, #3b1fa5);
   padding: 30px;
   border-radius: 15px;
-
   display: flex;
   gap: 25px;
+  overflow-x: auto; 
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.trip-container::-webkit-scrollbar {
+  height: 8px;
+}
+.trip-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+.trip-container::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .trip-container a {
   text-decoration: none;
+  flex-shrink: 0; 
+  display: flex;
 }
 
 .trip-card {
@@ -139,32 +154,93 @@ nav .active1 {
   border-radius: 10px;
   overflow: hidden;
   padding-bottom: 15px;
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column;
 }
 
-.trip-card img {
+/* Pembungkus gambar dibuat relatif untuk meletakkan badge rating */
+.card-img-wrapper {
+  position: relative;
   width: 100%;
   height: 150px;
+  overflow: hidden;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.trip-card h3 {
-  margin: 10px;
+/* BARU: Style Badge Rating Pojok Kanan Atas Gambar */
+.rating-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 2;
 }
 
-.trip-card p {
-  margin: 0 10px;
+.rating-badge .star {
+  color: #ffca28; /* Warna kuning emas */
+  font-size: 13px;
+}
+
+/* Area konten teks */
+.card-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  box-sizing: border-box; 
+  overflow: hidden; 
+}
+
+.trip-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #333; 
+  word-wrap: break-word; 
+}
+
+.trip-card p.desc {
+  margin: 0 0 10px 0;
   font-size: 14px;
   color: #555;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word; 
 }
 
 .trip-card .date {
-  margin-top: 5px;
+  margin-top: auto; 
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #777;
 }
 
 .price {
   display: block;
-  margin: 10px;
   font-weight: bold;
+  color: #6b3df5;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* PRIVATE TRIP */
@@ -174,7 +250,6 @@ nav .active1 {
   background: #f1edf8;
   padding: 40px;
   border-radius: 15px;
-
   display: flex;
   align-items: center;
   gap: 40px;
@@ -272,7 +347,6 @@ footer {
   font-weight: 600;
 }
 
-/* Styling Kontak dengan Ikon */
 .contact-item {
   display: flex;
   align-items: flex-start;
@@ -282,7 +356,6 @@ footer {
   font-weight: 600;
 }
 
-/* Bagian Media Sosial */
 .social-section {
   margin-top: 25px;
 }
@@ -300,7 +373,7 @@ footer {
 }
 
 .footer-logo-img {
-  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
+  width: 220px; 
   height: auto;
   display: block;
 }
@@ -349,7 +422,6 @@ footer {
 
 /* MOBILE */
 @media (max-width: 768px) {
-  /* NAVBAR */
   .navbar {
     flex-direction: column;
     padding: 20px;
@@ -362,7 +434,6 @@ footer {
     gap: 15px;
   }
 
-  /* HERO */
   .hero {
     height: auto;
     padding: 40px 20px;
@@ -378,7 +449,6 @@ footer {
     width: 150px;
   }
 
-  /* TRIP */
   .trip {
     padding: 30px 20px;
   }
@@ -393,13 +463,11 @@ footer {
     max-width: 300px;
   }
 
-  /* PRIVATE */
   .private-trip {
     margin: 30px 20px;
     padding: 20px;
   }
 
-  /* GALERI */
   .galeri {
     padding: 30px 20px;
   }
@@ -408,7 +476,6 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  /* FOOTER */
   .footer-content {
     flex-direction: column;
     text-align: center;
@@ -432,7 +499,6 @@ footer {
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
         <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
             </span>
@@ -442,7 +508,6 @@ footer {
             </a>
 
         <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
             <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
@@ -450,7 +515,6 @@ footer {
       </nav>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-content">
         <img
@@ -468,7 +532,6 @@ footer {
       </div>
     </section>
 
-    <!-- TRIP TERSEDIA -->
     <section class="trip">
       <div class="trip-header">
         <h2>Trip Tersedia</h2>
@@ -477,43 +540,57 @@ footer {
 
       <div class="trip-container">
         <?php
-        // Memuat file fungsi database pendukung
         require 'fungsi.php';
 
-        // Query mengambil data dengan JOIN ke tabel tujuan sesuai pemisahan struktur baru
-        $data_trip = kueri("SELECT t.*, tj.tujuan,
-                           (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) AS foto 
+        // UPDATE QUERY: Ditambahkan subquery rating (AVG(r.rating) as rata_rating)
+        $data_trip = kueri("SELECT t.*, tj.tujuan, k.*,
+                           (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) AS foto,
+                           (SELECT AVG(rating) FROM rating r WHERE r.id_trip = t.id_trip) as rata_rating
                            FROM trip t 
                            JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan 
+                           JOIN katalog k ON k.id_trip = t.id_trip
                            LIMIT 5");
 
-        // Melakukan looping untuk setiap baris data trip
         while ($row = ambil($data_trip)) :
-            // Mengolah format tanggal (Berangkat - Pulang Bulan Tahun)
             $tgl_berangkat = date('d', strtotime($row['tgl_berangkat']));
             $tgl_pulang = date('d F Y', strtotime($row['tgl_pulang']));
             $display_tgl = "Tanggal $tgl_berangkat - $tgl_pulang";
+            
+            // Format tampilan rating ke 1 desimal jika data tersedia
+            $rating_tampil = $row['rata_rating'] ? number_format($row['rata_rating'], 1) : null;
         ?>
 
             <a href="ot_katalog.php?id=<?= $row['id_trip']; ?>">
-                <div class="trip-card">
-                    <img src="../gambar/upload/<?= $row['foto'] ? $row['foto'] : 'default.jpg'; ?>" />
-                    
-                    <h3><?= htmlspecialchars($row['tujuan']); ?></h3>
-                    
-                    <p><?= htmlspecialchars($row['catatan']); ?></p>
-                    
-                    <p class="date"><?= $display_tgl; ?></p>
-                    
-                    <span class="price">Rp. <?= number_format($row['harga'], 0, ',', '.'); ?> / Pax</span>
-                </div>
+                  <div class="trip-card">
+                      <div class="card-img-wrapper">
+                          <img src="../gambar/upload/<?= $row['foto'] ? $row['foto'] : 'default.jpg'; ?>" />
+                          
+                          <?php if ($rating_tampil): ?>
+                            <div class="rating-badge">
+                              <span class="star">★</span> <?= $rating_tampil; ?> / 5
+                            </div>
+                          <?php else: ?>
+                            <div class="rating-badge" style="font-size: 9px; color: #777;">
+                              Baru
+                            </div>
+                          <?php endif; ?>
+                      </div>
+                      
+                      <div class="card-content">
+                          <h3><?= htmlspecialchars($row['tujuan']); ?></h3>
+                          
+                          <p class="desc"><?= htmlspecialchars($row['deskripsi']); ?></p>
+                          
+                          <p class="date"><?= $display_tgl; ?></p>
+                          <span class="price">Rp. <?= number_format($row['harga'], 0, ',', '.'); ?> / Pax</span>
+                      </div>
+                  </div>
             </a>
 
         <?php endwhile; ?>
       </div>
     </section>
 
-    <!-- TRIP SESUKA HATI -->
     <section class="private-trip">
       <div class="private-text">
         <h2>Trip Sesuka Hati</h2>
@@ -536,137 +613,104 @@ footer {
     </section>
 
     <section class="galeri">
+    <style>
+    .galeri{
+        padding:40px 6%;
+    }
 
-<style>
+    .galeri h2{
+        text-align:center;
+        font-size:30px;
+        margin-bottom:25px;
+        color:#333;
+    }
 
-.galeri{
-    padding:40px 6%;
-}
+    .galeri-container{
+        display:flex;
+        flex-wrap:wrap;
+        gap:15px;
+        justify-content:center;
+    }
 
-.galeri h2{
-    text-align:center;
-    font-size:30px;
-    margin-bottom:25px;
-    color:#333;
-}
+    .card-galeri{
+        width:180px;
+        background:#fff;
+        border-radius:12px;
+        overflow:hidden;
+        box-shadow:0 2px 8px rgba(0,0,0,0.08);
+        transition:0.3s;
+    }
 
-.galeri-container{
-    display:flex;
-    flex-wrap:wrap;
-    gap:15px;
-    justify-content:center;
-}
+    .card-galeri:hover{
+        transform:translateY(-3px);
+    }
 
-.card-galeri{
-    width:180px;
-    background:#fff;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-    transition:0.3s;
-}
+    .grid-foto{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:2px;
+        padding:2px;
+    }
 
-.card-galeri:hover{
-    transform:translateY(-3px);
-}
+    .grid-foto img{
+        width:100%;
+        height:85px;
+        object-fit:cover;
+        display:block;
+    }
 
-.grid-foto{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:2px;
-    padding:2px;
-}
+    .kosong{
+        width:100%;
+        height:85px;
+        background:#ddd;
+    }
 
-.grid-foto img{
-    width:100%;
-    height:85px;
-    object-fit:cover;
-    display:block;
-}
+    .judul-album{
+        padding:10px;
+        text-align:center;
+        font-size:14px;
+        font-weight:bold;
+        color:#333;
+    }
+    </style>
 
-.kosong{
-    width:100%;
-    height:85px;
-    background:#ddd;
-}
+    <h2>GALERI KAMI</h2>
 
-.judul-album{
-    padding:10px;
-    text-align:center;
-    font-size:14px;
-    font-weight:bold;
-    color:#333;
-}
+    <div class="galeri-container">
+    <?php
+    $data = mysqli_query($konek,"SELECT * FROM album ORDER BY id_album DESC");
 
-</style>
+    while($g = mysqli_fetch_assoc($data)):
+        $fotos = mysqli_query($konek,"SELECT nama_file FROM galeri WHERE id_album='$g[id_album]' LIMIT 4");
+        $gambar = [];
 
-<h2>GALERI KAMI</h2>
+        while($f = mysqli_fetch_assoc($fotos)){
+            $gambar[] = $f['nama_file'];
+        }
+    ?>
 
-<div class="galeri-container">
+    <a href="detail_galeri_user.php?id=<?php echo $g['id_album']; ?>" style="text-decoration:none;">
+      <div class="card-galeri">
+        <div class="grid-foto">
+          <?php for($i=0; $i<4; $i++): ?>
+              <?php if(isset($gambar[$i])): ?>
+                  <img src="../gambar/galeri/<?php echo $gambar[$i]; ?>">
+              <?php else: ?>
+                  <div class="kosong"></div>
+              <?php endif; ?>
+          <?php endfor; ?>
+        </div>
 
-<?php
+        <div class="judul-album">
+            <?php echo $g['nama']; ?>
+        </div>
+      </div>
+    </a>
 
-$data = mysqli_query($konek,"
-SELECT *
-FROM album
-ORDER BY id_album DESC
-");
+    <?php endwhile; ?>
+    </div>
+    </section>
 
-while($g = mysqli_fetch_assoc($data)):
-
-$fotos = mysqli_query($konek,"
-SELECT nama_file
-FROM galeri
-WHERE id_album='$g[id_album]'
-LIMIT 4
-");
-
-$gambar = [];
-
-while($f = mysqli_fetch_assoc($fotos)){
-    $gambar[] = $f['nama_file'];
-}
-
-?>
-
-<a href="detail_galeri_user.php?id=<?php echo $g['id_album']; ?>"
-style="text-decoration:none;">
-
-<div class="card-galeri">
-
-<div class="grid-foto">
-
-<?php for($i=0; $i<4; $i++): ?>
-
-    <?php if(isset($gambar[$i])): ?>
-
-        <img src="../gambar/galeri/<?php echo $gambar[$i]; ?>">
-
-    <?php else: ?>
-
-        <div class="kosong"></div>
-
-    <?php endif; ?>
-
-<?php endfor; ?>
-
-</div>
-
-<div class="judul-album">
-    <?php echo $g['nama']; ?>
-</div>
-
-</div>
-
-</a>
-
-<?php endwhile; ?>
-
-</div>
-
-</section>
-
-    <!-- FOOTER -->
     <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">

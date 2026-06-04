@@ -10,6 +10,49 @@ $katalog = "CREATE TABLE IF NOT EXISTS katalog (
     deskripsi TEXT NOT NULL,
     FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE
 )";
+$ubah_pt = "CREATE TABLE IF NOT EXISTS ubah_private (
+    id_ubah INT AUTO_INCREMENT PRIMARY KEY,
+    id_private INT,
+    nama VARCHAR(100) NOT NULL,
+    no_hp VARCHAR(20) NOT NULL,
+    tujuan VARCHAR(100) NOT NULL,
+    tgl_berangkat DATE NOT NULL,
+    tgl_pulang DATE NOT NULL,
+    tgl_pengajuan DATETIME NOT NULL DEFAULT NOW(),
+    catatan TEXT,
+    jumlah_peserta INT NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (id_private) REFERENCES private_trip(id_private) ON DELETE CASCADE
+)";
+$album = "CREATE TABLE album (
+    id_album INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(50)
+)";
+$galeri = "CREATE TABLE galeri (
+    id_galeri INT AUTO_INCREMENT PRIMARY KEY,
+    nama_file VARCHAR(150),
+    id_album INT,
+    FOREIGN KEY (id_album) REFERENCES album(id_album) ON DELETE CASCADE
+)";
+$notif = "CREATE TABLE notif (
+    id_notif INT AUTO_INCREMENT PRIMARY KEY,
+    pesan TEXT DEFAULT NULL,
+    waktu DATETIME NOT NULL DEFAULT NOW(),
+    dibaca BOOLEAN NOT NULL DEFAULT FALSE,
+    id_akun INT,
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
+)";
+$rating = "CREATE TABLE rating (
+    id_rating INT AUTO_INCREMENT PRIMARY KEY,
+    rating INT NOT NULL,
+    ulasan TEXT,
+    id_tujuan INT,
+    id_trip INT,
+    id_akun INT,
+    FOREIGN KEY (id_tujuan) REFERENCES tujuan(id_tujuan) ON DELETE CASCADE,
+    FOREIGN KEY (id_trip) REFERENCES trip(id_trip) ON DELETE CASCADE,
+    FOREIGN KEY (id_akun) REFERENCES akun(id_akun) ON DELETE CASCADE
+)";
 $tujuan = "CREATE TABLE IF NOT EXISTS tujuan (
     id_tujuan INT AUTO_INCREMENT PRIMARY KEY,
     tujuan VARCHAR(50) NOT NULL,
@@ -136,6 +179,7 @@ $peserta_pt = "CREATE TABLE IF NOT EXISTS peserta_private (
     usia INT NOT NULL,
     alamat VARCHAR(100) NOT NULL,
     riwayat VARCHAR(50) NOT NULL,
+    status_peserta ENUM('Aktif', 'Pending Hapus', 'Pengajuan') NOT NULL DEFAULT 'Aktif',
     FOREIGN KEY (id_private) REFERENCES private_trip(id_private) ON DELETE CASCADE
 )";
 $payment_pt = "CREATE TABLE IF NOT EXISTS payment_private (
@@ -151,7 +195,7 @@ $payment_pt = "CREATE TABLE IF NOT EXISTS payment_private (
 $batal_pt = "CREATE TABLE IF NOT EXISTS batal_private (
     id_batal INT AUTO_INCREMENT PRIMARY KEY,
     id_private INT,
-    status  NOT NULL DEFAULT FALSE,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
     tgl_pembatalan DATETIME NOT NULL DEFAULT NOW(),
     alasan TEXT NOT NULL,
     FOREIGN KEY (id_private) REFERENCES private_trip(id_private) ON DELETE CASCADE
@@ -165,7 +209,6 @@ $batal_peserta = "CREATE TABLE IF NOT EXISTS batal_peserta (
     tgl_verifikasi DATETIME NULL,
     FOREIGN KEY (id_detail) REFERENCES detail(id_detail) ON DELETE CASCADE
 )";
-
 
 mysqli_query($konek, $tujuan);
 mysqli_query($konek, $trip);
@@ -184,7 +227,12 @@ mysqli_query($konek, $private);
 mysqli_query($konek, $peserta_pt);
 mysqli_query($konek, $payment_pt);
 mysqli_query($konek, $batal_pt);
+mysqli_query($konek, $ubah_pt);
 mysqli_query($konek, $batal_peserta);
+mysqli_query($konek, $notif);
+mysqli_query($konek, $album);
+mysqli_query($konek, $galeri);
+mysqli_query($konek, $rating);
 
 mysqli_close($konek);
 header("Location: ../impor_sql/setup.php");

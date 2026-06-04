@@ -108,12 +108,40 @@ nav .active2 {
   margin-top: 20px;
 }
 
-/* IMAGE */
+/* IMAGE WORKSPACE */
+.img-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .main-img {
   width: 100%;
   border-radius: 10px;
   aspect-ratio: 3/2;
   object-fit: cover;
+}
+
+/* BARU: Rating Badge di pojok kanan atas gambar utama */
+.rating-badge-main {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.rating-badge-main .star-main {
+  color: #ffca28;
+  font-size: 16px;
 }
 
 .thumbs {
@@ -190,15 +218,42 @@ nav .active2 {
   padding: 15px;
   border-radius: 10px;
   margin: 10px 0;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
 }
 
-.price-card button {
+.price-box .harga-kiri p {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+}
+
+.price-box .harga-kiri h2 {
+  margin: 0;
+}
+
+.price-box .dp {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0.9; 
+}
+
+.price-card .btn-pesan {
+  display: block;
+  text-align: center;
+  text-decoration: none;
   width: 100%;
+  box-sizing: border-box;
   padding: 10px;
   background: #2f2f8f;
   color: white;
   border: none;
   border-radius: 8px;
+}
+
+.price-card .btn-pesan:hover {
+  background: #1e1e64;
 }
 
 /* FOOTER */
@@ -235,7 +290,6 @@ footer {
   font-weight: 600;
 }
 
-/* Styling Kontak dengan Ikon */
 .contact-item {
   display: flex;
   align-items: flex-start;
@@ -245,7 +299,6 @@ footer {
   font-weight: 600;
 }
 
-/* Bagian Media Sosial */
 .social-section {
   margin-top: 25px;
 }
@@ -328,10 +381,69 @@ footer {
     opacity: 0.8;
     border: 2px solid #6b3df5;
 }
+
+/* BARU: CSS Seksi Ulasan User */
+.ulasan-section {
+  margin-top: 50px;
+  background: #fdfbf3;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.ulasan-section h3 {
+  color: #5a3fc0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #efe8cc;
+  padding-bottom: 10px;
+}
+
+.ulasan-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ulasan-card {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border-left: 4px solid #6b3df5;
+}
+
+.ulasan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ulasan-user {
+  font-weight: bold;
+  color: #333;
+}
+
+.ulasan-stars {
+  color: #ffca28;
+  font-size: 14px;
+}
+
+.ulasan-text {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.ulasan-kosong {
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+  padding: 20px 0;
+}
   </style>
 </head>
 <body>
-    <!-- NAVBAR -->
     <header class="navbar">
       <div class="logo">
         <img
@@ -346,7 +458,6 @@ footer {
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
         <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
             </span>
@@ -356,7 +467,6 @@ footer {
             </a>
 
         <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
             <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
@@ -367,7 +477,7 @@ footer {
     <?php
     require 'fungsi.php';
 
-    $id_trip = $_GET['id'];
+    $id_trip = intval($_GET['id']);
 
     // Menghitung sisa kuota yang tersedia
     $sisa = ambil(kueri("SELECT
@@ -377,8 +487,9 @@ footer {
                 ON t.id_trip = b.id_trip AND b.status != 'Dibatalkan'
                 WHERE t.id_trip = $id_trip"));
 
-    // KODE DIPERBARUI: Query data dengan melakukan JOIN ke tabel tujuan
-    $data_trip = kueri("SELECT t.*, k.*, tj.tujuan 
+    // UPDATE QUERY: Menambahkan subquery AVG rating keseluruhan trip
+    $data_trip = kueri("SELECT t.*, k.*, tj.tujuan,
+                       (SELECT AVG(rating) FROM rating r WHERE r.id_trip = t.id_trip) as rata_rating
                        FROM trip t 
                        INNER JOIN katalog k ON t.id_trip = k.id_trip 
                        INNER JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
@@ -393,6 +504,13 @@ footer {
     $data_meet = kueri("SELECT * FROM meetpoint WHERE id_trip = $id_trip ORDER BY waktu ASC");
 
     $data_iten = kueri("SELECT * FROM itenerary WHERE id_trip = $id_trip ORDER BY mulai ASC");
+
+    // NEW QUERY: Menarik data review/ulasan personal dari para user
+    $data_ulasan = kueri("SELECT r.*, a.username 
+                          FROM rating r 
+                          INNER JOIN akun a ON r.id_akun = a.id_akun 
+                          WHERE r.id_trip = $id_trip 
+                          ORDER BY r.id_rating DESC");
 
     function tgl_indo($tanggal) {
         $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -421,8 +539,24 @@ footer {
             $gambar_list = [];
             while($g = ambil($data_gambar)) { $gambar_list[] = $g; }
             $main_img = !empty($gambar_list) ? $gambar_list[0]['nama_file'] : 'default.jpg';
+            
+            // Format angka rating rata-rata desimal
+            $rating_header = $trip['rata_rating'] ? number_format($trip['rata_rating'], 1) : null;
             ?>
-            <img src="../gambar/upload/<?= $main_img; ?>" id="mainImg" class="main-img" />
+            
+            <div class="img-wrapper">
+                <img src="../gambar/upload/<?= $main_img; ?>" id="mainImg" class="main-img" />
+                
+                <?php if ($rating_header): ?>
+                  <div class="rating-badge-main">
+                    <span class="star-main">★</span> <?= $rating_header; ?> / 5.0
+                  </div>
+                <?php else: ?>
+                  <div class="rating-badge-main" style="font-size: 11px; color: #666;">
+                    Belum ada ulasan
+                  </div>
+                <?php endif; ?>
+            </div>
 
             <div class="thumbs">
                 <?php foreach($gambar_list as $img) : ?>
@@ -434,11 +568,14 @@ footer {
                 <p class="date"><?= tgl_indo($trip['tgl_berangkat']); ?></p>
 
                 <div class="price-box">
-                    <p>Harga Per Pax</p>
-                    <h2>Rp. <?= number_format($trip['harga'], 0, ',', '.'); ?></h2>
+                    <div class="harga-kiri">
+                        <p>Harga Per Pax</p>
+                        <h2>Rp <?= number_format($trip['harga'], 0, ',', '.'); ?></h2>
+                    </div>
+                    <p class="dp">DP Rp <?= number_format($trip['harga_dp'], 0, ',', '.'); ?></p>
                 </div>
 
-                <a href="pilih_peserta.php?id=<?= $trip['id_trip']; ?>"> <button>Pesan sekarang</button></a>
+                <a href="pilih_peserta.php?id=<?= $trip['id_trip']; ?>" class="btn-pesan">Pesan sekarang</a>
             </div>
         </div>
 
@@ -493,9 +630,42 @@ footer {
             <?php endwhile; ?>
         </ul>
     </div>
+
+    <div class="ulasan-section">
+        <h3>Ulasan & Rating Pengunjung</h3>
+        <div class="ulasan-container">
+            <?php 
+            $ada_ulasan = false;
+            while($ul = ambil($data_ulasan)) : 
+                $ada_ulasan = true;
+            ?>
+                <div class="ulasan-card">
+                    <div class="ulasan-header">
+                        <span class="ulasan-user">👤 <?= htmlspecialchars($ul['username']); ?></span>
+                        <span class="ulasan-stars">
+                            <?php 
+                            // Membuat looping cetak bintang emas sesuai isi nilai int rating
+                            for($bintang = 1; $bintang <= 5; $bintang++) {
+                                echo $bintang <= $ul['rating'] ? '★' : '☆';
+                            }
+                            ?>
+                        </span>
+                    </div>
+                    <p class="ulasan-text">
+                        "<?= !empty($ul['ulasan']) ? nl2br(htmlspecialchars($ul['ulasan'])) : 'Pengunjung tidak memberikan deskripsi ulasan.'; ?>"
+                    </p>
+                </div>
+            <?php endwhile; ?>
+
+            <?php if(!$ada_ulasan): ?>
+                <div class="ulasan-kosong">
+                    <p>Belum ada ulasan untuk paket trip ini. Jadilah yang pertama memberikan review!</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
 </main>
 
-    <!-- FOOTER -->
     <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">

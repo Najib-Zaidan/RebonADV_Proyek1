@@ -488,7 +488,6 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
                     <th>Usia</th>
                     <th>Alamat</th>
                     <th>Riwayat Penyakit</th>
-                    <th>Aksi</th>
                 </tr>
 
                 <?php if(mysqli_num_rows($peserta) > 0): ?>
@@ -498,21 +497,11 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
                         <td><?= $p['usia']; ?> Thn</td>
                         <td><?= $p['alamat']; ?></td>
                         <td><?= !empty($p['riwayat']) ? $p['riwayat'] : '-'; ?></td>
-                        <td>
-                            <?php if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund'): ?>
-                                <a href="ubah_peserta_private.php?id_peserta=<?= $p['id_peserta']; ?>&id_private=<?= $id_private; ?>" 
-                                class="btn btn-edit-person">
-                                    Ubah Peserta
-                                </a>
-                            <?php else: ?>
-                                -
-                            <?php endif; ?>
-                        </td>
                     </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" style="text-align: center; color: #777; padding: 20px;">Belum ada data peserta yang dimasukkan.</td>
+                        <td colspan="4" style="text-align: center; color: #777; padding: 20px;">Belum ada data peserta yang dimasukkan.</td>
                     </tr>
                 <?php endif; ?>
 

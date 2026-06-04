@@ -191,7 +191,7 @@ while ($row = ambil($res_db_gambar)) {
 // Hapus semua relasi gambar lama untuk trip ini di database
 kueri("DELETE FROM gambar WHERE id_trip = $id_trip");
 
-// Masukkan kembali record gambar lama yang dipertahankan admin ke database
+// Masukkan kembali record gambar lama yang dipertahaman admin ke database
 if (!empty($gambar_tetap)) {
     foreach ($gambar_tetap as $nama_lama) {
         kueri("INSERT INTO gambar (id_trip, nama_file) VALUES ($id_trip, '$nama_lama')");
@@ -221,6 +221,48 @@ if (!empty($_FILES['files']['name'][0])) {
 }
 
 
+// =========================================================================
+// [LOGIKA TAMBAHAN KUSTOM] SINKRONISASI ULANG STATUS PEMBAYARAN BOOKING USER
+// =========================================================================
+// Logika ini dipicu jika komponen harga atau harga_dp terdeteksi berubah
+if (in_array("rincian harga", $list_perubahan)) {
+    
+    // Ambil semua data booking aktif untuk trip ini (Abaikan data Dibatalkan/Refund)
+    $res_all_booking = kueri("SELECT id_booking, jumlah_peserta, status FROM booking WHERE id_trip = $id_trip AND status NOT IN ('Dibatalkan', 'Refund')");
+    
+    while ($row_booking = ambil($res_all_booking)) {
+        $id_booking     = $row_booking['id_booking'];
+        $jumlah_peserta = $row_booking['jumlah_peserta'];
+        
+        // Ambil akumulasi nominal pembayaran yang valid (telah diverifikasi admin)
+        $res_payment = kueri("SELECT SUM(nominal) as total_bayar FROM payment_open WHERE id_booking = $id_booking AND status = 'Diverifikasi'");
+        $data_payment = ambil($res_payment);
+        $total_bayar  = isset($data_payment['total_bayar']) ? (int)$data_payment['total_bayar'] : 0;
+        
+        // Hitung ambang batas nominal tagihan baru sesuai variabel input terbaru
+        $total_harga_baru = (int)$harga * $jumlah_peserta;
+        $total_dp_baru    = (int)$harga_dp * $jumlah_peserta;
+        
+        // Komparasi kecukupan dana untuk memetakan ENUM status baru
+        if ($total_bayar >= $total_harga_baru) {
+            $status_baru = 'Lunas';
+        } elseif ($total_bayar >= $total_dp_baru) {
+            $status_baru = 'DP';
+        } elseif ($total_bayar > 0) {
+            $status_baru = 'Bayar non-DP';
+        } else {
+            $status_baru = 'Belum Bayar';
+        }
+        
+        // Eksekusi update data jika status komparasi berbeda dari data lawas database
+        if ($row_booking['status'] != $status_baru) {
+            kueri("UPDATE booking SET status = '$status_baru' WHERE id_booking = $id_booking");
+        }
+    }
+}
+// =========================================================================
+
+
 // ==========================================
 // [LOGIKA TAMBAHAN] PROSES GENERATE & KIRIM NOTIFIKASI KE USER
 // ==========================================
@@ -230,7 +272,14 @@ if (empty($list_perubahan)) {
 } else {
     // Menggabungkan item menjadi teks terpisah koma, contoh: "fasilitas trip, jadwal itinerary"
     $item_diubah = implode(', ', $list_perubahan);
-    $pesan_notif = "Admin telah mengubah komponen [$item_diubah] pada trip $nama_trip. Silakan periksa kembali detail pesanan Anda.";
+    $pesan_notif = "Admin telah mengubah komponen [$item_diubah] pada trip $nama_trip.";
+    
+    // Memberikan catatan tambahan khusus jika harga berubah agar user memeriksa tagihannya kembali
+    if (in_array("rincian harga", $list_perubahan)) {
+        $pesan_notif .= " Mohon periksa kembali riwayat tagihan Anda karena terjadi penyesuaian status pembayaran.";
+    } else {
+        $pesan_notif .= " Silakan periksa kembali detail pesanan Anda.";
+    }
 }
 
 // Ambil semua daftar id_akun unik yang telah membooking trip bersangkutan (Kecuali status dibatalkan)

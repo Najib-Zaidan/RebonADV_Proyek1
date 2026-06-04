@@ -179,6 +179,7 @@ $peserta_pt = "CREATE TABLE IF NOT EXISTS peserta_private (
     usia INT NOT NULL,
     alamat VARCHAR(100) NOT NULL,
     riwayat VARCHAR(50) NOT NULL,
+    status_peserta ENUM('Aktif', 'Pending Hapus', 'Pengajuan') NOT NULL DEFAULT 'Aktif',
     FOREIGN KEY (id_private) REFERENCES private_trip(id_private) ON DELETE CASCADE
 )";
 $payment_pt = "CREATE TABLE IF NOT EXISTS payment_private (

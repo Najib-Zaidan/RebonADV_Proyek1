@@ -17,14 +17,48 @@ $username = $_SESSION['username'];
 if (!isset($_GET['id_private']) || empty($_GET['id_private'])) {
     echo "<script>
             alert('Pilih data trip yang ingin diubah terlebih dahulu!');
-            window.location.href = 'history_trip.php'; // Sesuaikan dengan halaman riwayat Anda
+            window.location.href = 'history_trip.php';
           </script>";
     exit;
 }
 
 $id_private_target = mysqli_real_escape_string($konek, $_GET['id_private']);
 
-// 3. Tarik data lama dari private_trip untuk ditampilkan di form (Old Value)
+// PROSES AKSI: Ajukan Hapus Peserta Individual
+if (isset($_GET['action']) && $_GET['action'] == 'minta_hapus_peserta' && isset($_GET['id_peserta'])) {
+    $id_peserta_batal = mysqli_real_escape_string($konek, $_GET['id_peserta']);
+    
+    $query_pending_peserta = "UPDATE peserta_private SET status_peserta = 'Pending Hapus' WHERE id_peserta = '$id_peserta_batal' AND id_private = '$id_private_target'";
+    
+    if (kueri($query_pending_peserta)) {
+        echo "<script>
+                alert('Permintaan hapus peserta berhasil dicatat! Status diubah menjadi Pending Hapus.');
+                window.location.href = 'ubah_private.php?id_private=" . $id_private_target . "';
+              </script>";
+        exit;
+    }
+}
+
+// PROSES AKSI: Batalkan Request Hapus atau Batalkan Pengajuan Peserta Baru
+if (isset($_GET['action']) && ($_GET['action'] == 'batal_minta_hapus' || $_GET['action'] == 'batal_pengajuan_baru') && isset($_GET['id_peserta'])) {
+    $id_peserta_batal = mysqli_real_escape_string($konek, $_GET['id_peserta']);
+    $action = $_GET['action'];
+
+    if ($action == 'batal_minta_hapus') {
+        $query_restore = "UPDATE peserta_private SET status_peserta = 'Aktif' WHERE id_peserta = '$id_peserta_batal' AND id_private = '$id_private_target'";
+    } else {
+        $query_restore = "DELETE FROM peserta_private WHERE id_peserta = '$id_peserta_batal' AND id_private = '$id_private_target' AND status_peserta = 'Pengajuan'";
+    }
+    
+    if (kueri($query_restore)) {
+        echo "<script>
+                window.location.href = 'ubah_private.php?id_private=" . $id_private_target . "';
+              </script>";
+        exit;
+    }
+}
+
+// 3. Tarik data lama dari private_trip
 $query_old = "SELECT pt.* FROM private_trip pt 
               JOIN akun a ON pt.id_akun = a.id_akun 
               WHERE pt.id_private = '$id_private_target' AND a.username = '$username' LIMIT 1";
@@ -40,29 +74,32 @@ if (mysqli_num_rows($result_old) > 0) {
     exit;
 }
 
-// 4. Proses submit pengajuan perubahan
+$query_peserta = "SELECT * FROM peserta_private WHERE id_private = '$id_private_target'";
+$result_peserta = kueri($query_peserta);
+
+// 4. Proses submit pengajuan perubahan utama
 if (isset($_POST['submit'])) {
-    
-    // Tangkap data dari form dan sanitasi
     $nama = mysqli_real_escape_string($konek, $_POST['nama']);
     $no_hp = mysqli_real_escape_string($konek, $_POST['nohp']);
     $tujuan = mysqli_real_escape_string($konek, $_POST['destinasi']);
     $tgl_berangkat = mysqli_real_escape_string($konek, $_POST['tgl_berangkat']);
     $tgl_pulang = mysqli_real_escape_string($konek, $_POST['tgl_pulang']);
     $catatan = mysqli_real_escape_string($konek, $_POST['catatan']);
-    $jumlah_peserta = mysqli_real_escape_string($konek, $_POST['jumlah']);
     
-    // Atur timezone dan set tanggal pengajuan ke waktu saat ini
+    $query_hitung = "SELECT COUNT(*) as total FROM peserta_private WHERE id_private = '$id_private_target' AND status_peserta != 'Pending Hapus'";
+    $res_hitung = kueri($query_hitung);
+    $data_hitung = mysqli_fetch_assoc($res_hitung);
+    $jumlah_peserta_final = $data_hitung['total'];
+
     date_default_timezone_set('Asia/Jakarta');
     $tgl_pengajuan = date('Y-m-d H:i:s');
 
-    // Insert ke tabel ubah_private sesuai struktur SQL Anda
     $query_insert_ubah = "INSERT INTO ubah_private (id_private, nama, no_hp, tujuan, tgl_berangkat, tgl_pulang, tgl_pengajuan, catatan, jumlah_peserta, status) 
-                          VALUES ('$id_private_target', '$nama', '$no_hp', '$tujuan', '$tgl_berangkat', '$tgl_pulang', '$tgl_pengajuan', '$catatan', '$jumlah_peserta', FALSE)";
+                          VALUES ('$id_private_target', '$nama', '$no_hp', '$tujuan', '$tgl_berangkat', '$tgl_pulang', '$tgl_pengajuan', '$catatan', '$jumlah_peserta_final', FALSE)";
 
     if (kueri($query_insert_ubah)) {
         echo "<script>
-                alert('Berhasil! Pengajuan perubahan data Private Trip telah dikirim dan menunggu persetujuan admin.');
+                alert('Berhasil! Pengajuan perubahan data Private Trip beserta modifikasi struktur peserta telah dikirim dan menunggu verifikasi admin.');
                 window.location.href = 'home1.php'; 
               </script>";
     } else {
@@ -81,7 +118,6 @@ if (isset($_POST['submit'])) {
   <style>
     body {
         font-family: 'Segoe UI', Arial, sans-serif;
-        /* Mengikuti tema background detail_pesanan.php */
         background: linear-gradient(135deg, #f1eefc 0%, #e5defa 100%);
         background-attachment: fixed;
         margin: 0;
@@ -104,7 +140,6 @@ if (isset($_POST['submit'])) {
         box-sizing: border-box;
     }
 
-    /* Card Utama bertema ungu asik dengan aksen lingkaran transparan */
     .card-main {
         background: linear-gradient(135deg, #6b3df5 0%, #4922c7 100%);
         color: white;
@@ -136,20 +171,17 @@ if (isset($_POST['submit'])) {
         gap: 8px;
     }
 
-    /* Judul pada card putih biasa */
     .card .title {
         color: #4922c7;
         border-bottom: 2px solid #e5defa;
         padding-bottom: 8px;
     }
 
-    /* Judul pada card utama ungu */
     .card-main .title {
         color: white;
         border-bottom: 2px solid rgba(255, 255, 255, 0.15);
     }
 
-    /* Info grid penyusunan kode trip agar rapi */
     .info-grid {
         display: grid;
         grid-template-columns: 1fr;
@@ -162,7 +194,6 @@ if (isset($_POST['submit'])) {
         line-height: 1.5;
     }
 
-    /* Tombol Kembali / Back Link */
     .back {
         display: inline-block;
         margin-bottom: 20px;
@@ -182,7 +213,7 @@ if (isset($_POST['submit'])) {
         transform: translateY(-1px);
     }
 
-    /* Form styling agar seirama dengan inputan modern premium */
+    /* Form & Input Utility */
     .trip-form {
         display: flex;
         flex-direction: column;
@@ -203,7 +234,6 @@ if (isset($_POST['submit'])) {
 
     .trip-form input[type="text"],
     .trip-form input[type="date"],
-    .trip-form input[type="number"],
     .trip-form textarea {
         font-family: inherit;
         background: #fdfbff;
@@ -213,7 +243,6 @@ if (isset($_POST['submit'])) {
         font-size: 14px;
         color: #4a3b70;
         outline: none;
-        box-shadow: inset 0 1px 3px rgba(107, 61, 245, 0.03);
         width: 100%;
         box-sizing: border-box;
         transition: all 0.3s ease;
@@ -222,15 +251,9 @@ if (isset($_POST['submit'])) {
     .trip-form input:focus,
     .trip-form textarea:focus {
         border-color: #6b3df5;
-        background: #ffffff;
         box-shadow: 0 0 0 3px rgba(107, 61, 245, 0.15);
     }
 
-    .trip-form textarea {
-        resize: vertical;
-    }
-
-    /* Tata letak input tanggal berdampingan */
     .date-group {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -238,7 +261,6 @@ if (isset($_POST['submit'])) {
         width: 100%;
     }
 
-    /* Tombol Submit Orange Menyalanya dipertahankan dengan sentuhan modern */
     .btn-submit-ubah {
         display: inline-flex;
         align-items: center;
@@ -252,7 +274,6 @@ if (isset($_POST['submit'])) {
         font-weight: 600;
         cursor: pointer;
         font-size: 15px;
-        text-decoration: none;
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25);
         align-self: flex-end;
@@ -263,22 +284,131 @@ if (isset($_POST['submit'])) {
         box-shadow: 0 6px 18px rgba(255, 87, 34, 0.35);
     }
 
-    /* Media Queries Responsif untuk Layar Handphone */
+    /* Header Tabel Manajemen Peserta */
+    .panel-peserta-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #e5defa;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+    }
+
+    .panel-peserta-header .title-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: #4922c7;
+    }
+
+    .btn-add-peserta {
+        background: #27ae60;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-add-peserta:hover {
+        background: #219653;
+        transform: translateY(-1px);
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 8px;
+        border: 1px solid #e5defa;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 750px; /* Ditambah sedikit agar kolom punya ruang lega */
+    }
+
+    table th, table td {
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 14px;
+        border-bottom: 1px solid #f5f2fe;
+        vertical-align: middle;
+    }
+
+    table th {
+        background: #6b3df5;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+
+    /* Perbaikan utama tombol aksi */
+    .btn-action-del {
+        display: inline-block;
+        background: #e74c3c;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: background 0.2s;
+    }
+
+    .btn-action-del:hover { background: #c0392b; }
+
+    .btn-action-cancel {
+        display: inline-block;
+        background: #7f8c8d;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: background 0.2s;
+    }
+    
+    .btn-action-cancel:hover { background: #6c7a7a; }
+
+    /* Penyeimbang Kolom Status & Aksi */
+    table th:nth-child(5), table td:nth-child(5) {
+        width: 110px;
+    }
+
+    table th:nth-child(6), table td:nth-child(6) {
+        width: 120px;
+        text-align: center;
+    }
+
+    .status-badge {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    .badge-pending { color: #e67e22; background: #fdf5e6; }
+    .badge-pengajuan { color: #2980b9; background: #eaf2f8; }
+    .badge-aktif { color: #27ae60; background: #eafaf1; }
+
     @media (max-width: 768px) {
-        body {
-            padding: 10px;
-        }
-        .card {
-            padding: 18px;
-            border-radius: 12px;
-        }
-        .date-group {
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-        .btn-submit-ubah {
-            width: 100%;
-        }
+        body { padding: 10px; }
+        .card { padding: 18px; }
+        .date-group { grid-template-columns: 1fr; }
+        .btn-submit-ubah { width: 100%; }
+        .panel-peserta-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+        .btn-add-peserta { width: 100%; justify-content: center; }
     }
   </style>
 
@@ -293,9 +423,7 @@ if (isset($_POST['submit'])) {
     <a href="profiluser.php" class="back">← Kembali ke Riwayat</a>
 
     <div class="card card-main">
-        <div class="title">
-            <i></i> Detail Private Trip
-        </div>
+        <div class="title">Detail Private Trip</div>
         <div class="info-grid">
             <div class="info">
                 <b>Kode Trip Saat Ini:</b> 
@@ -306,6 +434,67 @@ if (isset($_POST['submit'])) {
             <div class="info" style="opacity: 0.9; font-size: 13px; margin-top: 5px;">
                 *Silakan isi formulir di bawah ini untuk mengajukan perubahan data rencana perjalanan Anda kepada admin.
             </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="panel-peserta-header">
+            <div class="title-text">Manajemen Anggota Peserta</div>
+            <a href="tambah_peserta_private.php?id_private=<?php echo $id_private_target; ?>" class="btn-add-peserta">
+                <i class="fa-solid fa-user-plus"></i> Tambah Peserta Baru
+            </a>
+        </div>
+        <div class="info" style="font-size: 13px; margin-bottom: 15px; color: #7f8c8d;">
+            * Peserta dengan status <b>Pengajuan</b> atau <b>Pending Hapus</b> akan dievaluasi dan dikonfirmasi langsung oleh admin bersama dengan form perubahan rencana di bawah.
+        </div>
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Peserta</th>
+                        <th>Usia</th>
+                        <th>Alamat</th>
+                        <th>Riwayat Penyakit</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php if (mysqli_num_rows($result_peserta) > 0): ?>
+                    <?php while ($p = mysqli_fetch_assoc($result_peserta)): ?>
+                    <tr>
+                        <td><b><?php echo $p['nama']; ?></b></td>
+                        <td><?php echo $p['usia']; ?> Thn</td>
+                        <td><?php echo $p['alamat']; ?></td>
+                        <td><?php echo !empty($p['riwayat']) ? $p['riwayat'] : '-'; ?></td>
+                        <td>
+                            <?php if ($p['status_peserta'] == 'Pending Hapus'): ?>
+                                <span class="status-badge badge-pending">Pending Hapus</span>
+                            <?php elseif ($p['status_peserta'] == 'Pengajuan'): ?>
+                                <span class="status-badge badge-pengajuan">Pengajuan</span>
+                            <?php else: ?>
+                                <span class="status-badge badge-aktif">Aktif</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($p['status_peserta'] == 'Pending Hapus'): ?>
+                                <a href="ubah_private.php?id_private=<?php echo $id_private_target; ?>&action=batal_minta_hapus&id_peserta=<?php echo $p['id_peserta']; ?>" class="btn-action-cancel" onclick="return confirm('Batalkan permintaan hapus?')">Pulihkan</a>
+                            <?php elseif ($p['status_peserta'] == 'Pengajuan'): ?>
+                                <a href="ubah_private.php?id_private=<?php echo $id_private_target; ?>&action=batal_pengajuan_baru&id_peserta=<?php echo $p['id_peserta']; ?>" class="btn-action-del" onclick="return confirm('Batalkan pengajuan peserta baru ini?')">Batal Tambah</a>
+                            <?php else: ?>
+                                <a href="ubah_private.php?id_private=<?php echo $id_private_target; ?>&action=minta_hapus_peserta&id_peserta=<?php echo $p['id_peserta']; ?>" class="btn-action-del" onclick="return confirm('Ajukan penghapusan peserta ini dari trip?')">Ajukan Hapus</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #777; padding: 20px;">Belum ada data peserta. Silakan klik tombol tambah di atas.</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -344,11 +533,6 @@ if (isset($_POST['submit'])) {
             <div class="form-group">
                 <label><i class="fa-solid fa-comment-dots"></i> Alasan & Catatan Tambahan Perubahan</label>
                 <textarea name="catatan" placeholder="Tuliskan detail atau alasan mengapa rencana trip ingin dirubah..." rows="4"><?php echo $data_old['catatan']; ?></textarea>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fa-solid fa-users"></i> Jumlah Peserta</label>
-                <input type="number" name="jumlah" placeholder="Minimal 1 Peserta" min="1" value="<?php echo $data_old['jumlah_peserta']; ?>" required />
             </div>
 
             <button type="submit" name="submit" class="btn-submit-ubah">

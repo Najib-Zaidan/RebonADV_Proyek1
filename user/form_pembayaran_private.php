@@ -210,8 +210,7 @@ footer {
 
     <div class="form">
         <form action="proses_pembayaran_private.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_private" value="<?php echo $_GET['id']; ?>">
-            
+            <input type="hidden" name="id_private" value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>">  
             <label>Nominal Pembayaran:</label>
             <input type="number" name="nominal" required>
             <hr>

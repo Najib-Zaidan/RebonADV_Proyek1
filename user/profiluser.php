@@ -465,96 +465,133 @@ nav a{text-decoration:none;color:black;}
 </div>
 
 <div id="pesanan" class="tab-content data-section">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-    <div>
-        <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Riwayat Pemesanan</h2>
-        <p style="color: #718096; font-size: 14px; margin-top: 5px;">Kelola pesanan trip Anda di sini.</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Riwayat Pemesanan</h2>
+            <p style="color: #718096; font-size: 14px; margin-top: 5px;">Kelola pesanan trip Anda di sini.</p>
+        </div>
+        
+        <div class="trip-switcher" style="display: flex; background: #edf2f7; padding: 4px; border-radius: 50px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; width: fit-content;">
+            <button onclick="switchTrip('open')" id="btn-open" 
+                style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: #6b3df5; color: #fff; box-shadow: 0 4px 6px rgba(107, 61, 245, 0.2);">
+                Open Trip
+            </button>
+            <button onclick="switchTrip('private')" id="btn-private" 
+                style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: transparent; color: #718096;">
+                Private Trip
+            </button>
+        </div>
     </div>
-    
-    <div class="trip-switcher" style="display: flex; background: #edf2f7; padding: 4px; border-radius: 50px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; width: fit-content;">
-        <button onclick="switchTrip('open')" id="btn-open" 
-            style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: #6b3df5; color: #fff; box-shadow: 0 4px 6px rgba(107, 61, 245, 0.2);">
-            Open Trip
-        </button>
-        <button onclick="switchTrip('private')" id="btn-private" 
-            style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: transparent; color: #718096;">
-            Private Trip
-        </button>
-    </div>
-</div>
 
+    <div class="time-switcher" style="display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;">
+        <button onclick="filterTime('all')" class="btn-time active-time" style="border: 1px solid #6b3df5; background: #6b3df5; color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s;">Semua</button>
+        <button onclick="filterTime('past')" class="btn-time" style="border: 1px solid #cbd5e0; background: white; color: #4a5568; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s;">Telah Berlalu</button>
+        <button onclick="filterTime('ongoing')" class="btn-time" style="border: 1px solid #cbd5e0; background: white; color: #4a5568; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s;">Sedang Berlangsung</button>
+        <button onclick="filterTime('upcoming')" class="btn-time" style="border: 1px solid #cbd5e0; background: white; color: #4a5568; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s;">Akan Datang</button>
+    </div>
 
     <div id="trip-content-open">
         <?php 
         mysqli_data_seek($pesanan, 0); 
+        $today = date('Y-m-d');
         while($b = ambil($pesanan)): 
             $id_booking = $b['id_booking'];
             
             // Ambil detail harga dari tabel trip
             $id_t = $b['id_trip'];
-            $t_info = ambil(kueri("SELECT harga, harga_dp FROM trip WHERE id_trip = '$id_t'"));
+            $t_info = ambil(kueri("SELECT harga, harga_dp, tgl_pulang FROM trip WHERE id_trip = '$id_t'"));
             $total_harga = $t_info['harga'] * $b['jumlah_peserta'];
 
             // Cek status pembatalan
             $cek_batal_q = kueri("SELECT status FROM batal_open WHERE id_booking = '$id_booking'");
             $cek_batal = mysqli_fetch_assoc($cek_batal_q);
             $status_batal = $cek_batal['status'] ?? null;
+
+            // Menentukan status waktu berdasarkan tanggal
+            $tgl_berangkat = $b['tgl_berangkat'];
+            $tgl_pulang = $t_info['tgl_pulang'] ?? $b['tgl_berangkat'];
+
+            if ($today > $tgl_pulang) {
+                $time_category = 'past';
+            } elseif ($today >= $tgl_berangkat && $today <= $tgl_pulang) {
+                $time_category = 'ongoing';
+            } else {
+                $time_category = 'upcoming';
+            }
         ?>
-        <div class="data-card" style="display: block; border-left: 6px solid #6b3df5; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
+        <div class="data-card open-card" data-time="<?= $time_category; ?>" style="display: block; border-left: 6px solid #6b3df5; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
             
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 20px; background: rgba(107, 61, 245, 0.02); border-bottom: 1px solid #f0f0f0;">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <h3 style="color: #321180; font-size: 19px; margin: 0; font-weight: 800;"><?= $b['tujuan']; ?></h3>
-                        <span style="background:#6b3df5; color:white; font-size:10px; padding:3px 8px; border-radius:5px; font-weight: 900; letter-spacing: 0.5px;">OPEN TRIP</span>
-                    </div>
-                    <p style="font-size: 12px; color: #888; margin: 0;">ID Booking: #BK-O<?= $id_booking; ?> | Pesan: <?= date('d M Y', strtotime($b['tgl_booking'])); ?></p>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 10px; color: #aaa; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;">Status Booking</div>
-                    <span style="padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; 
-                        <?= $b['status'] == 'Lunas' ? 'background:#e6fffa; color:#2c7a7b; border: 1px solid #b2f5ea;' : ($b['status'] == 'Dibatalkan' ? 'background:#fff5f5; color:#c53030; border: 1px solid #feb2b2;' : 'background:#fffaf0; color:#b7791f; border: 1px solid #fbe3a1;'); ?>">
-                        <?= strtoupper($b['status']); ?>
-                    </span>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin: 15px 20px;">
-                <div>
-                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">PESERTA</p>
-                    <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $b['jumlah_peserta']; ?> Orang</p>
-                </div>
-                <div>
-                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TRIP</p>
-                    <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;">Rp <?= number_format($t_info['harga']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
-                </div>
-                <div>
-                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">MINIMAL DP</p>
-                    <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;">Rp <?= number_format($t_info['harga_dp']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
-                </div>
-                <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
-                    <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">TOTAL TAGIHAN</p>
-                    <p style="font-size: 16px; font-weight: 800; color: #6b3df5; margin: 0;">Rp <?= number_format($total_harga); ?></p>
-                </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px;">
-                <div style="display: flex; flex-direction: column;">
-                    <p style="font-size: 11px; color: #a0aec0; margin: 0; font-weight: bold;">JADWAL BERANGKAT:</p>
-                    <p style="font-size: 13px; color: #4a5568; margin: 0;">📅 <b><?= date('d M Y', strtotime($b['tgl_berangkat'])); ?></b></p>
-                </div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 20px; background: rgba(107, 61, 245, 0.02); border-bottom: 1px solid #f0f0f0;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
+                <span style="background:#6b3df5; color:white; font-size:10px; padding:3px 8px; border-radius:5px; font-weight: 900; letter-spacing: 0.5px;">OPEN TRIP</span>
+            
+                <h3 style="color: #321180; font-size: 19px; margin: 0; font-weight: 800;"><?= $b['tujuan']; ?></h3>
                 
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <a href="detail_pesanan.php?id_booking=<?= $id_booking; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">Detail Pesanan</a>
-
-                    <?php if ($status_batal === null && $b['status'] != 'Lunas'): ?>
-                        <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
-                        
-                    
-                    <?php endif; ?>
-                </div>
+                <?php if ($time_category === 'past'): ?>
+                    <span style="background: #e2e8f0; color: #4a5568; font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700;">TELAH BERLALU</span>
+                <?php elseif ($time_category === 'ongoing'): ?>
+                    <span style="background: #feebc8; color: #c05621; font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700;">SEDANG BERLANGSUNG</span>
+                <?php else: ?>
+                    <span style="background: #ebf8ff; color: #2b6cb0; font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700;">AKAN DATANG</span>
+                <?php endif; ?>
             </div>
+            <p style="font-size: 12px; color: #888; margin: 0;">ID Booking: #BK-O<?= $id_booking; ?> | Pesan: <?= date('d M Y', strtotime($b['tgl_booking'])); ?></p>
         </div>
+        
+        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+            <div>
+                <div style="font-size: 10px; color: #aaa; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;">Status Booking</div>
+                <span style="padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; display: inline-block;
+                    <?= $b['status'] == 'Lunas' ? 'background:#e6fffa; color:#2c7a7b; border: 1px solid #b2f5ea;' : ($b['status'] == 'Dibatalkan' ? 'background:#fff5f5; color:#c53030; border: 1px solid #feb2b2;' : 'background:#fffaf0; color:#b7791f; border: 1px solid #fbe3a1;'); ?>">
+                    <?= strtoupper($b['status']); ?>
+                </span>
+            </div>
+
+            <?php if ($time_category === 'past' && $b['status'] !== 'Dibatalkan'): ?>
+                <a href="form_rating_trip.php?id_booking=<?= $id_booking; ?>" 
+                style="background: #fef3c7; color: #92400e; font-size: 11px; padding: 6px 14px; border-radius: 8px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #fde68a; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(217, 119, 6, 0.1);" 
+                onmouseover="this.style.background='#fde68a'; this.style.borderColor='#f59e0b';" 
+                onmouseout="this.style.background='#fef3c7'; this.style.borderColor='#fde68a';">
+                    ⭐ Berikan Penilaian
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin: 15px 20px;">
+        <div>
+            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">PESERTA</p>
+            <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $b['jumlah_peserta']; ?> Orang</p>
+        </div>
+        <div>
+            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TRIP</p>
+            <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;">Rp <?= number_format($t_info['harga']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
+        </div>
+        <div>
+            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">MINIMAL DP</p>
+            <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;">Rp <?= number_format($t_info['harga_dp']); ?> <small style="font-size: 10px; font-weight: normal;">/org</small></p>
+        </div>
+        <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
+            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">TOTAL TAGIHAN</p>
+            <p style="font-size: 16px; font-weight: 800; color: #6b3df5; margin: 0;">Rp <?= number_format($total_harga); ?></p>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px;">
+        <div style="display: flex; flex-direction: column;">
+            <p style="font-size: 11px; color: #a0aec0; margin: 0; font-weight: bold;">JADWAL BERANGKAT:</p>
+            <p style="font-size: 13px; color: #4a5568; margin: 0;">📅 <b><?= date('d M Y', strtotime($b['tgl_berangkat'])); ?></b></p>
+        </div>
+        
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <a href="detail_pesanan.php?id_booking=<?= $id_booking; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">Detail Pesanan</a>
+            <?php if ($status_batal === null && $b['status'] != 'Lunas'): ?>
+                <a href="form_pembayaran.php?id_booking=<?= $id_booking; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
 
         <?php endwhile; ?>
     </div>
@@ -570,88 +607,107 @@ nav a{text-decoration:none;color:black;}
         $cek_batal_pr = mysqli_fetch_assoc($cek_batal_pr_q);
         $status_batal_pr = $cek_batal_pr['status'] ?? null;
         
-        // Logika warna status bayar yang lebih soft
         $color_bayar = ($pr['status_bayar'] == 'Lunas') ? '#28a745' : (($pr['status_bayar'] == 'DP') ? '#f39c12' : '#6b3df5');
+
+        // Menentukan status waktu berdasarkan tanggal private
+        $tgl_ber_pr = $pr['tgl_berangkat'];
+        $tgl_pul_pr = $pr['tgl_pulang'];
+
+        if ($today > $tgl_pul_pr) {
+            $time_category_pr = 'past';
+        } elseif ($today >= $tgl_ber_pr && $today <= $tgl_pul_pr) {
+            $time_category_pr = 'ongoing';
+        } else {
+            $time_category_pr = 'upcoming';
+        }
     ?>
-<div class="data-card" style="display: block; border-left: 6px solid #ff4b2b; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 20px; background: rgba(255, 75, 43, 0.02); border-bottom: 1px solid #f0f0f0;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                <h3 style="color: #321180; font-size: 19px; margin: 0; font-weight: 800;"><?= $pr['tujuan']; ?></h3>
-                <span style="background:#ff4b2b; color:white; font-size:10px; padding:3px 8px; border-radius:5px; font-weight: 900; letter-spacing: 0.5px;">PRIVATE</span>
+    <div class="data-card private-card" data-time="<?= $time_category_pr; ?>" style="display: block; border-left: 6px solid #ff4b2b; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 20px; background: rgba(255, 75, 43, 0.02); border-bottom: 1px solid #f0f0f0;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
+                    
+                    <span style="background:#ff4b2b; color:white; font-size:10px; padding:3px 8px; border-radius:5px; font-weight: 900; letter-spacing: 0.5px;">PRIVATE</span>
+                    <h3 style="color: #321180; font-size: 19px; margin: 0; font-weight: 800;"><?= $pr['tujuan']; ?></h3>
+                    
+                    <?php if ($time_category_pr === 'past'): ?>
+                        <span style="background: #e2e8f0; color: #4a5568; font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700;">TELAH BERLALU</span>
+                    <?php elseif ($time_category_pr === 'ongoing'): ?>
+                        <span style="background: #feebc8; color: #c05621; font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700;">SEDANG BERLANGSUNG</span>
+                    <?php else: ?>
+                        <span style="background: #ebf8ff; color: #2b6cb0; font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700;">AKAN DATANG</span>
+                    <?php endif; ?>
+
+                </div>
+                <p style="font-size: 12px; color: #888; margin: 0;">ID Booking: #BK-P<?= $id_pr; ?> | Diajukan: <?= date('d M Y', strtotime($pr['tgl_booking'])); ?></p>
             </div>
-            <p style="font-size: 12px; color: #888; margin: 0;">ID Booking: #BK-P<?= $id_pr; ?> | Diajukan: <?= date('d M Y', strtotime($pr['tgl_booking'])); ?></p>
+            <div style="text-align: right;">
+                <div style="font-size: 10px; color: #aaa; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;">Status Pengajuan</div>
+                <span style="padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; 
+                    <?= $pr['status_trip'] == 'Disetujui' ? 'background:#e6fffa; color:#2c7a7b; border: 1px solid #b2f5ea;' : ($pr['status_trip'] == 'Ditolak' ? 'background:#fff5f5; color:#c53030; border: 1px solid #feb2b2;' : 'background:#fffaf0; color:#b7791f; border: 1px solid #fbe3a1;'); ?>">
+                    <?= strtoupper($pr['status_trip']); ?>
+                </span>
+            </div>
         </div>
-        <div style="text-align: right;">
-            <div style="font-size: 10px; color: #aaa; margin-bottom: 4px; font-weight: bold; text-transform: uppercase;">Status Pengajuan</div>
-            <span style="padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 800; 
-                <?= $pr['status_trip'] == 'Disetujui' ? 'background:#e6fffa; color:#2c7a7b; border: 1px solid #b2f5ea;' : ($pr['status_trip'] == 'Ditolak' ? 'background:#fff5f5; color:#c53030; border: 1px solid #feb2b2;' : 'background:#fffaf0; color:#b7791f; border: 1px solid #fbe3a1;'); ?>">
-                <?= strtoupper($pr['status_trip']); ?>
-            </span>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin: 15px 20px;">
+            <div>
+                <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">PESERTA</p>
+                <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $pr['jumlah_peserta']; ?> Orang</p>
+            </div>
+            <div>
+                <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TOTAL</p>
+                <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;"><?= $pr['harga'] ? 'Rp '.number_format($pr['harga']) : '<span style="color:#aaa; font-style:italic;">Menunggu ...</span>'; ?></p>
+            </div>
+            <div>
+                <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">DP MINIMAL</p>
+                <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;"><?= $pr['harga_dp'] ? 'Rp '.number_format($pr['harga_dp']) : '–'; ?></p>
+            </div>
+            <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
+                <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">STATUS BAYAR</p>
+                <p style="font-size: 15px; font-weight: 800; color: <?= $color_bayar; ?>; margin: 0;"><?= strtoupper($pr['status_bayar']); ?></p>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px;">
+            <div style="display: flex; flex-direction: column;">
+                <p style="font-size: 11px; color: #a0aec0; margin: 0; font-weight: bold;">JADWAL TRIP:</p>
+                <p style="font-size: 13px; color: #4a5568; margin: 0;">📅 <b><?= date('d M Y', strtotime($pr['tgl_berangkat'])); ?></b> s/d <b><?= date('d M Y', strtotime($pr['tgl_pulang'])); ?></b></p>
+            </div>
+            
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="detail_private.php?id=<?= $id_pr; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">Detail Trip</a>
+                <?php if ($status_batal_pr === null): ?>
+                    <?php if($pr['status_trip'] == 'Disetujui' && $pr['status_bayar'] != 'Lunas' && $pr['status_bayar'] != 'Dibatalkan'): ?>
+                        <a href="form_pembayaran_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin: 15px 20px;">
-        <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">PESERTA</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #2d3748;"><?= $pr['jumlah_peserta']; ?> Orang</p>
-        </div>
-        <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">HARGA TOTAL</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #321180;"><?= $pr['harga'] ? 'Rp '.number_format($pr['harga']) : '<span style="color:#aaa; font-style:italic;">Menunggu ...</span>'; ?></p>
-        </div>
-        <div>
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">DP MINIMAL</p>
-            <p style="font-size: 16px; font-weight: 700; margin:0; color: #ff4b2b;"><?= $pr['harga_dp'] ? 'Rp '.number_format($pr['harga_dp']) : '–'; ?></p>
-        </div>
-        <div style="border-left: 2px solid #e2e8f0; padding-left: 15px;">
-            <p style="font-size: 11px; color: #a0aec0; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">STATUS BAYAR</p>
-            <p style="font-size: 15px; font-weight: 800; color: <?= $color_bayar; ?>; margin: 0;"><?= strtoupper($pr['status_bayar']); ?></p>
+        <?php endwhile; ?>
         </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px;">
-        <div style="display: flex; flex-direction: column;">
-            <p style="font-size: 11px; color: #a0aec0; margin: 0; font-weight: bold;">JADWAL TRIP:</p>
-            <p style="font-size: 13px; color: #4a5568; margin: 0;">📅 <b><?= date('d M Y', strtotime($pr['tgl_berangkat'])); ?></b> s/d <b><?= date('d M Y', strtotime($pr['tgl_pulang'])); ?></b></p>
+    <div id="pembayaran" class="tab-content data-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <div>
+            <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Riwayat Pembayaran</h2>
+            <p style="color: #718096; font-size: 14px; margin-top: 5px;">Pantau status verifikasi pembayaran Anda di sini.</p>
         </div>
         
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <a href="detail_private.php?id=<?= $id_pr; ?>" class="btn" style="background:#f0f4f8; color:#4a5568; margin:0; font-weight: bold; font-size: 12px; border-radius: 8px; border: 1px solid #d1d9e6; text-decoration:none;">Detail Trip</a>
-
-            <?php if ($status_batal_pr === null): ?>
-                <?php if($pr['status_trip'] == 'Disetujui' && $pr['status_bayar'] != 'Lunas' && $pr['status_bayar'] != 'Dibatalkan'): ?>
-                    <a href="form_pembayaran_private.php?id=<?= $id_pr; ?>" class="btn purple" style="margin:0; font-weight: 900; font-size: 12px; border-radius: 8px; background: #6b3df5; color:white; text-decoration:none;">Bayar</a>
-                <?php endif; ?>
-                
-            <?php endif; ?>
+        <div class="trip-switcher" style="display: flex; background: #edf2f7; padding: 4px; border-radius: 50px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+            <button onclick="switchPayment('open')" id="btn-pay-open" 
+                style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: #6b3df5; color: #fff; box-shadow: 0 4px 6px rgba(107, 61, 245, 0.2);">
+                Open Trip
+            </button>
+            <button onclick="switchPayment('private')" id="btn-pay-private" 
+                style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: transparent; color: #718096;">
+                Private Trip
+            </button>
         </div>
     </div>
-</div>
-
-    <?php endwhile; ?>
- </div>
-</div>
-
-<div id="pembayaran" class="tab-content data-section">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-    <div>
-        <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Riwayat Pembayaran</h2>
-        <p style="color: #718096; font-size: 14px; margin-top: 5px;">Pantau status verifikasi pembayaran Anda di sini.</p>
-    </div>
-    
-    <div class="trip-switcher" style="display: flex; background: #edf2f7; padding: 4px; border-radius: 50px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-        <button onclick="switchPayment('open')" id="btn-pay-open" 
-            style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: #6b3df5; color: #fff; box-shadow: 0 4px 6px rgba(107, 61, 245, 0.2);">
-            Open Trip
-        </button>
-        <button onclick="switchPayment('private')" id="btn-pay-private" 
-            style="border: none; border-radius: 50px; padding: 10px 25px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; background: transparent; color: #718096;">
-            Private Trip
-        </button>
-    </div>
-</div>
 
 
     <div id="pay-content-open">
@@ -838,36 +894,50 @@ nav a{text-decoration:none;color:black;}
     </div>
 </div>
 
-<div id="notifikasi" class="tab-content data-section">
-  <div style="margin-bottom: 25px;">
-      <h2 style="color: #321180; margin: 0; font-size: 24px; font-weight: 800;">Notifikasi Anda</h2>
-      <p style="color: #718096; font-size: 14px; margin-top: 5px;">Informasi terbaru mengenai pembaruan status dan jadwal trip Anda.</p>
-  </div>
+<div id="notifikasi" class="tab-content data-section" style="background: #ffffff; padding: 30px; border-radius: 14px; box-shadow: 0 4px 20px rgba(39, 174, 96, 0.05); border: 1px solid rgba(39, 174, 96, 0.08);">
+    
+    <div style="margin-bottom: 25px; border-bottom: 2px solid #eafaf1; padding-bottom: 12px;">
+        <h2 style="color: #27ae60; margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px;">Notifikasi Anda</h2>
+        <p style="color: #718096; font-size: 13px; margin-top: 5px; margin-bottom: 0;">Informasi terbaru mengenai pembaruan status dan jadwal trip Anda.</p>
+    </div>
 
-  <?php if(mysqli_num_rows($notifikasi) > 0): ?>
-      <?php while($nt = ambil($notifikasi)): ?>
-          <div class="notif-card <?= $nt['dibaca'] == 0 ? 'unreads' : ''; ?>">
-              <div class="notif-left">
-                  <p class="notif-msg">
-                      <?php if($nt['dibaca'] == 0): ?>
-                          <span style="color: #ff4b2b; margin-right: 4px;">●</span>
-                      <?php endif; ?>
-                      <?= $nt['pesan']; ?>
-                  </p>
-                  <p class="notif-time">
-                      📅 <?= date('d M Y', strtotime($nt['waktu'])); ?> | ⏰ <?= date('H:i', strtotime($nt['waktu'])); ?> WIB
-                  </p>
-              </div>
-              <div class="notif-right">
-                  <a href="baca_notif.php?id=<?= $nt['id_notif']; ?>" class="btn-baca">Lihat Detail</a>
-              </div>
-          </div>
-      <?php endwhile; ?>
-  <?php else: ?>
-      <div style="text-align:center; padding:40px; color:#999;">
-          <p>Belum ada pemberitahuan atau aktivitas terbaru.</p>
-      </div>
-  <?php endif; ?>
+    <?php if(mysqli_num_rows($notifikasi) > 0): ?>
+        <?php while($nt = ambil($notifikasi)): ?>
+            <?php 
+                // Mengatur style dinamis berdasarkan status baca
+                $is_unread = ($nt['dibaca'] == 0);
+                $card_bg = $is_unread ? '#eafaf1' : '#fdfbff';
+                $card_border = $is_unread ? '1px solid #27ae60' : '1px solid #eae6fa';
+                $border_left = $is_unread ? '4px solid #2cc771' : '1px solid #eae6fa';
+            ?>
+            <div class="notif-card" style="display: flex; justify-content: space-between; align-items: center; background: <?= $card_bg; ?>; border: <?= $card_border; ?>; border-left: <?= $border_left; ?>; padding: 18px 20px; border-radius: 10px; margin-bottom: 12px; gap: 15px;">
+                
+                <div style="display: flex; flex-direction: column; gap: 6px; flex: 1;">
+                    <p style="margin: 0; font-size: 15px; color: #2c3e50; line-height: 1.5; font-weight: 500; display: flex; align-items: flex-start;">
+                        <?php if($is_unread): ?>
+                            <span style="color: #2ecc71; margin-right: 8px; font-size: 12px; align-self: center;">●</span>
+                        <?php endif; ?>
+                        <?= $nt['pesan']; ?>
+                    </p>
+                    <p style="margin: 0; font-size: 12px; color: #7f8c8d; display: flex; align-items: center; gap: 5px;">
+                        <i class="fa-regular fa-calendar" style="color: #27ae60;"></i> <?= date('d M Y', strtotime($nt['waktu'])); ?> 
+                        <span style="color: #cbd5e1; margin: 0 4px;">|</span>
+                        <i class="fa-regular fa-clock" style="color: #27ae60;"></i> <?= date('H:i', strtotime($nt['waktu'])); ?> WIB
+                    </p>
+                </div>
+
+                <div>
+                    <a href="detail_notip.php?id=<?= $nt['id_notif']; ?>" style="display: inline-flex; align-items: center; background: #27ae60; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; white-space: nowrap; transition: background 0.2s; box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);" onmouseover="this.style.background='#219653'" onmouseout="this.style.background='#27ae60'">Selengkapnya</a>
+                </div>
+
+            </div>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <div style="text-align: center; padding: 50px 20px; color: #7f8c8d;">
+            <i class="fa-regular fa-bell-slash" style="font-size: 40px; color: #eafaf1; margin-bottom: 15px; display: block;"></i>
+            <p style="margin: 0; font-size: 14px;">Belum ada pemberitahuan atau aktivitas terbaru.</p>
+        </div>
+    <?php endif; ?>
 </div>
 
 
@@ -1010,6 +1080,78 @@ function tab(id, el) {
         switchTrip('open'); // Reset ke open trip setiap kali tab pesanan ditekan
     }
 }
+
+let currentTimeFilter = 'all';
+
+function filterTime(type) {
+    currentTimeFilter = type;
+    
+    // Ambil seluruh button filter waktu
+    const buttons = document.querySelectorAll('.btn-time');
+    buttons.forEach(btn => {
+        // Reset styles ke default
+        btn.style.background = 'white';
+        btn.style.color = '#4a5568';
+        btn.style.borderColor = '#cbd5e0';
+    });
+    
+    // Set style active pada tombol yang dipilih
+    const activeBtn = event.currentTarget;
+    activeBtn.style.background = '#6b3df5';
+    activeBtn.style.color = 'white';
+    activeBtn.style.borderColor = '#6b3df5';
+    
+    // Jalankan pemfilteran elemen card
+    applyFilters();
+}
+
+function applyFilters() {
+    // Cari tahu seksi trip mana yang saat ini sedang aktif (open / private)
+    const isOpenActive = document.getElementById('trip-content-open').style.display !== 'none';
+    const cards = isOpenActive 
+        ? document.querySelectorAll('.open-card') 
+        : document.querySelectorAll('.private-card');
+        
+    // Sembunyikan semua card dari kategori yang tidak aktif dulu
+    document.querySelectorAll('.data-card').forEach(c => c.style.display = 'none');
+
+    // Filter card pada kategori yang aktif
+    cards.forEach(card => {
+        const timeAttr = card.getAttribute('data-time');
+        if (currentTimeFilter === 'all' || timeAttr === currentTimeFilter) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Hubungkan dengan fungsi switcher bawaan agar sinkron saat pindah tab Open/Private
+const originalSwitchTrip = window.switchTrip;
+window.switchTrip = function(type) {
+    if (typeof originalSwitchTrip === 'function') {
+        originalSwitchTrip(type);
+    } else {
+        // Logika fallback jika fungsi original tidak berada di scope global window
+        if(type === 'open') {
+            document.getElementById('trip-content-open').style.display = 'block';
+            document.getElementById('trip-content-private').style.display = 'none';
+            document.getElementById('btn-open').style.background = '#6b3df5';
+            document.getElementById('btn-open').style.color = '#fff';
+            document.getElementById('btn-private').style.background = 'transparent';
+            document.getElementById('btn-private').style.color = '#718096';
+        } else {
+            document.getElementById('trip-content-open').style.display = 'none';
+            document.getElementById('trip-content-private').style.display = 'block';
+            document.getElementById('btn-open').style.background = 'transparent';
+            document.getElementById('btn-open').style.color = '#718096';
+            document.getElementById('btn-private').style.background = '#6b3df5';
+            document.getElementById('btn-private').style.color = '#fff';
+        }
+    }
+    // Terapkan ulang filter waktu pada tab baru yang dibuka
+    applyFilters();
+};
 </script>
 
 </body>

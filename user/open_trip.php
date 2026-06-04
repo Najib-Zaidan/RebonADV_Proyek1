@@ -9,7 +9,7 @@ session_start();
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Open Trip</title>
 <style>
-    * {
+  * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -158,6 +158,12 @@ nav .active2 {
   gap: 30px;
 }
 
+.trip-grid a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+}
+
 /* card modern */
 .card {
   background: white;
@@ -165,6 +171,9 @@ nav .active2 {
   overflow: hidden;
   transition: 0.3s;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .card:hover {
@@ -172,19 +181,21 @@ nav .active2 {
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
+.card-img {
+  position: relative;
+  overflow: hidden;
+}
+
 .card-img img {
   width: 100%;
   height: 200px;
   object-fit: cover;
   transition: 0.3s;
+  display: block;
 }
 
 .card:hover .card-img img {
   transform: scale(1.05);
-}
-
-.card-img {
-  position: relative;
 }
 
 .badge {
@@ -198,8 +209,33 @@ nav .active2 {
   font-size: 12px;
 }
 
+/* BARU: Style Badge Rating di Pojok Kanan Atas Gambar */
+.rating-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.rating-badge .star {
+  color: #ffca28; /* Warna kuning emas untuk bintang */
+  font-size: 14px;
+}
+
 .card-body {
   padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .title-row {
@@ -222,11 +258,17 @@ nav .active2 {
   font-size: 13px;
   color: #555;
   margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .date {
   font-size: 13px;
   color: #666;
+  margin-top: auto; 
   margin-bottom: 10px;
 }
 
@@ -234,6 +276,12 @@ nav .active2 {
   font-size: 20px;
   font-weight: bold;
   color: #6b3df5;
+}
+
+.dp {
+  font-size: 13px;
+  color: #4caf50;
+  margin: 2px 0 0 0;
 }
 
 /* ================= FOOTER ================= */
@@ -320,7 +368,6 @@ footer {
   }
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -353,7 +400,6 @@ a {
 
 <body>
 
-<!-- ================= HEADER ================= -->
 <header class="navbar">
       <div class="logo">
         <img
@@ -368,7 +414,6 @@ a {
         <a href="private_trip.php" class="active3">Private</a>
         <a href="tentang_kami.php" class="active4">Tentang Kami</a>
         <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
             <span style="color:blue; margin-right:10px;">
               👤 <?php echo $_SESSION['username']; ?>
             </span>
@@ -378,7 +423,6 @@ a {
             </a>
 
         <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
             <a href="login_user.php">
               <button class="active5">Masuk</button>
             </a>
@@ -392,25 +436,24 @@ require 'fungsi.php';
 $sort = $_GET['sort'] ?? 'default';
 $keyword = $_GET['keyword'] ?? '';
 
-// Penentuan aturan order by berdasarkan parameter sort
 $order_by = "t.id_trip DESC";
 
 if ($sort == 'harga_terendah') $order_by = "t.harga ASC";
 elseif ($sort == 'harga_tertinggi') $order_by = "t.harga DESC";
-elseif ($sort == 'nama') $order_by = "tj.tujuan ASC"; // KODE DIPERBARUI: diarahkan ke tabel tujuan
+elseif ($sort == 'nama') $order_by = "tj.tujuan ASC"; 
 elseif ($sort == 'keberangkatan') $order_by = "t.tgl_berangkat ASC";
 
-/* QUERY UTAMA DIUPGRADE: Menambahkan JOIN ke tabel tujuan */
+/* QUERY UTAMA DIUPGRADE: Menambahkan subquery untuk mengambil rata-rata rating (rata_rating) */
 $sql = "SELECT t.*, k.*, tj.tujuan,
         (SELECT nama_file FROM gambar g WHERE g.id_trip = t.id_trip LIMIT 1) as gambar,
         (SELECT SUM(jumlah_peserta) FROM booking b 
-         WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi
+         WHERE b.id_trip = t.id_trip AND b.status != 'Dibatalkan') as terisi,
+        (SELECT AVG(rating) FROM rating r WHERE r.id_trip = t.id_trip) as rata_rating
         FROM trip t
         INNER JOIN katalog k ON t.id_trip = k.id_trip
         INNER JOIN tujuan tj ON t.id_tujuan = tj.id_tujuan
         WHERE 1";
 
-/* PENANGANAN KEYWORD PENCARIAN */
 if($keyword != ''){
     $keyword = mysqli_real_escape_string($konek, $keyword);
 
@@ -426,14 +469,10 @@ if($keyword != ''){
     )";
 }
 
-/* MENERAPKAN SORTING */
 $sql .= " ORDER BY $order_by";
-
-/* EKSEKUSI */
 $result = kueri($sql);
 ?>
 
-<!-- SEARCH + SORT -->
 <div class="filter-bar">
   <form method="GET" class="filter-form">
     
@@ -461,7 +500,6 @@ $result = kueri($sql);
   </form>
 </div>
 
-<!-- KATALOG CARD LOOPING -->
 <section class="trip-container">
 <div class="trip-grid">
 
@@ -477,12 +515,26 @@ if (mysqli_num_rows($result) > 0) {
     if ($sisa_kuota == 0 || $row['publik'] == 0) continue;
     
     $tgl_tampil = date('d', strtotime($row['tgl_berangkat'])) . " - " . date('d F Y', strtotime($row['tgl_pulang']));
+    
+    // Cek jika rating ada, jika tidak ada/null set ke 0 atau tampilkan pesan "Baru"
+    $rating_tampil = $row['rata_rating'] ? number_format($row['rata_rating'], 1) : null;
 ?>
 
 <a href="ot_katalog.php?id=<?php echo $row['id_trip']; ?>">
   <div class="card">
     <div class="card-img">
       <img src="../gambar/upload/<?php echo $row['gambar'] ? $row['gambar'] : 'default.jpg'; ?>" />
+      
+      <?php if ($rating_tampil): ?>
+        <div class="rating-badge">
+          <span class="star">★</span> <?php echo $rating_tampil; ?> / 5
+        </div>
+      <?php else: ?>
+        <div class="rating-badge" style="font-size: 10px; color: #888;">
+          Belum ada ulasan
+        </div>
+      <?php endif; ?>
+
       <span class="badge"><?php echo $durasi; ?> Hari</span>
     </div>
 
@@ -495,6 +547,7 @@ if (mysqli_num_rows($result) > 0) {
       <p class="via"><?php echo htmlspecialchars($row['deskripsi']); ?></p>
       <p class="date">📅 <?php echo $tgl_tampil; ?></p>
       <p class="price">Rp. <?php echo number_format($row['harga'],0,',','.'); ?></p>
+      <p class="dp">DP Rp. <?php echo number_format($row['harga_dp'],0,',','.'); ?></p>
     </div>
   </div>
 </a>
@@ -504,7 +557,6 @@ if (mysqli_num_rows($result) > 0) {
 </div>
 </section>
 
-<!-- ================= FOOTER ================= -->
 <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">

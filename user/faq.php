@@ -382,6 +382,30 @@ h5 {
 
 </div>
 
+<div class="faq umum">
+
+    <div class="faq-question">
+        Bagaimana cara memesan Open trip?
+    </div>
+
+    <div class="faq-answer">
+        Private trip adalah perjalanan khusus yang pesertanya hanya dari satu kelompok atau komunitas sendiri.
+    </div>
+
+</div>
+
+<div class="faq umum">
+
+    <div class="faq-question">
+        Bagaimana cara memesan Private trip?
+    </div>
+
+    <div class="faq-answer">
+        Private trip adalah perjalanan khusus yang pesertanya hanya dari satu kelompok atau komunitas sendiri.
+    </div>
+
+</div>
+
 
 
 <!-- ================= PERLENGKAPAN ================= -->
@@ -438,6 +462,30 @@ h5 {
 
 </div>
 
+<div class="faq pembayaran">
+
+    <div class="faq-question">
+        Kapan dimulainya pembayaran dp?
+    </div>
+
+    <div class="faq-answer">
+        Ya, peserta dapat melakukan pembayaran DP terlebih dahulu sesuai ketentuan yang berlaku.
+    </div>
+
+</div>
+
+<div class="faq pembayaran">
+
+    <div class="faq-question">
+        Kapan batasan pembayaran dp?
+    </div>
+
+    <div class="faq-answer">
+        Ya, peserta dapat melakukan pembayaran DP terlebih dahulu sesuai ketentuan yang berlaku.
+    </div>
+
+</div>
+
 
 
 <!-- ================= KEBERANGKATAN ================= -->
@@ -445,7 +493,7 @@ h5 {
 <div class="faq keberangkatan">
 
     <div class="faq-question">
-        Jam keberangkatan kapan?
+        Jam keberangkatan kapan untuk open trip?
     </div>
 
     <div class="faq-answer">

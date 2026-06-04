@@ -38,7 +38,7 @@ session_unset(); */
 }
 
 body {
-    background-image: url('bg.jpeg'); 
+    background-image: url('../gambar/prau.jpg'); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

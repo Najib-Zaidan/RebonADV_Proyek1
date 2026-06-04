@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
     :root {
   --purple-dark: #4b00ff;
   --purple-mid: #7a2cff;
-  --purple-light: #4b00ff;
+  --purple-light: #763ef9;
   --cream: #ffff;
   --lavender: #eee3ff;
   --input-border: rgba(0, 0, 0, 0.08);
@@ -102,7 +102,7 @@ body {
 
 body {
   background: #e7e2c8;
-  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
+  background: linear-gradient(180deg, #8652ff 0%, #7a2cff 100%);
 }
 
 .navbar {
