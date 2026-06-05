@@ -494,6 +494,9 @@ nav a{text-decoration:none;color:black;}
         <?php 
         mysqli_data_seek($pesanan, 0); 
         $today = date('Y-m-d');
+        // Ambil session id_akun yang sedang login
+        $session_id_akun = $_SESSION['id_akun'] ?? null;
+
         while($b = ambil($pesanan)): 
             $id_booking = $b['id_booking'];
             
@@ -517,6 +520,16 @@ nav a{text-decoration:none;color:black;}
                 $time_category = 'ongoing';
             } else {
                 $time_category = 'upcoming';
+            }
+
+            // AMBIL DATA RATING (Skenario Mengunci Rating Terakhir)
+            $user_rating = null;
+            if ($session_id_akun) {
+                $cek_rating_q = kueri("SELECT rating FROM rating WHERE id_trip = '$id_t' AND id_akun = '$session_id_akun' ORDER BY id_rating DESC LIMIT 1");
+                $data_rating = mysqli_fetch_assoc($cek_rating_q);
+                if ($data_rating) {
+                    $user_rating = (int)$data_rating['rating'];
+                }
             }
         ?>
         <div class="data-card open-card" data-time="<?= $time_category; ?>" style="display: block; border-left: 6px solid #6b3df5; margin-bottom: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; background: #fff;">
@@ -549,12 +562,28 @@ nav a{text-decoration:none;color:black;}
             </div>
 
             <?php if ($time_category === 'past' && $b['status'] !== 'Dibatalkan'): ?>
-                <a href="form_rating_trip.php?id_booking=<?= $id_booking; ?>" 
-                style="background: #fef3c7; color: #92400e; font-size: 11px; padding: 6px 14px; border-radius: 8px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #fde68a; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(217, 119, 6, 0.1);" 
-                onmouseover="this.style.background='#fde68a'; this.style.borderColor='#f59e0b';" 
-                onmouseout="this.style.background='#fef3c7'; this.style.borderColor='#fde68a';">
-                    ⭐ Berikan Penilaian
-                </a>
+                <?php if ($user_rating !== null): ?>
+                    <div style="background: #fdf4ff; color: #701a75; font-size: 11px; padding: 6px 14px; border-radius: 8px; font-weight: 800; display: inline-flex; flex-direction: column; align-items: flex-end; border: 1px solid #f5d0fe; box-shadow: 0 2px 4px rgba(112, 26, 117, 0.03);">
+                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 1px;">
+                            <span style="color: #eab308; font-size: 14px; letter-spacing: 1px; line-height: 1;">
+                                <?php 
+                                for ($i = 1; $i <= 5; $i++) {
+                                    echo $i <= $user_rating ? '★' : '☆';
+                                }
+                                ?>
+                            </span>
+                            <span style="font-weight: 900; font-size: 12px; color: #701a75;"><?= $user_rating; ?>/5</span>
+                        </div>
+                        <span style="font-size: 8.5px; color: #a21caf; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Rating Anda</span>
+                    </div>
+                <?php else: ?>
+                    <a href="form_rating_trip.php?id_booking=<?= $id_booking; ?>" 
+                       style="background: #fef3c7; color: #92400e; font-size: 11px; padding: 6px 14px; border-radius: 8px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #fde68a; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(217, 119, 6, 0.1);" 
+                       onmouseover="this.style.background='#fde68a'; this.style.borderColor='#f59e0b';" 
+                       onmouseout="this.style.background='#fef3c7'; this.style.borderColor='#fde68a';">
+                        ⭐ Berikan Penilaian
+                    </a>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
@@ -595,6 +624,7 @@ nav a{text-decoration:none;color:black;}
 
         <?php endwhile; ?>
     </div>
+
 
     <div id="trip-content-private" style="display:none; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <?php 

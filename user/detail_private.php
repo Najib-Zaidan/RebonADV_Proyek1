@@ -440,39 +440,62 @@ $total_terbayar = isset($data_bayar['total_terbayar']) ? $data_bayar['total_terb
 
         <div class="action-group">
             <?php 
-            // Tombol Bayar aktif jika trip DISETUJUI, belum lunas/batal/refund, dan tidak sedang mengajukan batal total
-            if($status_trip == 'Disetujui' && $status_sekarang != 'Lunas' && $status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund' && !$is_mengajukan_batal): 
+            // KUNCI UTAMA: Semua tombol aksi hanya muncul jika trip berstatus 'Disetujui'
+            if($status_trip == 'Disetujui'): 
             ?>
-                <a href="form_pembayaran_private.php?id_private=<?= $id_private; ?>" class="btn btn-pay">Bayar Sekarang</a>
-            <?php endif; ?>
-
-            <?php 
-            // TOMBOL AKSI PERUBAHAN
-            if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund' && !$is_mengajukan_batal):
-                if($is_mengajukan_ubah): ?>
-                    <span class="btn" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); cursor: default;">Perubahan sedang diproses...</span>
-                <?php else: ?>
-                    <a href="ubah_private.php?id_private=<?= $id_private; ?>" class="btn btn-edit-trip">Ajukan Perubahan</a>
+                
+                <?php 
+                // 1. TOMBOL BAYAR SEKARANG
+                // Aktif jika belum lunas, belum batal, belum refund, dan tidak sedang mengajukan pembatalan total
+                if($status_sekarang != 'Lunas' && $status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund' && !$is_mengajukan_batal): 
+                ?>
+                    <a href="form_pembayaran_private.php?id_private=<?= $id_private; ?>" class="btn btn-pay">Bayar Sekarang</a>
                 <?php endif; ?>
-            <?php endif; ?>
 
-            <?php 
-            if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund'): 
-                if($is_mengajukan_batal):
-                    if($data_batal['status'] == 0): ?>
-                        <span class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); cursor: default;">Menunggu Verifikasi Pembatalan</span>
+                <?php 
+                // 2. TOMBOL AJUKAN PERUBAHAN
+                // Aktif jika status pembayaran bukan batal/refund, dan tidak sedang mengajukan pembatalan total
+                if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund' && !$is_mengajukan_batal):
+                    if($is_mengajukan_ubah): ?>
+                        <span class="btn" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); cursor: default;">Perubahan sedang diproses...</span>
                     <?php else: ?>
-                        <span class="status-label">Pembatalan telah disetujui.</span>
-                    <?php endif;
-                else: ?>
-                    <a href="batal_private.php?id_private=<?= $id_private; ?>" 
-                    class="btn btn-cancel-all" 
-                    onclick="return confirm('Apakah Anda yakin ingin membatalkan seluruh pengajuan private trip ini?')">
-                        Batalkan Pesanan
-                    </a>
+                        <a href="ubah_private.php?id_private=<?= $id_private; ?>" class="btn btn-edit-trip">Ajukan Perubahan</a>
+                    <?php endif; ?>
                 <?php endif; ?>
-            <?php else: ?>
-                <span class="status-label">Pesanan ini sudah <?= $status_sekarang; ?>.</span>
+
+                <?php 
+                // 3. TOMBOL BATALKAN PESANAN ATAU LABEL STATUS PEMBATALAN
+                if($status_sekarang != 'Dibatalkan' && $status_sekarang != 'Refund'): 
+                    if($is_mengajukan_batal):
+                        if($data_batal['status'] == 0): ?>
+                            <span class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); cursor: default;">Menunggu Verifikasi Pembatalan</span>
+                        <?php else: ?>
+                            <span class="status-label">Pembatalan telah disetujui.</span>
+                        <?php endif;
+                    else: ?>
+                        <a href="batal_private.php?id_private=<?= $id_private; ?>" 
+                        class="btn btn-cancel-all" 
+                        onclick="return confirm('Apakah Anda yakin ingin membatalkan seluruh pengajuan private trip ini?')">
+                            Batalkan Pesanan
+                        </a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span class="status-label">Pesanan ini sudah <?= $status_sekarang; ?>.</span>
+                <?php endif; ?>
+
+            <?php 
+            // Jika status_trip bernilai 'Ditolak' atau status lainnya selain 'Disetujui'
+            else: 
+            ?>
+                <span class="status-label">
+                    <?php 
+                    if($status_trip == 'Ditolak') {
+                        echo "❌ Pengajuan trip ini ditolak oleh Admin.";
+                    } else {
+                        echo "⏳ Menunggu persetujuan pengajuan oleh Admin.";
+                    }
+                    ?>
+                </span>
             <?php endif; ?>
         </div>
     </div>

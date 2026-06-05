@@ -238,6 +238,45 @@ mysqli_query($konek, $rating);
 
 
 
+
+
+
+
+
+
+$insert_album = "INSERT INTO album (nama) VALUES 
+('Gunung Merbabu'),
+('Gunung Cikuray'),
+('Gunung Bromo'),
+('Gunung Papandayan')";
+
+$insert_galeri = "INSERT INTO galeri (nama_file, id_album) VALUES 
+-- Gunung Merbabu (19 gambar, id_album = 1, ekstensi .jpg)
+('merbabu1.jpg', 1), ('merbabu2.jpg', 1), ('merbabu3.jpg', 1), ('merbabu4.jpg', 1), ('merbabu5.jpg', 1),
+('merbabu6.jpg', 1), ('merbabu7.jpg', 1), ('merbabu8.jpg', 1), ('merbabu9.jpg', 1), ('merbabu10.jpg', 1),
+('merbabu11.jpg', 1), ('merbabu12.jpg', 1), ('merbabu13.jpg', 1), ('merbabu14.jpg', 1), ('merbabu15.jpg', 1),
+('merbabu16.jpg', 1), ('merbabu17.jpg', 1), ('merbabu18.jpg', 1), ('merbabu19.jpg', 1),
+
+-- Gunung Cikuray (21 gambar, id_album = 2, ekstensi .jpg)
+('cikuray1.jpg', 2), ('cikuray2.jpg', 2), ('cikuray3.jpg', 2), ('cikuray4.jpg', 2), ('cikuray5.jpg', 2),
+('cikuray6.jpg', 2), ('cikuray7.jpg', 2), ('cikuray8.jpg', 2), ('cikuray9.jpg', 2), ('cikuray10.jpg', 2),
+('cikuray11.jpg', 2), ('cikuray12.jpg', 2), ('cikuray13.jpg', 2), ('cikuray14.jpg', 2), ('cikuray15.jpg', 2),
+('cikuray16.jpg', 2), ('cikuray17.jpg', 2), ('cikuray18.jpg', 2), ('cikuray19.jpg', 2), ('cikuray20.jpg', 2),
+('cikuray21.jpg', 2),
+
+-- Gunung Bromo (18 gambar, id_album = 3, ekstensi .jpg)
+('bromo1.jpg', 3), ('bromo2.jpg', 3), ('bromo3.jpg', 3), ('bromo4.jpg', 3), ('bromo5.jpg', 3),
+('bromo6.jpg', 3), ('bromo7.jpg', 3), ('bromo8.jpg', 3), ('bromo9.jpg', 3), ('bromo10.jpg', 3),
+('bromo11.jpg', 3), ('bromo12.jpg', 3), ('bromo13.jpg', 3), ('bromo14.jpg', 3), ('bromo15.jpg', 3),
+('bromo16.jpg', 3), ('bromo17.jpg', 3), ('bromo18.jpg', 3),
+
+-- Gunung Papandayan (19 gambar, id_album = 4, ekstensi .JPG kapital)
+('papandayan1.JPG', 4), ('papandayan2.JPG', 4), ('papandayan3.JPG', 4), ('papandayan4.JPG', 4), ('papandayan5.JPG', 4),
+('papandayan6.JPG', 4), ('papandayan7.JPG', 4), ('papandayan8.JPG', 4), ('papandayan9.JPG', 4), ('papandayan10.JPG', 4),
+('papandayan11.JPG', 4), ('papandayan12.JPG', 4), ('papandayan13.JPG', 4), ('papandayan14.JPG', 4), ('papandayan15.JPG', 4),
+('papandayan16.JPG', 4), ('papandayan17.JPG', 4), ('papandayan18.JPG', 4), ('papandayan19.JPG', 4)";
+
+
 $insert_tujuan = "INSERT INTO tujuan (tujuan, kota, provinsi) VALUES
 ('Gunung Semeru', 'Lumajang', 'Jawa Timur'),
 ('Gunung Prau', 'Wonosobo', 'Jawa Tengah'),
@@ -2139,6 +2178,8 @@ mysqli_query($konek, $insert_peserta_pt);
 mysqli_query($konek, $insert_payment_pt);
 mysqli_query($konek, $insert_batal_pt);
 mysqli_query($konek, $insert_rating);
+mysqli_query($konek, $insert_album);
+mysqli_query($konek, $insert_galeri);
 
 /* For Admin Only 
    DON'T USE THIS

@@ -77,6 +77,12 @@ if (mysqli_num_rows($result_old) > 0) {
 $query_peserta = "SELECT * FROM peserta_private WHERE id_private = '$id_private_target'";
 $result_peserta = kueri($query_peserta);
 
+// Cek apakah ada modifikasi pada data struktur peserta (apakah ada yang 'Pending Hapus' atau 'Pengajuan')
+$query_cek_modif_peserta = "SELECT COUNT(*) as jml FROM peserta_private WHERE id_private = '$id_private_target' AND status_peserta IN ('Pending Hapus', 'Pengajuan')";
+$res_cek_peserta = kueri($query_cek_modif_peserta);
+$data_cek_peserta = mysqli_fetch_assoc($res_cek_peserta);
+$ada_perubahan_peserta = ($data_cek_peserta['jml'] > 0);
+
 // 4. Proses submit pengajuan perubahan utama
 if (isset($_POST['submit'])) {
     $nama = mysqli_real_escape_string($konek, $_POST['nama']);
@@ -86,6 +92,25 @@ if (isset($_POST['submit'])) {
     $tgl_pulang = mysqli_real_escape_string($konek, $_POST['tgl_pulang']);
     $catatan = mysqli_real_escape_string($konek, $_POST['catatan']);
     
+    // Validasi Sisi Backend: Cek perubahan data form utama
+    $apakah_form_berubah = (
+        $nama !== $data_old['nama'] ||
+        $no_hp !== $data_old['no_hp'] ||
+        $tujuan !== $data_old['tujuan'] ||
+        $tgl_berangkat !== $data_old['tgl_berangkat'] ||
+        $tgl_pulang !== $data_old['tgl_pulang'] ||
+        $catatan !== $data_old['catatan']
+    );
+
+    // Jika form detail tidak berubah DAN struktur tabel peserta juga tidak disentuh sama sekali
+    if (!$apakah_form_berubah && !$ada_perubahan_peserta) {
+        echo "<script>
+                alert('Gagal Mengirim! Anda belum melakukan perubahan apa pun pada data trip maupun susunan peserta.');
+                window.location.href = 'ubah_private.php?id_private=" . $id_private_target . "';
+              </script>";
+        exit;
+    }
+
     $query_hitung = "SELECT COUNT(*) as total FROM peserta_private WHERE id_private = '$id_private_target' AND status_peserta != 'Pending Hapus'";
     $res_hitung = kueri($query_hitung);
     $data_hitung = mysqli_fetch_assoc($res_hitung);
@@ -275,7 +300,7 @@ if (isset($_POST['submit'])) {
         cursor: pointer;
         font-size: 15px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25);
+        box-shadow: 0 4px 12 rgba(255, 87, 34, 0.25);
         align-self: flex-end;
     }
 
@@ -329,7 +354,7 @@ if (isset($_POST['submit'])) {
     table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 750px; /* Ditambah sedikit agar kolom punya ruang lega */
+        min-width: 750px;
     }
 
     table th, table td {
@@ -348,7 +373,6 @@ if (isset($_POST['submit'])) {
         font-size: 12px;
     }
 
-    /* Perbaikan utama tombol aksi */
     .btn-action-del {
         display: inline-block;
         background: #e74c3c;
@@ -379,7 +403,6 @@ if (isset($_POST['submit'])) {
     
     .btn-action-cancel:hover { background: #6c7a7a; }
 
-    /* Penyeimbang Kolom Status & Aksi */
     table th:nth-child(5), table td:nth-child(5) {
         width: 110px;
     }
@@ -501,38 +524,38 @@ if (isset($_POST['submit'])) {
     <div class="card">
         <div class="title">Formulir Perubahan Rencana</div>
 
-        <form action="" method="post" class="trip-form">
+        <form action="" method="post" class="trip-form" id="formUbahTrip">
             
             <div class="form-group">
                 <label><i class="fa-solid fa-user"></i> Nama Lengkap</label>
-                <input type="text" name="nama" placeholder="Nama Lengkap Pemesan" autocomplete="off" value="<?php echo $data_old['nama']; ?>" required />
+                <input type="text" id="inputNama" name="nama" placeholder="Nama Lengkap Pemesan" autocomplete="off" value="<?php echo $data_old['nama']; ?>" required />
             </div>
 
             <div class="form-group">
                 <label><i class="fa-solid fa-phone"></i> Nomor Telepon</label>
-                <input type="text" name="nohp" placeholder="Contoh: 0812345xxxxx" autocomplete="off" value="<?php echo $data_old['no_hp']; ?>" required />
+                <input type="text" id="inputNoHp" name="nohp" placeholder="Contoh: 0812345xxxxx" autocomplete="off" value="<?php echo $data_old['no_hp']; ?>" required />
             </div>
 
             <div class="form-group">
                 <label><i class="fa-solid fa-map-location-dot"></i> Lokasi Destinasi</label>
-                <input type="text" name="destinasi" placeholder="Tujuan Destinasi Baru" autocomplete="off" value="<?php echo $data_old['tujuan']; ?>" required />
+                <input type="text" id="inputTujuan" name="destinasi" placeholder="Tujuan Destinasi Baru" autocomplete="off" value="<?php echo $data_old['tujuan']; ?>" required />
             </div>
 
             <div class="date-group">
                 <div class="form-group">
                     <label><i class="fa-solid fa-calendar-plus"></i> Tanggal Berangkat Baru</label>
-                    <input type="date" name="tgl_berangkat" value="<?php echo $data_old['tgl_berangkat']; ?>" required>
+                    <input type="date" id="inputTglBerangkat" name="tgl_berangkat" value="<?php echo $data_old['tgl_berangkat']; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label><i class="fa-solid fa-calendar-minus"></i> Tanggal Pulang Baru</label>
-                    <input type="date" name="tgl_pulang" value="<?php echo $data_old['tgl_pulang']; ?>" required>
+                    <input type="date" id="inputTglPulang" name="tgl_pulang" value="<?php echo $data_old['tgl_pulang']; ?>" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label><i class="fa-solid fa-comment-dots"></i> Alasan & Catatan Tambahan Perubahan</label>
-                <textarea name="catatan" placeholder="Tuliskan detail atau alasan mengapa rencana trip ingin dirubah..." rows="4"><?php echo $data_old['catatan']; ?></textarea>
+                <textarea id="inputCatatan" name="catatan" placeholder="Tuliskan detail atau alasan mengapa rencana trip ingin dirubah..." rows="4"><?php echo $data_old['catatan']; ?></textarea>
             </div>
 
             <button type="submit" name="submit" class="btn-submit-ubah">
@@ -543,6 +566,45 @@ if (isset($_POST['submit'])) {
     </div>
 
 </div>
+
+<script type="text/javascript">
+    document.getElementById('formUbahTrip').addEventListener('submit', function(e) {
+        // Ambil value lama dari PHP via inject string javascript
+        const oldNama = "<?php echo addslashes($data_old['nama']); ?>";
+        const oldNoHp = "<?php echo addslashes($data_old['no_hp']); ?>";
+        const oldTujuan = "<?php echo addslashes($data_old['tujuan']); ?>";
+        const oldTglBerangkat = "<?php echo $data_old['tgl_berangkat']; ?>";
+        const oldTglPulang = "<?php echo $data_old['tgl_pulang']; ?>";
+        const oldCatatan = "<?php echo addslashes($data_old['catatan']); ?>";
+        
+        // Status deteksi modifikasi peserta dari backend
+        const adaPerubahanPeserta = <?php echo $ada_perubahan_peserta ? 'true' : 'false'; ?>;
+
+        // Ambil value saat ini dari input form
+        const currentNama = document.getElementById('inputNama').value.trim();
+        const currentNoHp = document.getElementById('inputNoHp').value.trim();
+        const currentTujuan = document.getElementById('inputTujuan').value.trim();
+        const currentTglBerangkat = document.getElementById('inputTglBerangkat').value;
+        const currentTglPulang = document.getElementById('inputTglPulang').value;
+        const currentCatatan = document.getElementById('inputCatatan').value.trim();
+
+        // Bandingkan data input form sekarang dengan data original
+        const isFormChanged = (
+            currentNama !== oldNama ||
+            currentNoHp !== oldNoHp ||
+            currentTujuan !== oldTujuan ||
+            currentTglBerangkat !== oldTglBerangkat ||
+            currentTglPulang !== oldTglPulang ||
+            currentCatatan !== oldCatatan
+        );
+
+        // Jika form isian kosong/tidak berubah DAN data list peserta juga tidak dimodifikasi
+        if (!isFormChanged && !adaPerubahanPeserta) {
+            e.preventDefault(); // Menghentikan form submit
+            alert('Gagal Mengirim! Anda belum melakukan perubahan apa pun pada data isian formulir maupun pada data list peserta.');
+        }
+    });
+</script>
 
 </body>
 </html>
