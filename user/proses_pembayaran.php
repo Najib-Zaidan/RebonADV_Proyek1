@@ -37,7 +37,13 @@ if (move_uploaded_file($tmp_file, $path)) {
 
     if (kueri($query)) {
 
-        header("Location: profiluser.php");
+    echo "
+    <script>
+        alert('Pembayaran berhasil diajukan dan sedang menunggu verifikasi admin');
+        window.location.href='profiluser.php';
+    </script>
+    ";
+    exit;
 
     } else {
 

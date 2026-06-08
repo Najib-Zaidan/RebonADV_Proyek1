@@ -172,26 +172,48 @@ nav ul li a.active {
 
 /* Hero Section */
 .hero {
-    background-size: cover;
-    background: #e7e2c8;
-    height: 500px;
-    text-align: center;
-    color: white;
+    background: linear-gradient(135deg, #e7e2c8, #d8cfb0);
+    min-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 30px;
+}
+
+.hero-content {
+    max-width: 700px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+
+    padding: 40px 50px;
+
+    border-radius: 25px;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+
+    border-top: 5px solid #6b3df5;
+
+    text-align: center;
+
+    transition: .3s ease;
+}
+
+.hero-content:hover {
+    transform: translateY(-5px);
 }
 
 .hero-content h3 {
-    color: #070708;
-    font-size: 24px;
+    color: #6b3df5;
+    font-size: 36px;
+    font-weight: 800;
     margin-bottom: 20px;
+    letter-spacing: 1px;
 }
 
 .hero-content p {
-    max-width: 800px;
-    font-size: 18px;
-    line-height: 1.6;
+    color: #555;
+    font-size: 17px;
+    line-height: 1.9;
 }
 
 /* Gallery Section */
@@ -569,8 +591,14 @@ footer {
 
     <section class="hero">
         <div class="hero-content">
-            <h3>SIAPA KAMI?</h3>
-            <p>Rebon Adventure adalah penyedia layanan Open Trip dan Private Trip yang berfokus pada perjalanan pendakian dan eksplorasi alam. Kami berkomitmen menghadirkan pengalaman perjalanan yang aman, terencana, dan berkesan bagi setiap peserta.</p>
+            <h3>REBON ADVENTURE</h3>
+
+            <p>
+                Rebon Adventure merupakan penyedia layanan Open Trip dan Private Trip
+                yang berfokus pada kegiatan pendakian gunung serta eksplorasi alam.
+                Kami menghadirkan perjalanan yang aman, nyaman, terencana, dan penuh
+                kebersamaan bagi setiap peserta.
+            </p>
         </div>
     </section>
 

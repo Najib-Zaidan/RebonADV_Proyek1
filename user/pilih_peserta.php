@@ -231,7 +231,7 @@ footer{
 </header> -->
 
 <!-- CONTENT -->
- <a href="ot_katalog.php?id=<?=$id?>" class="back">Kembali</a>
+ <a href="ot_katalog.php?id=<?=$id_trip?>" class="back">Kembali</a>
 <div class="container">
 
 <?php if(mysqli_num_rows($result)): ?>

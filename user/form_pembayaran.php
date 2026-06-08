@@ -1,326 +1,351 @@
 <?php
 session_start();
-
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pembayaran Trip</title>
+
 <style>
-/* NAVBAR */
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 80px;
-  background: #f4f0e5;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.logo img {
-  height: 50px;
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#4b1fa3,#8a6be8);
+    min-height:100vh;
 }
 
-nav {
-  display: flex;
-  gap: 30px;
-  align-items: center;
+.form{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 15px;
 }
 
-nav a {
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
+form{
+    width:100%;
+    max-width:500px;
+    background:#eae4cc;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
 
-nav .active2 {
-  color: #6b3df5;
+.btn-kembali{
+    display:inline-block;
+    text-decoration:none;
+    background:#6b3df5;
+    color:#fff;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:600;
+    margin-bottom:20px;
+    transition:.3s;
 }
 
-.active5 {
-  background: #6b3df5;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
+.btn-kembali:hover{
+    background:#4b1fa3;
 }
 
-/* BODY BACKGROUND */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #4b1fa3, #8a6be8);
-    /* display: flex; */
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+.judul{
+    text-align:center;
+    margin-bottom:25px;
 }
 
-/* FORM CONTAINER (CARD) */
-
-.form {
-    display: flex;
-    justify-content: center;
-    margin: 100px;
-}
-form {
-    background-color: #eae4cc;
-    padding: 40px;
-    border-radius: 16px;
-    justify-content: center;
-    width: 400px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    text-align: left;
+.judul h2{
+    color:#2c2f7a;
+    margin-bottom:5px;
 }
 
-/* LABEL */
-form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #333;
+.judul p{
+    color:#666;
+    font-size:13px;
 }
 
-/* INPUT */
-form input[type="number"],
-form input[type="file"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    border: none;
-    background-color: #cfc6e8;
-    outline: none;
-    font-size: 14px;
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+    color:#333;
 }
 
-/* FILE INPUT CUSTOM FEEL */
-form input[type="file"] {
-    padding: 10px;
-    background-color: #cfc6e8;
-    cursor: pointer;
+select,
+input[type="number"],
+input[type="file"]{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#cfc6e8;
+    outline:none;
+    font-size:14px;
 }
 
-/* HR */
-form hr {
-    border: none;
-    height: 1px;
-    background-color: #bbb;
-    margin: 20px 0;
+textarea{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#cfc6e8;
+    resize:none;
+    outline:none;
 }
 
-/* BUTTON */
-form button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #4b1fa3, #2c2f7a);
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.payment-card{
+    background:#f4efff;
+    border:1px solid #ddd;
+    border-radius:15px;
+    padding:15px;
+    margin-top:15px;
+    margin-bottom:20px;
 }
 
-/* BUTTON HOVER */
-form button:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
+.payment-card h4{
+    color:#4b1fa3;
+    margin-bottom:12px;
 }
 
-/* FOOTER */
-
-footer {
-  background-color: #fdfae6;
-  padding: 40px 10% 20px 10%;
-  color: #333;
+.payment-item{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid rgba(0,0,0,.08);
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 30px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 30px;
+.payment-item:last-child{
+    border-bottom:none;
 }
 
-.footer-column h4 {
-  font-size: 16px;
-  margin-bottom: 15px;
-  font-weight: 800;
+hr{
+    border:none;
+    height:1px;
+    background:#bbb;
+    margin:20px 0;
 }
 
-.footer-column ul {
-  list-style: none;
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#4b1fa3,#2c2f7a);
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
 }
 
-.footer-column ul li {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
+button:hover{
+    transform:translateY(-2px);
 }
 
-/* Styling Kontak dengan Ikon */
-.contact-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 600;
+.info-upload{
+    display:block;
+    margin-top:8px;
+    color:#444;
+    font-size:12px;
 }
 
-/* Bagian Media Sosial */
-.social-section {
-  margin-top: 25px;
-}
+@media(max-width:600px){
 
-.social-icons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
+    .form{
+        padding:20px 10px;
+    }
 
-.social-icons img {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
+    form{
+        padding:20px;
+    }
 
-.footer-logo-img {
-  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
-  height: auto;
-  display: block;
-}
-.copyright {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
+    .payment-item{
+        flex-direction:column;
+        gap:4px;
+    }
+
+    .btn-kembali{
+        width:100%;
+        text-align:center;
+    }
 }
 
 </style>
+</head>
+
 <body>
-    <!-- NAVBAR -->
-    <header class="navbar">
-      <div class="logo">
-        <img
-          src="../gambar/REBON LOGO GRADIENT presisi.png"
-          alt="Rebon Adventure"
-        />
-      </div>
 
-      <nav>
-        <a href="home1.php" class="active1">Home</a>
-        <a href="open_trip.php" class="active2">Open</a>
-        <a href="private_trip.php" class="active3">Private</a>
-        <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-        <a href="profile.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
-            <span style="color:blue; margin-right:10px;">
-              👤 <?php echo $_SESSION['username']; ?>
-            </span>
-        </a>
-            <a href="logout_user.php">
-              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
-            </a>
+<div class="form">
 
-        <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
-            <a href="login_user.php">
-              <button class="active5">Masuk</button>
-            </a>
-        <?php endif; ?>
-      </nav>
-    </header>
+<form action="proses_pembayaran.php" method="POST" enctype="multipart/form-data">
 
-    <div class="form">
-    <form action="proses_pembayaran.php" method="POST" enctype="multipart/form-data">
+    <a href="profiluser.php" class="btn-kembali">
+         Kembali
+    </a>
+
+    <div class="judul">
+        <h2> Pembayaran Trip</h2>
+        <p>Pilih metode pembayaran kemudian upload bukti transfer.</p>
+    </div>
+
     <input type="hidden" name="id_booking" value="<?php echo $_GET['id_booking']; ?>">
-    
-    <label>Nominal Pembayaran:</label>
-    <input type="number" name="nominal" required>
+
+    <label>Metode Pembayaran</label>
+
+    <select id="metodePembayaran" onchange="showPaymentInfo()">
+        <option value="">-- Pilih Metode Pembayaran --</option>
+
+        <option value="bca"> BCA</option>
+        <option value="bri"> BRI</option>
+        <option value="bsi"> BSI</option>
+        <option value="dana"> DANA</option>
+        <option value="gopay"> GoPay</option>
+    </select>
+
+    <div id="paymentInfo"></div>
+
     <hr>
-<label>Bukti Pembayaran:</label>
-<input type="file" name="bukti_bayar" accept="image/*" required>
 
-<small style="color:black;">
-    <i>*Maksimal ukuran file 5MB</i>
-</small>
+    <label>Nominal Pembayaran</label>
+    <input type="number" name="nominal" required>
 
-<hr>
-    <label>Catatan:</label>
-<textarea name="catatan" rows="4" placeholder="Tulis catatan pembayaran (opsional)..." 
-style="width:100%; padding:12px; border:none; border-radius:8px; background:#cfc6e8; resize:none;"></textarea>
+    <hr>
 
-<hr>
-    <button type="submit">Kirim Pembayaran</button>
+    <label>Bukti Pembayaran</label>
+    <input type="file" name="bukti_bayar" accept="image/*" required>
+
+    <small class="info-upload">
+        * Maksimal ukuran file 5MB (JPG, JPEG, PNG)
+    </small>
+
+    <hr>
+
+    <label>Catatan</label>
+
+    <textarea
+        name="catatan"
+        rows="4"
+        placeholder="Tulis catatan pembayaran (opsional)..."></textarea>
+
+    <hr>
+
+    <button type="submit">
+        Kirim Pembayaran
+    </button>
+
 </form>
+
 </div>
-<!-- FOOTER -->
 
-    <footer>
-      <div class="footer-content">
-        <div class="footer-column logo-col">
-          <img
-            src="../gambar/logo-rebon.png"
-            alt="Rebon Adventure Logo"
-            class="footer-logo-img"
-          />
-        </div>
+<script>
 
-        <div class="footer-column">
-          <h4>KONTAK KAMI</h4>
-          <div class="contact-item">
-            <span class="icon">✉</span>
-            <p>rebonadventure@gmail.com</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📞</span>
-            <p>+62 812-3456-7890</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📍</span>
-            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
-          </div>
-        </div>
+function showPaymentInfo(){
 
-        <div class="footer-column">
-          <h4>LAYANAN KAMI</h4>
-          <ul>
-            <li>OPEN TRIP</li>
-            <li>PRIVATE TRIP</li>
-          </ul>
-        </div>
+    let metode = document.getElementById("metodePembayaran").value;
+    let box = document.getElementById("paymentInfo");
 
-        <div class="footer-column">
-          <h4>INFORMASI</h4>
-          <ul>
-            <li>TENTANG KAMI</li>
-            <li>TRIP TERSEDIA</li>
-            <li>FAQ</li>
-          </ul>
+    if(metode == "bca"){
 
-          <div class="social-section">
-            <h4>FOLLOW US ON</h4>
-            <div class="social-icons">
-              <img src="../gambar/fb-icon.png" alt="FB" />
-              <a href="https://www.instagram.com/rebon_adv?igsh=MW4xcDc1YTJhMzRpMw==" target="_blank" rel="noopener noreferrer">
-                <img src="../gambar/ig-icon.png" alt="Instagram" />
-              </a>
-              <a href="https://www.tiktok.com/@rebon.adventure?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
-                <img src="../gambar/tt-icon.png" alt="Tiktok" />
-              </a>
+        box.innerHTML = `
+        <div class="payment-card">
+            <h4> BCA</h4>
+
+            <div class="payment-item">
+                <span>No Rekening</span>
+                <strong>1234567890</strong>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
-    </footer>
-    
+            <div class="payment-item">
+                <span>Atas Nama</span>
+                <strong>Rebon Adventure</strong>
+            </div>
+        </div>`;
+    }
+
+    else if(metode == "bri"){
+
+        box.innerHTML = `
+        <div class="payment-card">
+            <h4> BRI</h4>
+
+            <div class="payment-item">
+                <span>No Rekening</span>
+                <strong>9876543210</strong>
+            </div>
+
+            <div class="payment-item">
+                <span>Atas Nama</span>
+                <strong>Rebon Adventure</strong>
+            </div>
+        </div>`;
+    }
+
+    else if(metode == "bsi"){
+
+        box.innerHTML = `
+        <div class="payment-card">
+            <h4> BSI</h4>
+
+            <div class="payment-item">
+                <span>No Rekening</span>
+                <strong>1122334455</strong>
+            </div>
+
+            <div class="payment-item">
+                <span>Atas Nama</span>
+                <strong>Rebon Adventure</strong>
+            </div>
+        </div>`;
+    }
+
+    else if(metode == "dana"){
+
+        box.innerHTML = `
+        <div class="payment-card">
+            <h4> DANA</h4>
+
+            <div class="payment-item">
+                <span>Nomor DANA</span>
+                <strong>081234567890</strong>
+            </div>
+
+            <div class="payment-item">
+                <span>Atas Nama</span>
+                <strong>Rebon Adventure</strong>
+            </div>
+        </div>`;
+    }
+
+    else if(metode == "gopay"){
+
+        box.innerHTML = `
+        <div class="payment-card">
+            <h4> GoPay</h4>
+
+            <div class="payment-item">
+                <span>Nomor GoPay</span>
+                <strong>081234567890</strong>
+            </div>
+
+            <div class="payment-item">
+                <span>Atas Nama</span>
+                <strong>Rebon Adventure</strong>
+            </div>
+        </div>`;
+    }
+
+    else{
+        box.innerHTML = "";
+    }
+}
+
+</script>
+
 </body>
 </html>
