@@ -129,6 +129,30 @@ tr:nth-child(even){ background:#f9f9f9; }
     font-weight:bold;
 }
 
+.btn-kembali{
+    display:inline-flex;
+    align-items:center;
+    text-decoration:none;
+    padding:12px 24px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#6b3df5,#8b5cf6);
+    color:#fff;
+    font-weight:600;
+    box-shadow:0 10px 25px rgba(107,61,245,.25);
+    transition:.3s;
+    margin-bottom:20px;
+}
+
+.btn-kembali:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 35px rgba(107,61,245,.35);
+}
+
+.btn-kembali::before{
+    margin-right:8px;
+    font-size:18px;
+}
+
 /* PRINT */
 @media print {
     body { background:white; padding:0; }
@@ -200,7 +224,9 @@ tr:nth-child(even){ background:#f9f9f9; }
     </a>
 </div>
 
-<a class="btn-kembali" href="index.php?menu=laporan">Kembali</a>
+    <a class="btn-kembali" href="index.php?menu=laporan">
+        Kembali
+    </a>
 
 <table>
 <tr>
