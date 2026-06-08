@@ -441,6 +441,150 @@ footer {
   font-size: 14px;
   padding: 20px 0;
 }
+
+/* ===== LOGIN MODAL POPUP ===== */
+#loginModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+#loginModal.active {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.50);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-box {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(75, 0, 255, 0.25);
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: sans-serif;
+}
+
+.modal-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #eee3ff, #d4b8ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 32px;
+}
+
+.modal-box h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 10px;
+}
+
+.modal-box p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.modal-box p span {
+  color: #6b3df5;
+  font-weight: 700;
+}
+
+.modal-btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-btn-login {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #4b00ff 0%, #7a2cff 100%);
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(107, 61, 245, 0.4);
+}
+
+.modal-btn-close {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  border: 2px solid #e0d6ff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  background: transparent;
+  color: #6b3df5;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-btn-close:hover {
+  background: #f3eeff;
+  border-color: #6b3df5;
+}
+
+.modal-close-x {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.modal-close-x:hover {
+  color: #333;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+/* ===== END MODAL ===== */
   </style>
 </head>
 <body>
@@ -575,7 +719,7 @@ footer {
                     <p class="dp">DP Rp <?= number_format($trip['harga_dp'], 0, ',', '.'); ?></p>
                 </div>
 
-                <a href="pilih_peserta.php?id=<?= $trip['id_trip']; ?>" class="btn-pesan">Pesan sekarang</a>
+                <a href="pilih_peserta.php?id=<?= $trip['id_trip']; ?>" class="btn-pesan" id="btnPesan">Pesan sekarang</a>
             </div>
         </div>
 
@@ -727,9 +871,53 @@ footer {
     </footer>
 </body>
 
+<!-- ===== LOGIN MODAL ===== -->
+<div id="loginModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-backdrop" onclick="closeLoginModal()"></div>
+  <div class="modal-box">
+    <button class="modal-close-x" onclick="closeLoginModal()" aria-label="Tutup">&#x2715;</button>
+    <div class="modal-icon">🔒</div>
+    <h2 id="modalTitle">Login Diperlukan</h2>
+    <p>Kamu harus <span>login</span> terlebih dahulu sebelum memesan <span>Open Trip</span>. Yuk masuk ke akunmu!</p>
+    <div class="modal-btn-group">
+      <a href="login_user.php" class="modal-btn-login">Masuk Sekarang</a>
+      <button class="modal-btn-close" onclick="closeLoginModal()">Nanti Saja</button>
+    </div>
+  </div>
+</div>
+<!-- ===== END MODAL ===== -->
+
 <script>
 function changeImage(element) {
     document.getElementById('mainImg').src = element.src;
 }
+
+// Cek status login dari PHP session
+const isLoggedIn = <?php echo isset($_SESSION['username']) ? 'true' : 'false'; ?>;
+
+function showLoginModal() {
+  const modal = document.getElementById('loginModal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLoginModal() {
+  const modal = document.getElementById('loginModal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Tutup modal dengan tombol Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLoginModal();
+});
+
+// Intercept klik tombol "Pesan sekarang"
+document.getElementById('btnPesan').addEventListener('click', function(e) {
+  if (!isLoggedIn) {
+    e.preventDefault();
+    showLoginModal();
+  }
+});
 </script>
 </html>
