@@ -327,9 +327,13 @@ footer {
           <div class="social-section">
             <h4>FOLLOW US ON</h4>
             <div class="social-icons">
-              <img src="../gambar/fb-icon.png" alt="FB" />
-              <img src="../gambar/ig-icon.png" alt="IG" />
-              <img src="../gambar/tt-icon.png" alt="TK" />
+               <img src="../gambar/fb-icon.png" alt="FB" />
+              <a href="https://www.instagram.com/rebon_adv?igsh=MW4xcDc1YTJhMzRpMw==" target="_blank" rel="noopener noreferrer">
+                <img src="../gambar/ig-icon.png" alt="Instagram" />
+              </a>
+              <a href="https://www.tiktok.com/@rebon.adventure?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                <img src="../gambar/tt-icon.png" alt="Tiktok" />
+              </a>
             </div>
           </div>
         </div>

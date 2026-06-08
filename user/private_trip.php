@@ -157,7 +157,7 @@ nav .active3 {
       align-items: flex-start;
     }
 
-    /* Image */
+    /* --- Komponen Gambar (Kiri) --- */
     .card-image {
       flex: 0 0 48%;
     }
@@ -189,7 +189,7 @@ nav .active3 {
       text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
     }
 
-    /* Form */
+    /* --- Komponen Form (Kanan) --- */
     .card-form {
       flex: 0 0 46%;
     }
@@ -200,6 +200,7 @@ nav .active3 {
       gap: 14px;
     }
 
+    /* Penyelarasan tampilan huruf dan desain elemen Input/Textarea */
     .trip-form input[type="text"],
     .trip-form input[type="tel"],
     .trip-form input[type="date"],
@@ -209,23 +210,37 @@ nav .active3 {
       border-radius: 10px;
       border: 1px solid var(--input-border);
       padding: 12px 14px;
-      font-size: 15px;
       outline: none;
       box-shadow: 0 10px 25px rgba(97, 88, 88, 0.1);
       width: 100%;
+      
+      /* Pengaturan huruf input disamakan */
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      color: #333333;
+    }
+
+    /* Penyelarasan placeholder bawaan */
+    .trip-form input::placeholder,
+    .trip-form textarea::placeholder {
+      color: #888888;
+      font-family: inherit;
+      font-size: 15px;
     }
 
     .trip-form input:focus,
     .trip-form textarea:focus {
       border: 2px solid #6b3df5;
       background: #e6e0ff;
+      color: #000000;
     }
 
     .trip-form textarea {
       resize: vertical;
     }
 
-    /* Tanggal */
+    /* Input Grup Tanggal */
     .date-group {
       display: flex;
       gap: 10px;
@@ -236,10 +251,12 @@ nav .active3 {
       flex: 1;
     }
 
-    /* Placeholder palsu */
+    /* Placeholder palsu khusus untuk input date */
     .date-group input[type="date"]:invalid::before {
       content: attr(data-placeholder);
-      color: #888;
+      color: #888888;
+      font-family: inherit;
+      font-size: 15px;
     }
 
     .date-group input[type="date"]:focus::before,
@@ -247,16 +264,19 @@ nav .active3 {
       content: "";
     }
 
-    /* Hilangkan text default */
+    /* Menyembunyikan teks bawaan browser sebelum tanggal dipilih */
     .date-group input[type="date"]:invalid::-webkit-datetime-edit {
       color: transparent;
     }
 
+    /* Penyelarasan teks tanggal pilihan user */
     .date-group input[type="date"]::-webkit-datetime-edit {
-      color: black;
+      color: #333333;
+      font-family: inherit;
+      font-size: 15px;
     }
 
-    /* Button */
+    /* Tombol Submit / WhatsApp */
     .cta-row {
       display: flex;
       justify-content: flex-end;
@@ -272,10 +292,14 @@ nav .active3 {
       border: none;
       padding: 14px 22px;
       border-radius: 10px;
-      font-weight: 700;
       cursor: pointer;
-      font-size: 16px;
       text-decoration: none;
+      
+      /* Pengaturan Huruf Tombol */
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.2s ease;
     }
 
     .btn-whatsapp:hover {
@@ -283,11 +307,15 @@ nav .active3 {
       box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
 
-    /* Footer */
+    /* ==========================================================================
+       3. LAYOUT FOOTER YANG SUDAH DIRAPIKAN
+       ========================================================================== */
     footer {
       background-color: #fdfae6;
-      padding: 40px 10% 20px 10%;
-      color: #333;
+      padding: 50px 10% 25px 10%;
+      color: #333333;
+      font-family: inherit;
+      margin-top: 40px;
     }
 
     .footer-content {
@@ -295,47 +323,196 @@ nav .active3 {
       justify-content: space-between;
       align-items: flex-start;
       flex-wrap: wrap;
-      gap: 30px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 30px;
+      gap: 40px;
+      border-bottom: 1px solid #e2dfcc;
+      padding-bottom: 40px;
     }
 
-    .footer-column h4 {
-      font-size: 16px;
-      margin-bottom: 15px;
-      font-weight: 800;
+    .footer-column {
+      flex: 1;
+      min-width: 200px;
     }
 
-    .footer-column ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .footer-column ul li {
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .contact-item {
-      margin-bottom: 10px;
-      font-size: 14px;
-      font-weight: 600;
+    /* Kolom logo proporsional */
+    .footer-column.logo-col {
+      flex: 1.2;
+      min-width: 220px;
     }
 
     .footer-logo-img {
-      width: 220px;
+      width: 100%;
+      max-width: 220px;
       height: auto;
       display: block;
     }
 
+    .footer-column h4 {
+      font-size: 15px;
+      margin-bottom: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #111111;
+    }
+
+    /* Navigasi List Link */
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-column ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-column ul li a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555555;
+      transition: color 0.2s ease;
+    }
+
+    .footer-column ul li a:hover {
+      color: #6b3df5; /* Menggunakan aksen warna utama form */
+    }
+
+    /* Item Informasi Kontak */
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #444444;
+    }
+
+    .contact-item .icon {
+      font-size: 16px;
+      color: #6b3df5;
+    }
+
+    .contact-item p {
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    /* Bagian Sosial Media */
+    .social-section {
+      margin-top: 30px;
+    }
+
+    .social-section h4 {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .social-icons a {
+      display: inline-block;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .social-icons a:hover {
+      transform: translateY(-3px);
+    }
+
+    .social-icons img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Hak Cipta */
     .copyright {
       text-align: center;
       font-size: 12px;
-      margin-top: 20px;
-      font-weight: bold;
-      color: #333;
+      margin-top: 25px;
+      font-weight: 700;
+      color: #777777;
+      letter-spacing: 0.5px;
     }
+/* ================= FOOTER ================= */
+
+footer {
+  background-color: #fdfae6;
+  padding: 40px 10% 20px 10%;
+  color: #333;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.social-section {
+  margin-top: 25px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.footer-logo-img {
+  width: 220px; 
+  height: auto;
+  display: block;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
     
 /* page background gradient (big purple area) */
 
@@ -441,55 +618,64 @@ nav .active3 {
 </main>
 
 <footer>
+      <div class="footer-content">
+        <div class="footer-column logo-col">
+          <img
+            src="../gambar/logo-rebon.png"
+            alt="Rebon Adventure Logo"
+            class="footer-logo-img"
+          />
+        </div>
 
-  <div class="footer-content">
+        <div class="footer-column">
+          <h4>KONTAK KAMI</h4>
+          <div class="contact-item">
+            <span class="icon">✉</span>
+            <p>rebonadventure@gmail.com</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📞</span>
+            <p>+62 812-3456-7890</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📍</span>
+            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
+          </div>
+        </div>
 
-    <div class="footer-column logo-col">
-      <img src="../gambar/logo-rebon.png" class="footer-logo-img" />
-    </div>
+        <div class="footer-column">
+          <h4>LAYANAN KAMI</h4>
+          <ul>
+            <li>OPEN TRIP</li>
+            <li>PRIVATE TRIP</li>
+          </ul>
+        </div>
 
-    <div class="footer-column">
-      <h4>KONTAK KAMI</h4>
+        <div class="footer-column">
+          <h4>INFORMASI</h4>
+          <ul>
+            <li>TENTANG KAMI</li>
+            <li>TRIP TERSEDIA</li>
+            <li>FAQ</li>
+          </ul>
 
-      <div class="contact-item">
-        ✉ rebonadventure@gmail.com
+          <div class="social-section">
+            <h4>FOLLOW US ON</h4>
+            <div class="social-icons">
+               <img src="../gambar/fb-icon.png" alt="FB" />
+              <a href="https://www.instagram.com/rebon_adv?igsh=MW4xcDc1YTJhMzRpMw==" target="_blank" rel="noopener noreferrer">
+                <img src="../gambar/ig-icon.png" alt="Instagram" />
+              </a>
+              <a href="https://www.tiktok.com/@rebon.adventure?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                <img src="../gambar/tt-icon.png" alt="Tiktok" />
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="contact-item">
-        📞 +62 812-3456-7890
-      </div>
-
-      <div class="contact-item">
-        📍 Cirebon, Indonesia
-      </div>
-    </div>
-
-    <div class="footer-column">
-      <h4>LAYANAN KAMI</h4>
-
-      <ul>
-        <li>OPEN TRIP</li>
-        <li>PRIVATE TRIP</li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h4>INFORMASI</h4>
-
-      <ul>
-        <li>TENTANG KAMI</li>
-        <li>TRIP TERSEDIA</li>
-        <li>FAQ</li>
-      </ul>
-    </div>
-
-  </div>
-
-  <div class="copyright">
-    © 2026 REBON ADVENTURE
-  </div>
-
-</footer>
+      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
+    </footer>
 
 </body>
 </html>

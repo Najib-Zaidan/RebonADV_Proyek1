@@ -11,7 +11,8 @@ require 'fungsi.php';
 
 $query = "SELECT id_peserta, id_akun, nama, no_hp, usia, alamat, riwayat 
           FROM peserta_open
-          WHERE id_akun = '$id'";
+          WHERE id_akun = '$id'
+          ORDER BY nama ASC";
 
 $result = kueri($query);
 ?>
@@ -63,6 +64,47 @@ nav a{
   border-radius:8px;
 }
 
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;                  /* Jarak antara panah dan teks */
+  color: #ffffff;            /* Warna teks putih agar kontras dengan background */
+  text-decoration: none;     /* Menghilangkan garis bawah link */
+  font-size: 14px;           /* Ukuran huruf kompak, tidak terlalu besar */
+  font-weight: 600;          /* Ketebalan huruf */
+  padding: 8px 16px;         /* Jarak ruang di dalam tombol */
+  border: none;              /* Menghilangkan garis tepi */
+  border-radius: 8px;        /* Sudut melengkung halus */
+  background: #6b3df5;       /* Warna ungu solid sebagai cover/dasar tombol */
+  float: left;         
+
+ 
+  margin-left: 20px;         /* Jarak dari dinding kiri agar tidak terlalu pojok */
+  
+  
+  /* Posisi di sebelah kiri dan margin luar */
+  float: left;               
+  margin-bottom: 20px;       /* Jarak ke elemen di bawahnya */
+  
+  /* Efek transisi saat disentuh kursor */
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(107, 61, 245, 0.2); /* Efek bayangan lembut */
+}
+
+/* Efek Hover (Saat kursor berada di atas tombol) */
+.back:hover {
+  background: #562cd1;       /* Warna ungu menjadi sedikit lebih gelap saat di-hover */
+  transform: translateX(3px); /* Efek bergeser sedikit ke kiri */
+  box-shadow: 0 6px 15px rgba(107, 61, 245, 0.3);
+}
+
+/* Pembersih Float agar elemen di bawahnya tidak berantakan */
+.container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
 /* CONTENT */
 .container{
   width:80%;
@@ -168,9 +210,10 @@ footer{
 </head>
 
 <body>
+  
 
 <!-- NAVBAR -->
-<header class="navbar">
+<!-- <header class="navbar">
   <div class="logo">
     <img src="../gambar/REBON LOGO GRADIENT presisi.png">
   </div>
@@ -185,9 +228,10 @@ footer{
       <span>👤 <?= $_SESSION['username']; ?></span>
     <?php endif; ?>
   </nav>
-</header>
+</header> -->
 
 <!-- CONTENT -->
+ <a href="ot_katalog.php?id=<?=$id?>" class="back">Kembali</a>
 <div class="container">
 
 <?php if(mysqli_num_rows($result)): ?>
@@ -241,7 +285,7 @@ footer{
 
 </div>
 
-<!-- FOOTER -->
+<!-- FOOTER
 <footer>
   <div class="footer-content">
     <img src="../gambar/logo-rebon.png" class="footer-logo-img">
@@ -250,7 +294,7 @@ footer{
   <div class="copyright">
     © 2026 REBON ADVENTURE
   </div>
-</footer>
+</footer> -->
 
 </body>
 </html>

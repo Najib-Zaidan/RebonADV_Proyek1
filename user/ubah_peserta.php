@@ -22,7 +22,7 @@ $row = mysqli_fetch_assoc($data);
     <style>
         /* NAVBAR */
 
-.navbar {
+/* .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,8 +57,48 @@ nav .active2 {
   padding: 10px 18px;
   border-radius: 8px;
   cursor: pointer;
+} */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;                  /* Jarak antara panah dan teks */
+  color: #ffffff;            /* Warna teks putih agar kontras dengan background */
+  text-decoration: none;     /* Menghilangkan garis bawah link */
+  font-size: 14px;           /* Ukuran huruf kompak, tidak terlalu besar */
+  font-weight: 600;          /* Ketebalan huruf */
+  padding: 8px 16px;         /* Jarak ruang di dalam tombol */
+  border: none;              /* Menghilangkan garis tepi */
+  border-radius: 8px;        /* Sudut melengkung halus */
+  background: #6b3df5;       /* Warna ungu solid sebagai cover/dasar tombol */
+  float: left;         
+
+  margin-top: 15px;          /* Jarak dari atas */
+  margin-left: 20px;         /* Jarak dari dinding kiri agar tidak terlalu pojok */
+  margin-bottom: 20px;       /* Jarak ke elemen di bawahnya */
+  
+  /* Posisi di sebelah kiri dan margin luar */
+  float: left;               
+  margin-bottom: 20px;       /* Jarak ke elemen di bawahnya */
+  
+  /* Efek transisi saat disentuh kursor */
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(107, 61, 245, 0.2); /* Efek bayangan lembut */
 }
 
+/* Efek Hover (Saat kursor berada di atas tombol) */
+.back:hover {
+  background: #562cd1;       /* Warna ungu menjadi sedikit lebih gelap saat di-hover */
+  transform: translateX(3px); /* Efek bergeser sedikit ke kiri */
+  box-shadow: 0 6px 15px rgba(107, 61, 245, 0.3);
+}
+
+/* Pembersih Float agar elemen di bawahnya tidak berantakan */
+.container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
 /* GRID TRIP */
 
 .trip-container {
@@ -216,38 +256,7 @@ footer {
     </style>
 </head>
 <body>
-<!-- NAVBAR -->
-    <header class="navbar">
-      <div class="logo">
-        <img
-          src="../gambar/REBON LOGO GRADIENT presisi.png"
-          alt="Rebon Adventure"
-        />
-      </div>
-
-      <nav>
-        <a href="home1.php" class="active1">Home</a>
-        <a href="open_trip.php" class="active2">Open</a>
-        <a href="private_trip.php" class="active3">Private</a>
-        <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-        <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
-            <span style="color:blue; margin-right:10px;">
-              👤 <?php echo $_SESSION['username']; ?>
-            </span>
-        </a>
-            <a href="logout_user.php">
-              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
-            </a>
-
-        <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
-            <a href="login_user.php">
-              <button class="active5">Masuk</button>
-            </a>
-        <?php endif; ?>
-      </nav>
-    </header>
+  <a href="profiluser.php" class="back">← Kembali</a>
 
     <div class="container">
         <form class="form-box" method="POST" action="">
@@ -266,7 +275,7 @@ footer {
 
     <!-- FOOTER -->
 
-    <footer>
+    <!-- <footer>
       <div class="footer-content">
         <div class="footer-column logo-col">
           <img
@@ -310,17 +319,20 @@ footer {
 
           <div class="social-section">
             <h4>FOLLOW US ON</h4>
-            <div class="social-icons">
-              <img src="../gambar/fb-icon.png" alt="FB" />
-              <img src="../gambar/ig-icon.png" alt="IG" />
-              <img src="../gambar/tt-icon.png" alt="TK" />
+             <img src="../gambar/fb-icon.png" alt="FB" />
+              <a href="https://www.instagram.com/rebon_adv?igsh=MW4xcDc1YTJhMzRpMw==" target="_blank" rel="noopener noreferrer">
+                <img src="../gambar/ig-icon.png" alt="Instagram" />
+              </a>
+              <a href="https://www.tiktok.com/@rebon.adventure?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                <img src="../gambar/tt-icon.png" alt="Tiktok" />
+              </a>
             </div>
           </div>
         </div>
       </div>
 
       <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
-    </footer>
+    </footer> -->
 
     <?php
       if (isset($_POST['submit'])) {
