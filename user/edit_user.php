@@ -354,7 +354,7 @@ footer {
         <input type="password" name="confirm_password" placeholder="Ulangi password baru">
       </div>
 
-      <a href="#"><p class="forgot">Lupa password?</p></a>
+      <!-- <a href="#"><p class="forgot">Lupa password?</p></a> -->
 
       <button type="submit" class="btn">Simpan Perubahan</button>
 
