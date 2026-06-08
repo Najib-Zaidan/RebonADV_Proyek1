@@ -6,7 +6,7 @@ if(isset($_GET['id'])){
 
     $id = $_GET['id'];
 
-    $query = "DELETE FROM peserta_open WHERE id_peserta = '$id'";
+    $query = "DELETE FROM peserta WHERE id_peserta = '$id'";
 
     if(mysqli_query($konek, $query)){
         echo "<script>

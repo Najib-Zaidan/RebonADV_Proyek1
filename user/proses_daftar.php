@@ -22,7 +22,7 @@ VALUES
 if (mysqli_query($konek, $query)) {
     echo "<script>
             alert('Peserta berhasil disimpan!, Silahkan cek profile dan menu peserta');
-            window.location='profiluser.php';
+            window.location='open_trip.php';
           </script>";
 } else {
     echo "Error: " . mysqli_error($konek);

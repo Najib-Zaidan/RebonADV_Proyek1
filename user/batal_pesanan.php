@@ -135,7 +135,7 @@ button:hover{
         <button type="submit" name="kirim_batal">Kirim Pembatalan</button>
     </form>
 
-    <a href="profiluser.php" class="back">Kembali</a>
+    <a href="profiluser.php" class="back">← Kembali</a>
 
 </div>
 
