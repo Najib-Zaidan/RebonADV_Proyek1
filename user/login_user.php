@@ -279,8 +279,12 @@ footer {
 
 
           <button type="submit">Login</button>
+<<<<<<< HEAD
+          
+=======
 
-          <a href="lupa_password.php"><p class="forgot">Lupa password?</p></a>
+          <!-- <a href="lupa_password.php"><p class="forgot">Lupa password?</p></a> -->
+>>>>>>> f59a1b8c7eaca618524ae61f726f82c695e237b0
           <p class="register">
             Belum punya akun?
             <a href="daftar_user.php"><span>Daftar di sini</span></a>
