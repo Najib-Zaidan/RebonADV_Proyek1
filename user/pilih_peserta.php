@@ -268,10 +268,10 @@ footer{
 
 </form>
 
-<div class="kosong">
+<!-- <div class="kosong">
   <h3>Atau</h3>
   <a href="form.php" class="btn-tambah">+ Tambah Peserta</a>
-</div>
+</div> -->
 
 <?php else: ?>
 

@@ -585,6 +585,21 @@ footer {
   to   { opacity: 1; transform: translateY(0)    scale(1);    }
 }
 /* ===== END MODAL ===== */
+
+/* ===== MODAL BELUM ADA PESERTA ===== */
+#pesertaModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+#pesertaModal.active {
+  display: flex;
+}
+/* ===== END MODAL PESERTA ===== */
   </style>
 </head>
 <body>
@@ -655,6 +670,15 @@ footer {
                           INNER JOIN akun a ON r.id_akun = a.id_akun 
                           WHERE r.id_trip = $id_trip 
                           ORDER BY r.id_rating DESC");
+
+    // CEK jumlah peserta_open milik akun yang sedang login
+    $jumlah_peserta_akun = 0;
+    if (isset($_SESSION['id_akun'])) {
+        $id_akun_login = intval($_SESSION['id_akun']);
+        $cek_peserta = kueri("SELECT COUNT(*) as total FROM peserta_open WHERE id_akun = $id_akun_login");
+        $row_peserta  = ambil($cek_peserta);
+        $jumlah_peserta_akun = (int)$row_peserta['total'];
+    }
 
     function tgl_indo($tanggal) {
         $bulan = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -887,37 +911,74 @@ footer {
 </div>
 <!-- ===== END MODAL ===== -->
 
+<!-- ===== MODAL BELUM ADA PESERTA ===== -->
+<div id="pesertaModal" role="dialog" aria-modal="true" aria-labelledby="pesertaModalTitle">
+  <div class="modal-backdrop" onclick="closePesertaModal()"></div>
+  <div class="modal-box">
+    <button class="modal-close-x" onclick="closePesertaModal()" aria-label="Tutup">&#x2715;</button>
+    <div class="modal-icon">👥</div>
+    <h2 id="pesertaModalTitle">Belum Ada Peserta</h2>
+    <p>Kamu belum menambahkan <span>data peserta</span> apapun. Tambahkan peserta terlebih dahulu sebelum melanjutkan pemesanan <span>Open Trip</span>.</p>
+    <div class="modal-btn-group">
+      <a href="form.php" class="modal-btn-login">Tambah Peserta</a>
+      <button class="modal-btn-close" onclick="closePesertaModal()">Nanti Saja</button>
+    </div>
+  </div>
+</div>
+<!-- ===== END MODAL PESERTA ===== -->
+
 <script>
 function changeImage(element) {
     document.getElementById('mainImg').src = element.src;
 }
 
-// Cek status login dari PHP session
+// Status login & jumlah peserta dari PHP session
 const isLoggedIn = <?php echo isset($_SESSION['username']) ? 'true' : 'false'; ?>;
+const jumlahPeserta = <?php echo $jumlah_peserta_akun; ?>;
 
+// ===== MODAL LOGIN =====
 function showLoginModal() {
-  const modal = document.getElementById('loginModal');
-  modal.classList.add('active');
+  document.getElementById('loginModal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
 function closeLoginModal() {
-  const modal = document.getElementById('loginModal');
-  modal.classList.remove('active');
+  document.getElementById('loginModal').classList.remove('active');
   document.body.style.overflow = '';
 }
 
-// Tutup modal dengan tombol Escape
+// ===== MODAL PESERTA =====
+function showPesertaModal() {
+  document.getElementById('pesertaModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePesertaModal() {
+  document.getElementById('pesertaModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Tutup semua modal dengan tombol Escape
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeLoginModal();
+  if (e.key === 'Escape') {
+    closeLoginModal();
+    closePesertaModal();
+  }
 });
 
-// Intercept klik tombol "Pesan sekarang"
+// Intercept klik tombol "Pesan sekarang" — tiga kondisi:
+// 1. Belum login          → modal login
+// 2. Login tapi 0 peserta → modal peringatan peserta
+// 3. Login & ada peserta  → lanjut ke pilih_peserta.php
 document.getElementById('btnPesan').addEventListener('click', function(e) {
   if (!isLoggedIn) {
     e.preventDefault();
     showLoginModal();
+  } else if (jumlahPeserta === 0) {
+    e.preventDefault();
+    showPesertaModal();
   }
+  // else: href berjalan normal
 });
 </script>
 </html>

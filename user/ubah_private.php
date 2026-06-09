@@ -125,7 +125,7 @@ if (isset($_POST['submit'])) {
     if (kueri($query_insert_ubah)) {
         echo "<script>
                 alert('Berhasil! Pengajuan perubahan data Private Trip beserta modifikasi struktur peserta telah dikirim dan menunggu verifikasi admin.');
-                window.location.href = 'home1.php'; 
+                window.location.href = 'profiluser.php'; 
               </script>";
     } else {
         echo "<script>alert('Gagal mengirim pengajuan: " . mysqli_error($konek) . "');</script>";

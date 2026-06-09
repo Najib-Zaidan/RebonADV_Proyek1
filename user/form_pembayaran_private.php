@@ -2,45 +2,14 @@
 session_start();
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pembayaran Private Trip</title>
+
 <style>
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 80px;
-  background: #f4f0e5;
-}
-
-.logo img {
-  height: 50px;
-}
-
-nav {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
-
-nav a {
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
-}
-
-nav .active3 {
-  color: #6b3df5;
-}
-
-.active5 {
-  background: #6b3df5;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -48,237 +17,183 @@ body {
     min-height: 100vh;
 }
 
-.form {
+.wrapper {
     display: flex;
     justify-content: center;
-    margin: 100px;
+    align-items: center;
+    min-height: 100vh;
+    padding: 30px;
 }
 
-form {
-    background-color: #eae4cc;
-    padding: 40px;
-    border-radius: 16px;
-    width: 400px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    text-align: left;
+.form-box {
+    background: #eae4cc;
+    width: 450px;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
-form label {
+h2 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    text-align: center;
+    color: #2c2c2c;
+}
+
+label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
     color: #333;
 }
 
-form input[type="number"],
-form input[type="file"] {
+input[type="number"],
+input[type="file"],
+select,
+textarea {
     width: 100%;
     padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+    margin-bottom: 15px;
+    border-radius: 10px;
     border: none;
-    background-color: #cfc6e8;
-    outline: none;
+    background: #cfc6e8;
     font-size: 14px;
+    outline: none;
 }
 
-form input[type="file"] {
-    padding: 10px;
-    background-color: #cfc6e8;
-    cursor: pointer;
+textarea {
+    resize: none;
 }
 
-form hr {
-    border: none;
-    height: 1px;
-    background-color: #bbb;
-    margin: 20px 0;
-}
-
-form button {
+button {
     width: 100%;
     padding: 14px;
     border: none;
     border-radius: 12px;
     background: linear-gradient(135deg, #4b1fa3, #2c2f7a);
     color: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
-form button:hover {
-    opacity: 0.9;
+button:hover {
     transform: scale(1.02);
+    opacity: 0.95;
 }
 
-footer {
-  background-color: #fdfae6;
-  padding: 40px 10% 20px 10%;
-  color: #333;
+.back-btn {
+    display: inline-block;
+    margin-bottom: 15px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #4b1fa3;
+    font-weight: 600;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 30px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 30px;
+.back-btn:hover {
+    text-decoration: underline;
 }
 
-.footer-column h4 {
-  font-size: 16px;
-  margin-bottom: 15px;
-  font-weight: 800;
+hr {
+    border: none;
+    height: 1px;
+    background: #b9b2d6;
+    margin: 15px 0;
 }
 
-.footer-column ul {
-  list-style: none;
+/* BOX REKENING */
+.rekening-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    border-left: 5px solid #4b1fa3;
+    display: none;
 }
 
-.footer-column ul li {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.contact-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.social-section {
-  margin-top: 25px;
-}
-
-.social-icons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.social-icons img {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
-
-.footer-logo-img {
-  width: 220px;
-  height: auto;
-  display: block;
-}
-
-.copyright {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
+.rekening-box span {
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #333;
 }
 </style>
+</head>
+
 <body>
-    <header class="navbar">
-      <div class="logo">
-        <img src="../gambar/REBON LOGO GRADIENT presisi.png" alt="Rebon Adventure" />
-      </div>
 
-      <nav>
-        <a href="home1.php">Home</a>
-        <a href="open_trip.php">Open</a>
-        <a href="private_trip.php" class="active3">Private</a>
-        <a href="tentang_kami.php">Tentang Kami</a>
-        <a href="profile.php">
-          <?php if (isset($_SESSION['username'])): ?>
-            <span style="color:blue; margin-right:10px;">👤 <?php echo $_SESSION['username']; ?></span>
-        </a>
-            <a href="logout_user.php">
-              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
-            </a>
-          <?php else: ?>
-            <a href="login_user.php"><button class="active5">Masuk</button></a>
-          <?php endif; ?>
-      </nav>
-    </header>
+<div class="wrapper">
 
-    <div class="form">
+    <div class="form-box">
+
+        <a href="profiluser.php" class="back-btn"> Kembali ke Profil</a>
+
+        <h2>Pembayaran Private Trip</h2>
+
         <form action="proses_pembayaran_private.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_private" value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>">  
+
+            <input type="hidden" name="id_private"
+                value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>">
+
+            <label>Metode Pembayaran:</label>
+            <select name="metode_pembayaran" id="metode" required>
+                <option value="">-- Pilih Metode --</option>
+                <option value="BCA">BCA</option>
+                <option value="BRI">BRI</option>
+                <option value="BSI">BSI</option>
+                <option value="DANA">DANA</option>
+                <option value="GOPAY">GOPAY</option>
+            </select>
+
+            <!-- BOX REKENING -->
+            <div class="rekening-box" id="rekeningBox">
+                <div id="rekeningText"></div>
+            </div>
+
             <label>Nominal Pembayaran:</label>
             <input type="number" name="nominal" required>
-            <hr>
+
             <label>Bukti Pembayaran:</label>
             <input type="file" name="bukti_bayar" accept="image/*" required>
-            <hr>
-            <label>Catatan:</label>
-            <textarea name="catatan" rows="4" placeholder="Tulis catatan pembayaran (opsional)..." 
-            style="width:100%; padding:12px; border:none; border-radius:8px; background:#cfc6e8; resize:none;"></textarea>
 
-            <hr>
-            <button type="submit">Kirim Pembayaran Private</button>
+            <label>Catatan:</label>
+            <textarea name="catatan" rows="4" placeholder="Tulis catatan pembayaran (opsional)..."></textarea>
+
+            <button type="submit">Kirim Pembayaran</button>
+
         </form>
     </div>
 
-    <footer>
-      <div class="footer-content">
-        <div class="footer-column logo-col">
-          <img src="../gambar/logo-rebon.png" alt="Rebon Adventure Logo" class="footer-logo-img" />
-        </div>
+</div>
 
-        <div class="footer-column">
-          <h4>KONTAK KAMI</h4>
-          <div class="contact-item">
-            <span class="icon">✉</span>
-            <p>rebonadventure@gmail.com</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📞</span>
-            <p>+62 812-3456-7890</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📍</span>
-            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
-          </div>
-        </div>
+<script>
+const metode = document.getElementById("metode");
+const box = document.getElementById("rekeningBox");
+const text = document.getElementById("rekeningText");
 
-        <div class="footer-column">
-          <h4>LAYANAN KAMI</h4>
-          <ul>
-            <li>OPEN TRIP</li>
-            <li>PRIVATE TRIP</li>
-          </ul>
-        </div>
+const dataRekening = {
+    BCA: "Bank BCA\nNo Rekening: 123456789\nA/N: Rebon Adventure",
+    BRI: "Bank BRI\nNo Rekening: 123456789\nA/N: Rebon Adventure",
+    BSI: "Bank BSI\nNo Rekening: 123456789\nA/N: Rebon Adventure",
+    DANA: "E-Wallet DANA\nNomor: 08123456789\nA/N: Rebon Adventure",
+    GOPAY: "E-Wallet GOPAY\nNomor: 08987654321\nA/N: Rebon Adventure"
+};
 
-        <div class="footer-column">
-          <h4>INFORMASI</h4>
-          <ul>
-            <li>TENTANG KAMI</li>
-            <li>TRIP TERSEDIA</li>
-            <li>FAQ</li>
-          </ul>
+metode.addEventListener("change", function () {
+    const val = this.value;
 
-          <div class="social-section">
-            <h4>FOLLOW US ON</h4>
-            <div class="social-icons">
-              <img src="../gambar/fb-icon.png" alt="FB" />
-              <a href="https://www.instagram.com/rebon_adv?igsh=MW4xcDc1YTJhMzRpMw==" target="_blank" rel="noopener noreferrer">
-                <img src="../gambar/ig-icon.png" alt="Instagram" />
-              </a>
-              <a href="https://www.tiktok.com/@rebon.adventure?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
-                <img src="../gambar/tt-icon.png" alt="Tiktok" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
-    </footer>
+    if (dataRekening[val]) {
+        box.style.display = "block";
+        text.innerHTML = dataRekening[val].replace(/\n/g, "<br>");
+    } else {
+        box.style.display = "none";
+        text.innerHTML = "";
+    }
+});
+</script>
+
 </body>
 </html>

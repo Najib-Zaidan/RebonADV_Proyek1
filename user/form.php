@@ -9,384 +9,223 @@ if (!isset($_SESSION['username'])) {
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Formulir Pendaftaran Open Trip</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Peserta Open Trip</title>
 
-  <style>
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-body {
-  background: #e7e2c8;
-}
+        body{
+            min-height:100vh;
+            background:#e7e2c8;
+        }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 80px;
-  background: #f4f0e5;
-}
+        .form-section{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:30px 15px;
+            background:linear-gradient(135deg,#4e2bbf,#8b6cf6);
+        }
 
-.logo img {
-  height: 50px;
-}
+        .form-container{
+            width:100%;
+            max-width:520px;
+            background:#ffffff;
+            padding:35px;
+            border-radius:20px;
+            box-shadow:0 15px 40px rgba(0,0,0,.15);
+        }
 
-nav {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
+        .btn-kembali{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            width:100%;
+            padding:12px;
+            margin-bottom:20px;
+            border-radius:12px;
+            background:#f3f3f3;
+            color:#333;
+            font-weight:600;
+            transition:.3s;
+        }
 
-nav a {
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
-}
+        .btn-kembali:hover{
+            background:#e6e6e6;
+        }
 
-nav .active2 {
-  color: #6b3df5;
-}
+        .form-header{
+            text-align:center;
+            margin-bottom:25px;
+        }
 
-.active5 {
-  background: #6b3df5;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+        .form-header h2{
+            color:#222;
+            font-size:28px;
+            margin-bottom:8px;
+        }
 
-/* SECTION BACKGROUND */
-.form-section {
-  background: linear-gradient(135deg, #4e2bbf, #8b6cf6);
-  padding: 80px 0;
-  display: flex;
-  justify-content: center;
-}
+        .form-header p{
+            color:#666;
+            font-size:14px;
+        }
 
-/* CARD FORM */
-.form-container {
-  background: #e9e4c7;
-  padding: 40px;
-  border-radius: 15px;
-  width: 420px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
+        form{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+        }
 
-/* JUDUL */
-.form-container h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 22px;
-  font-weight: bold;
-}
+        .input-group{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+        }
 
-/* FORM */
-.form-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+        .input-group label{
+            font-size:14px;
+            font-weight:600;
+            color:#333;
+        }
 
-/* INPUT & SELECT */
-.form-container input,
-.form-container select {
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background: #cfc7ea;
-  font-size: 14px;
-  outline: none;
-}
+        input{
+            width:100%;
+            padding:14px 16px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            font-size:14px;
+            background:#fafafa;
+            transition:.3s;
+        }
 
-/* FOCUS EFFECT */
-.form-container input:focus,
-.form-container select:focus {
-  border: 2px solid #6b3df5;
-  background: #e6e0ff;
-}
+        input:focus{
+            outline:none;
+            border-color:#6b3df5;
+            background:#fff;
+            box-shadow:0 0 0 4px rgba(107,61,245,.15);
+        }
 
-/* TANGGAL LAHIR */
+        .btn-submit{
+            margin-top:10px;
+            border:none;
+            padding:14px;
+            border-radius:12px;
+            background:#4e2bbf;
+            color:white;
+            font-size:15px;
+            font-weight:600;
+            cursor:pointer;
+            transition:.3s;
+        }
 
-.date-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+        .btn-submit:hover{
+            background:#6b3df5;
+            transform:translateY(-2px);
+        }
 
-.date-wrapper label {
-  font-size: 14px;
-  font-weight: 600;
-}
+        @media(max-width:600px){
 
-.date-group {
-  display: flex;
-  gap: 10px;
-}
+            .form-container{
+                padding:25px;
+            }
 
-.date-group p {
-  font-size: 14px;
-  min-width: 110px;
-}
+            .form-header h2{
+                font-size:24px;
+            }
 
-.date-group input {
-  width: 100%;
-  text-align: center;
-}
+        }
+    </style>
 
-/* BUTTON */
-.form-container button {
-  margin-top: 10px;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #4e2bbf;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
+</head>
+<body>
 
-/* HOVER BUTTON */
-.form-container button:hover {
-  background: #6b3df5;
-}
+<section class="form-section">
 
-footer {
-  background-color: #fdfae6;
-  padding: 40px 10% 20px 10%;
-  color: #333;
-}
+    <div class="form-container">
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 30px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 30px;
-}
-
-.footer-column h4 {
-  font-size: 16px;
-  margin-bottom: 15px;
-  font-weight: 800;
-}
-
-.footer-column ul {
-  list-style: none;
-}
-
-.footer-column ul li {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Styling Kontak dengan Ikon */
-.contact-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Bagian Media Sosial */
-.social-section {
-  margin-top: 25px;
-}
-
-.social-icons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.social-icons img {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
-
-.footer-logo-img {
-  width: 220px; /* Ukuran logo dikecilkan agar proporsional */
-  height: auto;
-  display: block;
-}
-
-.copyright {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-
-</style>
-
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="form_user_op.css" />
-    <title>formulir registrasi user</title>
-  </head>
-  <body>
-    <header class="navbar">
-      <div class="logo">
-        <img
-          src="../gambar/REBON LOGO GRADIENT presisi.png"
-          alt="Rebon Adventure"
-        />
-      </div>
-
-      <nav>
-        <a href="home1.php" class="active1">Home</a>
-        <a href="open_trip.php" class="active2">Open</a>
-        <a href="private_trip.php" class="active3">Private</a>
-        <a href="tentang_kami.php" class="active4">Tentang Kami</a>
-        <a href="profiluser.php"><?php if (isset($_SESSION['username'])): ?>
-            <!-- JIKA SUDAH LOGIN -->
-            <span style="color:blue; margin-right:10px;">
-              👤 <?php echo $_SESSION['username']; ?>
-            </span>
+        <a href="profiluser.php" class="btn-kembali">
+             Kembali ke Profil
         </a>
-            <a href="logout_user.php">
-              <button class="active5" onclick="return confirm('Yakin ingin logout?')">Logout</button>
-            </a>
 
-        <?php else: ?>
-            <!-- JIKA BELUM LOGIN -->
-            <a href="login_user.php">
-              <button class="active5">Masuk</button>
-            </a>
-        <?php endif; ?>
-      </nav>
-    </header>
-
-    <section class="form-section">
-      <div class="form-container">
-        <h2>TAMBAH PESERTA OPEN TRIP</h2>
-
-        <form
-          id="formPendaftaran"
-          action="proses_daftar.php"
-          method="POST"
-        >
-          <input
-            type="text"
-            name="nama"
-            id="nama"
-            placeholder="Nama Lengkap *"  required
-          />
-
-          <input
-            type="text"
-            name="usia"
-            id="usia"
-            placeholder="Usia *" required
-          />
-
-          <input
-            type="text"
-            name="alamat"
-            id="alamat"
-            placeholder="Alamat Lengkap *" required
-          />
-          <input
-  type="tel"
-  name="telepon"
-  id="telepon"
-  placeholder="Nomor Telepon *"
-  pattern="[0-9]+"
-  title="Hanya boleh angka"
-  required
-/>
-
-          <input
-            type="text"
-            name="detail"
-            id="detail"
-            placeholder="Detail Penyakit"
-          />
-
-          <button type="submit">Pesan sekarang</button>
-        </form>
-      </div>
-    </section>
-
-    <footer>
-      <div class="footer-content">
-        <div class="footer-column logo-col">
-          <img
-            src="../gambar/logo-rebon.png"
-            alt="Rebon Adventure Logo"
-            class="footer-logo-img"
-          />
+        <div class="form-header">
+            <h2>Tambah Peserta Open Trip</h2>
+            <p>Lengkapi data peserta sebelum melakukan pemesanan trip.</p>
         </div>
 
-        <div class="footer-column">
-          <h4>KONTAK KAMI</h4>
-          <div class="contact-item">
-            <span class="icon">✉</span>
-            <p>rebonadventure@gmail.com</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📞</span>
-            <p>+62 812-3456-7890</p>
-          </div>
-          <div class="contact-item">
-            <span class="icon">📍</span>
-            <p>Jl. sukawera No. 15,<br />Cirebon, Indonesia</p>
-          </div>
-        </div>
+        <form id="formPendaftaran" action="proses_daftar.php" method="POST">
 
-        <div class="footer-column">
-          <h4>LAYANAN KAMI</h4>
-          <ul>
-            <li>OPEN TRIP</li>
-            <li>PRIVATE TRIP</li>
-          </ul>
-        </div>
-
-        <div class="footer-column">
-          <h4>INFORMASI</h4>
-          <ul>
-            <li>TENTANG KAMI</li>
-            <li>TRIP TERSEDIA</li>
-            <li>FAQ</li>
-          </ul>
-
-          <div class="social-section">
-            <h4>FOLLOW US ON</h4>
-            <div class="social-icons">
-              <img src="../gambar/fb-icon.png" alt="FB" />
-              <a href="https://www.instagram.com/rebon_adv?igsh=MW4xcDc1YTJhMzRpMw==" target="_blank" rel="noopener noreferrer">
-                <img src="../gambar/ig-icon.png" alt="Instagram" />
-              </a>
-              <a href="https://www.tiktok.com/@rebon.adventure?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
-                <img src="../gambar/tt-icon.png" alt="Tiktok" />
-              </a>
+            <div class="input-group">
+                <label>Nama Lengkap</label>
+                <input
+                    type="text"
+                    name="nama"
+                    id="nama"
+                    placeholder="Masukkan nama lengkap"
+                    required>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="copyright">© 2026 REBON ADVENTURE. ALL RIGHTS RESERVED.</div>
-    </footer>
-  </body>
+            <div class="input-group">
+                <label>Usia</label>
+                <input
+                    type="number"
+                    name="usia"
+                    id="usia"
+                    placeholder="Masukkan usia"
+                    min="1"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>Alamat Lengkap</label>
+                <input
+                    type="text"
+                    name="alamat"
+                    id="alamat"
+                    placeholder="Masukkan alamat lengkap"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>Nomor Telepon</label>
+                <input
+                    type="tel"
+                    name="telepon"
+                    id="telepon"
+                    placeholder="Contoh: 081234567890"
+                    pattern="[0-9]+"
+                    title="Hanya boleh angka"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>Riwayat Penyakit</label>
+                <input
+                    type="text"
+                    name="detail"
+                    id="detail"
+                    placeholder="Kosongkan jika tidak ada">
+            </div>
+
+            <button type="submit" class="btn-submit">
+                Simpan Peserta
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+</body>
 </html>
-
